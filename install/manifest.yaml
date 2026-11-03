@@ -1,0 +1,965 @@
+# fullstack-engineer-curated-skills — manifest (fonte da verdade da curadoria)
+#
+# Princípio-mestre: skill = barato (lazy-load) · MCP = caro (4-32x mais tokens que CLI).
+# A plataforma GLOBAL carrega só o barato + os 2 MCPs genéricos. Todo o resto é por-projeto,
+# ligado pela skill `fullstack-setup` após detectar a stack e fazer um grill curto.
+#
+# Campos por item:
+#   id, name, area, cycle[], type(skill|mcp|cli-skill|output-style|reference),
+#   cost(low|high), scope(global|project), load(always|on-demand),
+#   required(bool), telemetry(none|anonymous|operational), stack_match[], install, source,
+#   usage{when, avoid, pattern}, notes
+#
+# stack_match: "*" = qualquer projeto. Senão: linguagens, arquivos-sinal ou vendors que a setup
+# detecta/pergunta no grill (ex: "datadog" só é perguntado, nunca auto-instalado).
+
+schema_version: 1
+
+# ESCOPO (explícito): este kit foca APLICAÇÕES WEB — frontend web, backend/API, dados, filas, infra,
+# observabilidade, segurança e QA de web. FORA DE ESCOPO por ora (declarado, não esquecido):
+# mobile/native (React Native, Flutter, iOS/Android, Swift/Kotlin), desktop nativo, ML/data-eng.
+scope_focus: web-applications
+out_of_scope: [mobile, native, desktop, ml-data-engineering]
+
+# CONFIANÇA (regra #4 do COMPOSITION): gate antes de instalar código de terceiros.
+# Quem não está listado = 'community' (padrão: revisar). 'unverified' = AUDITAR ANTES de confiar.
+# fsk.py usa isto no `plan`/`doctor`. Ao confirmar um link #VERIFY, mova o id de unverified → tier real.
+trust_tiers:
+  official:   # Anthropic ou vendor-oficial (link confirmado)
+    [frontend-design, webapp-testing, mcp-builder, security-review-native, context7, shadcn-skill,
+     shadcn-mcp, figma-mcp, terraform-mcp, aws-mcp, azure-mcp, docker-mcp-gateway, grafana-mcp,
+     sentry-mcp, datadog-mcp, cloudwatch-mcp, linear-mcp, atlassian-mcp, playwright-mcp, semgrep-mcp,
+     infisical-secrets, conventional-commit, web-design-guidelines, vercel-react-best-practices,
+     chrome-devtools-mcp, k8s-mcp]
+  self:       # autorado por este kit / dono do repo
+    [using-mcps-well, documents, fullstack-setup, project-learning, project-onboarding, nautilus, argonaut]
+  unverified: # baixa adoção ou sinal de confiança duvidoso — audite antes
+    [db-migrations, better-design, material3-mcp, ui-ux-pro-max]
+
+# Índice das áreas (o CATALOG.md é gerado/espelha isto)
+areas:
+  - discipline          # como o agente pensa/trabalha
+  - flow                # spec/debug/review sob demanda
+  - code-intelligence   # navegação de código + docs ao vivo
+  - version-control     # git/PR
+  - frontend-ui         # design, componentes, ícones, a11y, UX
+  - backend-api
+  - data-read
+  - data-migrations
+  - queues
+  - infra-devops
+  - secrets
+  - tasks               # gestão de trabalho / tickets
+  - observability
+  - qa-testing
+  - security
+  - documents           # xlsx/pptx/pdf/docx
+  - productivity
+  - reference           # rules de arquitetura/boas práticas (conteúdo)
+
+# =====================================================================================
+# NÚCLEO GLOBAL — plataforma. Só barato + os 2 MCPs genéricos. Instalado uma vez em ~/.claude.
+# =====================================================================================
+items:
+  - id: karpathy-ponytail
+    name: Karpathy + Ponytail (disciplina)
+    area: discipline
+    cycle: [build, maintain]
+    type: skill
+    cost: low
+    scope: global
+    load: always
+    required: true
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/AbdullahHameedKhan/karpathy-ponytail-skills
+    install: "curl -o ~/.claude/CLAUDE.snippets/karpathy-ponytail.md <raw-url> (ver install/README)"
+    usage:
+      when: "sempre on — pensar antes de codar, mudança cirúrgica, reusar antes de escrever"
+      avoid: "nunca desligar; é a base anti-overengineering"
+      pattern: "dono único do princípio YAGNI/KISS — nenhuma outra skill repete isso"
+    notes: "Funde karpathy (raciocínio) + ponytail (laziness ladder). Fonte canônica de enxugamento."
+
+  - id: using-mcps-well
+    name: Using MCPs Well (nossa)
+    area: discipline
+    cycle: [build, operate]
+    type: skill
+    cost: low
+    scope: global
+    load: always
+    required: true
+    telemetry: none
+    stack_match: ["*"]
+    source: ./skills/using-mcps-well
+    install: "incluída no repo"
+    usage:
+      when: "antes de ligar/chamar qualquer MCP"
+      avoid: "chamar MCP quando read/grep/CLI resolve"
+      pattern: "MCP é caro; read-only primeiro; batch/filtre; desligue o que não usa"
+    notes: "Lê os blocos usage.* deste manifest para decidir quando cada MCP vale a pena."
+
+  - id: conventional-commit
+    name: Conventional Commit + git-commit (gh CLI)
+    area: version-control
+    cycle: [ship]
+    type: cli-skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: true
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/github/awesome-copilot
+    install: "npx skills add github/awesome-copilot (skills: git-commit, conventional-commit)"
+    usage:
+      when: "commit/PR do dia-a-dia"
+      avoid: "GitHub MCP para isso — 4-32x mais tokens; use gh CLI"
+      pattern: "diff → stage → Conventional Commit → gh pr create"
+    notes: "GitHub MCP fica só para Actions/code-scanning/Projects."
+
+  - id: security-review-native
+    name: /security-review (nativo)
+    area: security
+    cycle: [review]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: true
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/anthropics/claude-code-security-review
+    install: "nativo do Claude Code"
+    usage:
+      when: "revisão rápida de segurança do diff antes de PR"
+      avoid: "auditoria profunda — use cloudflare-security-audit"
+      pattern: "rodar sobre o diff da branch"
+
+  - id: documents
+    name: Documents (router xlsx/pptx/pdf/docx) (nossa)
+    area: documents
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: ./skills/documents
+    install: "incluída no repo; instala sob demanda a skill oficial do tipo pedido"
+    usage:
+      when: "criar/editar/ler .xlsx .pptx .pdf .docx"
+      avoid: "carregar os 4 playbooks juntos"
+      pattern: "detecta extensão → lê SÓ references/<tipo>.md → instala a skill oficial daquele tipo"
+    notes: "Router com progressive disclosure. As 4 skills oficiais são PROPRIETARY — instalamos/apontamos, não copiamos."
+
+  # --- as 3 skills originais que são o motor do repo ---
+  - id: fullstack-setup
+    name: Fullstack Setup (nossa)
+    area: discipline
+    cycle: [plan]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: true
+    telemetry: none
+    stack_match: ["*"]
+    source: ./skills/fullstack-setup
+    install: "incluída no repo"
+    usage:
+      when: "ao entrar num projeto novo ou existente"
+      avoid: "instalar MCP manualmente item a item"
+      pattern: "detecta stack + grill (vendors) → instala núcleo global + opcionais que casam"
+    notes: "Build por último (Wave 3). Lê este manifest."
+
+  - id: project-learning
+    name: Project Learning (nossa)
+    area: discipline
+    cycle: [maintain, learn]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: true
+    telemetry: none
+    stack_match: ["*"]
+    source: ./skills/project-learning
+    install: "incluída no repo"
+    usage:
+      when: "ao detectar aprendizado durável (convenção, decisão, padrão repetido)"
+      avoid: "gravar sem confirmação do usuário"
+      pattern: "PROPOR → com 'ok' → AGENTS.md | rules/ (1ª=candidato, 2ª=rule) | skill local"
+    notes: "Base: skill-creator (Anthropic) para o ciclo rascunho→eval→refino e otimização de description."
+
+  - id: project-onboarding
+    name: Project Onboarding (nossa)
+    area: discipline
+    cycle: [plan]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: ./skills/project-onboarding
+    install: "incluída no repo"
+    usage:
+      when: "projeto brownfield sem AGENTS.md/mapa"
+      avoid: "reexecutar se o mapa está atualizado (checar last_built_commit)"
+      pattern: "/init + CodeGraph → AGENTS.md + rules iniciais + mapa de módulos"
+
+  # --- os 2 MCPs genéricos permitidos no global ---
+  - id: codegraph
+    name: CodeGraph (MCP)
+    area: code-intelligence
+    cycle: [build, maintain]
+    type: mcp
+    cost: high
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/suatkocar/codegraph
+    install: "codegraph init no projeto; MCP já disponível"
+    usage:
+      when: "entender fluxo/impacto/blast-radius que grep não segue (dispatch dinâmico)"
+      avoid: "lookup de 1 símbolo que você já sabe onde está — use read/grep"
+      pattern: "explore('símbolos ou pergunta') — 1 chamada, não loop"
+    notes: "Genérico (qualquer código). Global permitido pelo usuário."
+
+  - id: context7
+    name: Context7 (MCP)
+    area: code-intelligence
+    cycle: [build]
+    type: mcp
+    cost: high
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/upstash/context7
+    install: "claude mcp add context7 -- npx -y @upstash/context7-mcp"
+    usage:
+      when: "usar lib/framework cuja API pode ter mudado de versão"
+      avoid: "libs triviais/estáveis que você já conhece"
+      pattern: "resolve-library-id → query-docs com a versão do projeto"
+    notes: "Genérico. Anti-alucinação de API. Global permitido pelo usuário."
+
+# =====================================================================================
+# FLOW — global, on-demand (disparo manual; nunca auto-injetado)
+# =====================================================================================
+  - id: mattpocock-to-spec
+    name: to-spec (mattpocock)
+    area: flow
+    cycle: [plan]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/mattpocock/skills
+    install: "npx skills add mattpocock/skills (curar a cadeia greenfield: to-spec, implement, tdd, code-review, pr + diagnosing-bugs)"
+    usage: {when: "transformar pedido vago em spec curta", avoid: "tarefa trivial", pattern: "invocar explicitamente"}
+    notes: "Genérica, não-TS. Cadeia de ORQUESTRAÇÃO de desenvolvimento NOVO (greenfield). NÃO instalar o pacote inteiro."
+
+  - id: mattpocock-diagnosing-bugs
+    name: diagnosing-bugs (mattpocock)
+    area: flow
+    cycle: [maintain]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/mattpocock/skills
+    install: "npx skills add mattpocock/skills"
+    usage: {when: "bug que exige hipótese→reprodução→causa raiz", avoid: "erro óbvio de 1 linha", pattern: "provar causa raiz antes de corrigir"}
+
+  - id: mattpocock-code-review
+    name: code-review (mattpocock)
+    area: flow
+    cycle: [review]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/mattpocock/skills
+    install: "npx skills add mattpocock/skills"
+    usage: {when: "revisar diff antes de PR", avoid: "duplicar com /security-review (foco diferente)", pattern: "sob demanda"}
+
+  - id: cloudflare-security-audit
+    name: Security Audit (Cloudflare)
+    area: security
+    cycle: [review]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/cloudflare/security-audit-skill
+    install: "npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit"
+    usage: {when: "auditoria profunda com validação adversarial", avoid: "revisão rápida — use /security-review", pattern: "6 fases: recon→caça paralela→refutação→relatório"}
+
+  - id: mattpocock-implement
+    name: implement (mattpocock)
+    area: flow
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/mattpocock/skills
+    install: "npx skills add mattpocock/skills"
+    usage: {when: "construir a partir da spec (greenfield)", avoid: "mudança de 1 linha", pattern: "spec aprovada → implementar incremental"}
+
+  - id: mattpocock-tdd
+    name: tdd (mattpocock)
+    area: flow
+    cycle: [build, test]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/mattpocock/skills
+    install: "npx skills add mattpocock/skills"
+    usage: {when: "desenvolvimento novo guiado por teste", avoid: "código sem superfície testável", pattern: "red → green → refactor"}
+
+  - id: mattpocock-pr
+    name: pr (mattpocock)
+    area: flow
+    cycle: [ship]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/mattpocock/skills
+    install: "npx skills add mattpocock/skills"
+    usage: {when: "abrir PR ao fim do greenfield", avoid: "commit simples — use conventional-commit", pattern: "descrição de PR no padrão do projeto (ver rules/pr.md)"}
+    notes: "Cadeia greenfield completa: to-spec → implement → tdd → code-review → pr. spec-kit e gsd-core DESCARTADOS (pesados/redundantes)."
+
+# =====================================================================================
+# FRONTEND-UI — por-projeto (stack_match frontend). Grill liga só o que o projeto usa.
+# =====================================================================================
+  - id: frontend-design
+    name: frontend-design (Anthropic)
+    area: frontend-ui
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","vue","svelte","html","css","*.tsx","*.jsx"]
+    source: https://github.com/anthropics/skills/tree/main/skills/frontend-design
+    install: "npx skills add https://github.com/anthropics/skills --skill frontend-design"
+    usage: {when: "direção estética — fugir da 'cara de IA'", avoid: "double-gate com ui-ux-pro-max no mesmo fluxo", pattern: "plano de tokens → revisar contra brief → codar"}
+    notes: "Opcional. ui-ux-pro-max cobre boa parte; usar como camada anti-AI-tell, não como 2º gate."
+
+  - id: ui-ux-pro-max
+    name: ui-ux-pro-max (criar)
+    area: frontend-ui
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","vue","svelte","angular","*.tsx","*.jsx"]
+    source: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+    install: "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && /plugin install ui-ux-pro-max@ui-ux-pro-max-skill"
+    usage: {when: "criar UI com estilo/paleta/tipografia/UX consistentes", avoid: "revisar — use web-design-guidelines", pattern: "integra com shadcn para busca de componentes"}
+    notes: "Principal da camada 'criar'. 50+ estilos, 161 paletas, 57 pares de fontes, 99 diretrizes UX. Scripts stdlib, sem rede. ATENÇÃO: contagem de estrelas suspeita (star-gaming) — não use como sinal de confiança; audite."
+
+  - id: web-design-guidelines
+    name: web-design-guidelines (Vercel, revisar)
+    area: frontend-ui
+    cycle: [review]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","vue","svelte","angular","html","*.tsx","*.jsx"]
+    source: https://github.com/vercel-labs/agent-skills
+    install: "npx skills add vercel-labs/agent-skills --skill web-design-guidelines"
+    usage: {when: "auditar UI contra Web Interface Guidelines", avoid: "criar — use ui-ux-pro-max", pattern: "retorna achados arquivo:linha (UX + a11y)"}
+    notes: "Par de ui-ux-pro-max: um cria, o outro revisa."
+
+  - id: shadcn-skill
+    name: shadcn (skill oficial)
+    area: frontend-ui
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","next","*.tsx","tailwind"]
+    source: https://github.com/shadcn-ui/ui/tree/main/skills/shadcn
+    install: "pnpm dlx skills add shadcn/ui"
+    usage: {when: "usar/instalar componentes shadcn (evita reinventar)", avoid: "shadcn MCP junto — redundante com Bash", pattern: "info --json → search → docs → add --diff"}
+    notes: "No Claude Code (tem Bash) a skill basta; MCP só p/ ambiente sem shell."
+
+  - id: shadcn-mcp
+    name: shadcn MCP (opcional, sem-Bash)
+    area: frontend-ui
+    cycle: [build]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","next"]
+    source: https://ui.shadcn.com/docs/mcp
+    install: "pnpm dlx shadcn@latest mcp init --client claude"
+    usage: {when: "ambiente sem shell (chat puro)", avoid: "quando a skill shadcn já resolve via CLI", pattern: "tool-calls de search/add"}
+    notes: "Redundante com a skill no Claude Code. Catalogado para completude."
+
+  - id: better-design
+    name: Better Design (31 design systems)
+    area: frontend-ui
+    cycle: [build]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","next","*.tsx"]
+    source: https://github.com/marvkr/better-design
+    install: "via shadcn registry (ver repo)"
+    usage: {when: "'construa no estilo da Stripe/Linear/Apple' — tokens+componentes de marca", avoid: "projeto sem design system de referência", pattern: "carrega docs+tokens+código do system escolhido"}
+
+  - id: material3-mcp
+    name: Material 3 (MCP)
+    area: frontend-ui
+    cycle: [build]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["material","mui","android","flutter"]
+    source: https://github.com/weppa-cloud/material3-mcp-server
+    install: "claude mcp add material3 -- npx -y @weppa-cloud/material3-mcp-server"
+    usage: {when: "projeto Material 3 (componentes/tokens/a11y)", avoid: "projeto não-Material", pattern: "consultar componentes/tokens/diretrizes"}
+    notes: "Baixa adoção (~6★) — audite antes de confiar."
+
+  - id: better-icons
+    name: Better Icons (ícones)
+    area: frontend-ui
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","vue","svelte","html","*.tsx","*.jsx"]
+    source: https://github.com/better-auth/better-icons
+    install: "npx skills add better-auth/better-icons (ou MCP: npx better-icons setup)"
+    usage: {when: "buscar ícones existentes (200k, 150+ coleções)", avoid: "gerar SVG inline à mão (erro + tokens)", pattern: "busca em lote; fixar 1 lib (Lucide) no AGENTS.md"}
+    notes: "Alternativas: Iconify MCP (simples) · Icons8 MCP (mais estilos). Regra de composição: 1 lib fixa."
+
+  - id: figma-mcp
+    name: Figma (MCP)
+    area: frontend-ui
+    cycle: [build]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["figma"]
+    source: https://help.figma.com (figma mcp)
+    install: "claude mcp add --transport http figma https://mcp.figma.com/mcp"
+    usage: {when: "o time tem designs prontos no Figma", avoid: "projeto sem Figma", pattern: "componentes/variáveis/tokens/Code Connect"}
+
+  - id: axe-a11y-mcp
+    name: Axe / Accessibility (MCP)
+    area: frontend-ui
+    cycle: [test, review]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","vue","svelte","angular","html"]
+    source: https://github.com/JustasMonkev/mcp-accessibility-scanner
+    install: "ver repo (npx, MIT, gratuito)"
+    usage: {when: "checar conformidade WCAG com relatório", avoid: "lint estático já cobre o básico", pattern: "rodar axe sobre a página renderizada"}
+    notes: "Preenche o gap de a11y. Opção FREE/MIT (59★). Alternativa oficial Deque (axe-mcp-server) é PAGA — fora do foco free do kit."
+
+  # stack-specific best-practices (exemplos; setup detecta e sugere; project-learning expande)
+  - id: vercel-react-best-practices
+    name: Vercel React/Next Best Practices
+    area: frontend-ui
+    cycle: [build, maintain]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["react","next","*.tsx","*.jsx"]
+    source: https://github.com/vercel-labs/agent-skills
+    install: "npx skills add vercel-labs/agent-skills --skill react-best-practices"
+    usage: {when: "otimizar perf React/Next (waterfalls, bundle, render)", avoid: "projeto não-React", pattern: "regras priorizadas"}
+    notes: "Oficial Vercel (skill 'react-best-practices' no repo agent-skills)."
+
+  - id: vue-best-practices
+    name: Vue Best Practices
+    area: frontend-ui
+    cycle: [build, maintain]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["vue","*.vue"]
+    source: https://github.com/vuejs-ai/skills
+    install: "npx skills add vuejs-ai/skills"
+    usage: {when: "boas práticas/perf Vue", avoid: "projeto não-Vue", pattern: "regras priorizadas"}
+    notes: "Comunidade (early experiment, ~3.2k★, MIT); autor pretende doar à org Vue oficial."
+
+# =====================================================================================
+# BACKEND-API
+# =====================================================================================
+  - id: openapi-mcp
+    name: OpenAPI Bridge (MCP)
+    area: backend-api
+    cycle: [build, test]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["openapi","swagger","*.openapi.yaml","*.swagger.json"]
+    source: https://github.com/murilojrpereira/mcp-openapi-bridge
+    install: "ver repo"
+    usage: {when: "interagir com API descrita por OpenAPI (1 tool/endpoint)", avoid: "API trivial — curl basta", pattern: "read-only por padrão"}
+
+  - id: mcp-builder
+    name: MCP Builder (Anthropic)
+    area: backend-api
+    cycle: [build]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/anthropics/skills/tree/main/skills/mcp-builder
+    install: "npx skills add https://github.com/anthropics/skills --skill mcp-builder"
+    usage: {when: "construir um servidor MCP próprio", avoid: "quando um MCP existente serve", pattern: "scaffold + boas práticas de MCP"}
+
+# =====================================================================================
+# DATA (leitura / migrations) + QUEUES — MCPs próprios do usuário
+# =====================================================================================
+  - id: nautilus
+    name: Nautilus (multi-DB read-only) [próprio]
+    area: data-read
+    cycle: [operate, build]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["postgres","mysql","mariadb","sqlite","sqlserver","oracle","mongodb","redis"]
+    source: https://github.com/KauaLealz/nautilus-mcp-server
+    install: "ver repo (config YAML)"
+    usage: {when: "inspecionar dados/esquema em LEITURA", avoid: "escrita — read-only por desenho", pattern: "list_connections → query read-only; nunca em loop"}
+    notes: "Mantido pelo usuário. Licença pública a declarar."
+
+  - id: db-migrations
+    name: Migrations (provider MCP ou skill-CLI)
+    area: data-migrations
+    cycle: [build, ship]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: anonymous
+    stack_match: ["supabase","planetscale","prisma","alembic","golang-migrate","atlas","*.sql"]
+    source: "Supabase | PlanetScale | migrate-mcp | skill-que-orquestra-CLI (Atlas/Alembic/golang-migrate)"
+    install: "depende do provedor/CLI (ver install/README)"
+    usage: {when: "criar/aplicar migration/schema", avoid: "aplicar sem aprovação explícita", pattern: "gerar diff → revisar em preview/staging → aplicar só com 'ok'; nunca direto em prod"}
+    notes: "nautilus é read-only; esta área cobre a ESCRITA. Atlas manda telemetria anônima (ATLAS_NO_ANON_TELEMETRY=true). Neon removido por decisão do usuário."
+
+  - id: argonaut
+    name: Argonaut (filas unificado) [próprio]
+    area: queues
+    cycle: [operate]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["kafka","rabbitmq","sqs","sns","redis-streams"]
+    source: https://pypi.org/project/argonaut-mcp-server/
+    install: "pip install argonaut-mcp-server[all]"
+    usage: {when: "inspecionar/diagnosticar filas e tópicos", avoid: "escrita sem necessidade", pattern: "leitura segura; escrita exige operator mode + confirmação 2-step"}
+    notes: "Mantido pelo usuário."
+
+# =====================================================================================
+# INFRA-DEVOPS + SECRETS
+# =====================================================================================
+  - id: aws-mcp
+    name: AWS (awslabs/mcp)
+    area: infra-devops
+    cycle: [operate, ship]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["aws","cdk","cloudformation","terraform"]
+    source: https://github.com/awslabs/mcp
+    install: "ver repo (vários servers: CDK, CloudFormation, Cost, CloudWatch...)"
+    usage: {when: "projeto em AWS", avoid: "projeto não-AWS", pattern: "escolher o server específico; a maioria read, write explícito"}
+
+  - id: azure-mcp
+    name: Azure (microsoft/mcp)
+    area: infra-devops
+    cycle: [operate, ship]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["azure"]
+    source: https://github.com/microsoft/mcp
+    install: "ver repo"
+    usage: {when: "projeto em Azure", avoid: "projeto não-Azure", pattern: "Azure.Mcp.Server"}
+
+  - id: docker-mcp-gateway
+    name: Docker MCP Gateway
+    area: infra-devops
+    cycle: [build, ship]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["docker","dockerfile","compose"]
+    source: https://github.com/docker/mcp-gateway
+    install: "docker mcp (plugin)"
+    usage: {when: "orquestrar MCPs containerizados com isolamento + segredos via Docker Desktop", avoid: "projeto sem Docker", pattern: "gateway + registry"}
+
+  - id: terraform-mcp
+    name: Terraform (HashiCorp)
+    area: infra-devops
+    cycle: [architect, ship]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["terraform","*.tf"]
+    source: https://github.com/hashicorp/terraform-mcp-server
+    install: "claude mcp add terraform -s user -t stdio -- docker run -i --rm hashicorp/terraform-mcp-server"
+    usage: {when: "navegar módulos/providers/docs do Registry; validar IaC", avoid: "projeto sem Terraform", pattern: "consulta de módulo/provider"}
+
+  - id: k8s-mcp
+    name: Kubernetes (MCP)
+    area: infra-devops
+    cycle: [operate]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["kubernetes","k8s","helm","*.yaml"]
+    source: https://github.com/containers/kubernetes-mcp-server
+    install: "claude mcp add-json kubernetes-mcp-server '{\"command\":\"npx\",\"args\":[\"-y\",\"kubernetes-mcp-server@latest\"]}' -s user"
+    usage: {when: "inspecionar cluster (pods/logs)", avoid: "mutação sem necessidade", pattern: "status/logs read-first; configure ServiceAccount read-only"}
+    notes: "Oficial Red Hat/containers (Go nativo, Apache-2.0, sem kubectl/helm). Telemetria OTel opt-in, desligada por padrão."
+
+  - id: ci-mcp
+    name: CI/CD (GitLab oficial / CircleCI)
+    area: infra-devops
+    cycle: [ship]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["gitlab",".gitlab-ci.yml","circleci",".circleci"]
+    source: "https://mcp.gitlab.com | https://github.com/CircleCI-Public/mcp-server-circleci"
+    install: "ver fonte"
+    usage: {when: "ler logs de pipeline/rodar pipeline", avoid: "GitHub Actions — use GitHub MCP", pattern: "get failure logs → run"}
+
+  - id: infisical-secrets
+    name: Infisical (secrets)
+    area: secrets
+    cycle: [operate]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["infisical","vault","secrets"]
+    source: https://github.com/Infisical/infisical-mcp-server
+    install: "ver repo (configurar read-only via INFISICAL_ENABLED_TOOLS)"
+    usage: {when: "gerenciar segredos com telemetria zero", avoid: "expor segredo bruto ao agente", pattern: "read-only; injeção via env, não read_secret direto"}
+    notes: "Telemetria zero confirmada. Preferir a Vault (write-by-default)."
+
+# =====================================================================================
+# TASKS + OBSERVABILITY
+# =====================================================================================
+  - id: linear-mcp
+    name: Linear (task manager)
+    area: tasks
+    cycle: [plan]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["linear"]
+    source: https://mcp.linear.app/mcp
+    install: "claude mcp add --transport http linear https://mcp.linear.app/mcp (ou /readonly)"
+    usage: {when: "amarrar código a ticket Linear", avoid: "contexto sem tickets", pattern: "usar endpoint /readonly quando só consulta"}
+
+  - id: atlassian-mcp
+    name: Atlassian (Jira/Confluence)
+    area: tasks
+    cycle: [plan]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["jira","confluence","bitbucket"]
+    source: https://github.com/atlassian/atlassian-mcp-server
+    install: "https://mcp.atlassian.com/v2/mcp (OAuth 2.1)"
+    usage: {when: "enterprise com Jira; auditoria por tool-call", avoid: "time que usa Linear", pattern: "read-write com log de auditoria"}
+
+  - id: grafana-mcp
+    name: Grafana (observabilidade hub)
+    area: observability
+    cycle: [operate, maintain]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["grafana","prometheus","loki","tempo"]
+    source: https://github.com/grafana/mcp-grafana
+    install: "ver repo"
+    usage: {when: "consultar dashboards/datasources (Prometheus+Loki+Tempo)/alertas", avoid: "vendor único fora de Grafana", pattern: "hub multi-vendor"}
+    notes: "Default da categoria observabilidade (multi-vendor)."
+
+  - id: sentry-mcp
+    name: Sentry (erros/APM)
+    area: observability
+    cycle: [maintain]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["sentry"]
+    source: https://github.com/getsentry/sentry-mcp
+    install: "claude mcp add --transport http sentry https://mcp.sentry.dev/mcp"
+    usage: {when: "time usa Sentry p/ erros/traces", avoid: "travar observabilidade nele", pattern: "issues→stacktrace→resolução"}
+    notes: "Telemetria operacional própria (zerar SENTRY_DSN desliga)."
+
+  - id: datadog-mcp
+    name: Datadog (métricas/APM/logs)
+    area: observability
+    cycle: [operate, maintain]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["datadog"]
+    source: https://github.com/datadog-labs/mcp-server
+    install: "https://mcp.datadoghq.com"
+    usage: {when: "time usa Datadog", avoid: "outro vendor", pattern: "métricas/monitors/logs/APM"}
+
+  - id: cloudwatch-mcp
+    name: AWS CloudWatch (logs/métricas)
+    area: observability
+    cycle: [maintain]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["aws","cloudwatch"]
+    source: https://github.com/awslabs/mcp
+    install: "server cloudwatch-logs-mcp-server do awslabs/mcp"
+    usage: {when: "logs/alarmes/root-cause em AWS", avoid: "fora de AWS", pattern: "análise de logs + alarmes"}
+
+# =====================================================================================
+# QA-TESTING
+# =====================================================================================
+  - id: e2e-browser-qa
+    name: e2e-browser-qa (orquestrador QA)
+    area: qa-testing
+    cycle: [test]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: "instalada no ambiente do usuário"
+    install: "já instalada"
+    usage: {when: "QA sênior: planeja por risco, executa, classifica por severidade, gera relatório+evidências, converte p/ Playwright/Cypress", avoid: "sem navegador disponível", pattern: "precisa de um browser MCP (Playwright/Chrome DevTools)"}
+    notes: "Principal da área QA. Depende de um driver de browser abaixo."
+
+  - id: playwright-mcp
+    name: Playwright (MCP)
+    area: qa-testing
+    cycle: [test]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["web","react","vue","angular","*.html"]
+    source: https://github.com/microsoft/playwright-mcp
+    install: "claude mcp add playwright npx @playwright/mcp@latest"
+    usage: {when: "exploração interativa de app + evidências (screenshot/trace)", avoid: "suíte reproduzível — use webapp-testing", pattern: "snapshot de acessibilidade, não screenshot cego"}
+
+  - id: chrome-devtools-mcp
+    name: Chrome DevTools (MCP)
+    area: qa-testing
+    cycle: [test, maintain]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["web"]
+    source: https://github.com/ChromeDevTools/chrome-devtools-mcp
+    install: "claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest"
+    usage: {when: "evidenciar bug de rede/performance/console detalhado", avoid: "teste funcional simples — Playwright basta", pattern: "performance + network + console"}
+    notes: "Oficial Google (Apache-2.0). Telemetria LIGADA por padrão (usage stats + trace à CrUX) — desligue com --no-usage-statistics e --no-performance-crux."
+
+  - id: webapp-testing
+    name: webapp-testing (Anthropic)
+    area: qa-testing
+    cycle: [test]
+    type: skill
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["web","*.html","react","vue"]
+    source: https://github.com/anthropics/skills/tree/main/skills/webapp-testing
+    install: "npx skills add https://github.com/anthropics/skills --skill webapp-testing"
+    usage: {when: "escrever/rodar testes Playwright reproduzíveis p/ CI", avoid: "exploração ad-hoc — use Playwright MCP", pattern: "scripts python descartáveis + with_server.py"}
+
+# =====================================================================================
+# SECURITY (SAST contínuo)
+# =====================================================================================
+  - id: semgrep-mcp
+    name: Semgrep (SAST)
+    area: security
+    cycle: [build, review]
+    type: mcp
+    cost: high
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: operational
+    stack_match: ["*"]
+    source: https://github.com/semgrep/mcp
+    install: "ver repo (Semgrep MCP)"
+    usage: {when: "SAST/SCA/secrets contínuo em tempo de edição", avoid: "revisão pontual — /security-review basta", pattern: "OWASP Top 10, 15+ linguagens"}
+
+# =====================================================================================
+# PRODUCTIVITY
+# =====================================================================================
+  - id: i-have-adhd
+    name: i-have-adhd (output-style)
+    area: productivity
+    cycle: [build]
+    type: output-style
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/ayghri/i-have-adhd
+    install: "claude plugin marketplace add ayghri/i-have-adhd && claude plugin install i-have-adhd@i-have-adhd"
+    usage: {when: "quer respostas action-first, numeradas, sem preâmbulo", avoid: "desligada por padrão", pattern: "/i-have-adhd ... stop adhd mode"}
+
+# =====================================================================================
+# REFERENCE (rules/ — conteúdo, não skills que competem por gatilho)
+# =====================================================================================
+  - id: ref-architecture
+    name: Arquitetura & ADR (referência)
+    area: reference
+    cycle: [architect]
+    type: reference
+    cost: low
+    scope: project
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: https://github.com/keez97/claude-architecture-skills
+    install: "conteúdo curado em rules/architecture.md"
+    usage: {when: "decisão de arquitetura/ADR/resiliência/escalabilidade", avoid: "virar skill que compete com disciplina", pattern: "lido como referência pela disciplina e pelo review"}
+    notes: "Inclui boring-engineering, yagni-principle, clean-code multi-linguagem, padrões de resiliência/observabilidade, refactoring."

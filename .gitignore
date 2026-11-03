@@ -1,0 +1,17 @@
+# Crew — estado efêmero de orquestração (não publicar)
+.crew/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
