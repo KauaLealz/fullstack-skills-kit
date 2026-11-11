@@ -76,6 +76,7 @@ Legenda: **tipo** skill·mcp·cli·ref · **custo** 🟢baixo(lazy) 🔴alto(MCP
 ## ✅ QA / Testes
 | Item | tipo | onde | Papel |
 |---|---|---|---|
+| **surgical-testing** (nossa) | skill 🟢 | 🌐 on-demand | **Decide o nível do teste**: e2e > integração > unitário (último recurso). Testa invariante de arquitetura, contrato e caminho de dinheiro/permissão. |
 | **e2e-browser-qa** | skill 🟢 | 📦 | Orquestra QA: plano por risco, evidências, relatório, converte p/ Playwright/Cypress. |
 | **Playwright MCP** | mcp 🔴 | 📦 | Driver de browser + evidência (ad-hoc). |
 | **Chrome DevTools MCP** | mcp 🔴 | 📦 | Performance/rede/console detalhado. |
@@ -106,6 +107,7 @@ Legenda: **tipo** skill·mcp·cli·ref · **custo** 🟢baixo(lazy) 🔴alto(MCP
 | **project-onboarding** | Brownfield → minera código+git+PRs → gera a **PKB** (AGENTS.md + rules + pattern skills). |
 | **project-learning** | Enriquece a **PKB** continuamente; PROPÕE (com "ok") rule / pattern skill / AGENTS.md. |
 | **using-mcps-well** | Governa o uso eficiente dos MCPs. |
+| **surgical-testing** | Governa **onde** testar: e2e/integração primeiro, unitário só em último caso. |
 | **documents** | Router de documentos (xlsx/pptx/pdf/docx). |
 
 > **PKB — Base de Conhecimento Pré-Destilada** ([docs/knowledge-base.md](./docs/knowledge-base.md)): o maior

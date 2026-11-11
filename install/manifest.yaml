@@ -847,6 +847,25 @@ items:
 # =====================================================================================
 # QA-TESTING
 # =====================================================================================
+  - id: surgical-testing
+    name: Surgical Testing (nossa)
+    area: qa-testing
+    cycle: [build, test]
+    type: skill
+    cost: low
+    scope: global
+    load: on-demand
+    required: false
+    telemetry: none
+    stack_match: ["*"]
+    source: "própria (deste kit)"
+    install: "cp -r skills/surgical-testing ~/.claude/skills/"
+    usage:
+      when: "escrever, revisar ou planejar teste; fechar mudança; herdar suíte lenta ou frágil; alguém propor meta de cobertura"
+      avoid: "não substitui o runner nem a suíte do projeto — decide o NÍVEL do teste, não executa"
+      pattern: "e2e > integração > unitário (último recurso); testa invariante de arquitetura, contrato e o caminho de dinheiro/permissão/tenant"
+    notes: "Inverte a pirâmide por economia: unitário é enviesado para regra de negócio, trava refatoração e custa token/tempo. Par natural do e2e-browser-qa (este decide onde testar, aquele executa o QA de browser)."
+
   - id: e2e-browser-qa
     name: e2e-browser-qa (orquestrador QA)
     area: qa-testing

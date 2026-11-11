@@ -47,7 +47,7 @@ Disso decorre tudo:
 | **Fluxo (on-demand)** | to-spec · diagnosing-bugs · code-review · security-audit · spec-kit (tarefa grande) |
 | **Code intelligence (2 MCPs globais)** | CodeGraph · Context7 |
 | **Por-projeto, por stack** | Frontend/UI · Backend/API · Banco · Filas · Infra · Secrets · Tasks · Observabilidade · QA · Segurança |
-| **Skills originais** | `fullstack-setup` · `project-learning` · `project-onboarding` · `using-mcps-well` · `documents` |
+| **Skills originais** | `fullstack-setup` · `project-learning` · `project-onboarding` · `using-mcps-well` · `surgical-testing` · `documents` |
 
 Catálogo completo em **[CATALOG.md](./CATALOG.md)**. Regras de convivência em **[COMPOSITION.md](./COMPOSITION.md)**.
 Fonte da verdade (machine-readable) em **[install/manifest.yaml](./install/manifest.yaml)**.

@@ -37,7 +37,7 @@ claude mcp add context7 -- npx -y @upstash/context7-mcp
 #   CodeGraph: rode `codegraph init` dentro de cada repo que quiser indexar
 
 cp -r skills/using-mcps-well skills/documents skills/fullstack-setup \
-      skills/project-learning skills/project-onboarding  ~/.claude/skills/
+      skills/project-learning skills/project-onboarding skills/surgical-testing  ~/.claude/skills/
 ```
 
 ### Windows (PowerShell)
@@ -53,7 +53,7 @@ claude mcp add context7 -- npx -y "@upstash/context7-mcp"
 $dst = "$HOME\.claude\skills"
 New-Item -ItemType Directory -Force $dst | Out-Null
 Copy-Item -Recurse -Force skills\using-mcps-well, skills\documents, skills\fullstack-setup, `
-  skills\project-learning, skills\project-onboarding $dst
+  skills\project-learning, skills\project-onboarding, skills\surgical-testing $dst
 ```
 
 ## Por projeto
