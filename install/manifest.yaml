@@ -861,10 +861,10 @@ items:
     source: "própria (deste kit)"
     install: "cp -r skills/surgical-testing ~/.claude/skills/"
     usage:
-      when: "escrever, revisar ou planejar teste; fechar mudança; herdar suíte lenta ou frágil; alguém propor meta de cobertura"
-      avoid: "não substitui o runner nem a suíte do projeto — decide o NÍVEL do teste, não executa"
-      pattern: "e2e > integração > unitário (último recurso); testa invariante de arquitetura, contrato e o caminho de dinheiro/permissão/tenant"
-    notes: "Inverte a pirâmide por economia: unitário é enviesado para regra de negócio, trava refatoração e custa token/tempo. Par natural do e2e-browser-qa (este decide onde testar, aquele executa o QA de browser)."
+      when: "escrever, revisar, planejar ou rodar teste; fechar mudança; orquestrar fases/subagentes; herdar suíte lenta ou frágil; alguém propor meta de cobertura"
+      avoid: "não substitui o runner do projeto — decide o nível do teste e a estratégia de execução, não reimplementa a suíte"
+      pattern: "e2e > integração > unitário (último recurso, com motivo no arquivo); frontend só e2e; execução direcionada durante o trabalho, suíte completa uma vez no fechamento"
+    notes: "Inverte a pirâmide por economia: unitário é enviesado para regra de negócio, trava refatoração e custa token/tempo. Sem categoria pré-aprovada para descer de nível. Cobre também o desperdício de rodar a suíte inteira a cada passo, que explode quando há subagentes. Par natural do e2e-browser-qa (este decide onde e quando testar, aquele executa o QA de browser)."
 
   - id: e2e-browser-qa
     name: e2e-browser-qa (orquestrador QA)
