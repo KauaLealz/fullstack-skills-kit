@@ -26,7 +26,8 @@ effort: high
   comportamento em commits separados, para o revisor pular o mecânico com segurança.
 - **Registro corrido para a revisão:** cada decisão tomada, cada mudança de comportamento aprovada e cada
   lugar de menor confiança vão para `.claude/specs/<slug>/notas.md` no momento em que acontecem (uma
-  linha cada). É a matéria-prima do dossiê; nada é reconstruído de memória no fim.
+  linha cada). É a matéria-prima do dossiê; nada é reconstruído de memória no fim. Ao ser retomado
+  ("continue"), leia `notas.md`/spec para saber onde parou — não recomece do zero nem reexplore.
 
 ## Worktree
 Se o plan decidiu por worktree, crie pela receita do `AGENTS.md` (branch na convenção do repo), prepare

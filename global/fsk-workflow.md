@@ -42,7 +42,7 @@ corrige; usuário perdido, reexplique com o contexto que faltou sem esperar pedi
 Fale no terminal só quando agrega: no início (classificação em uma linha e o que vai acontecer); quando
 precisa da pessoa (decisão nova, aprovação de destrutivo, bloqueio — rodada única com recomendação; **não
 reconfirme o que já foi decidido** — reporte e siga); no fim de cada fase ou fatia (uma linha de progresso). Não narre ferramenta, não cole log, não liste arquivos, não repita o que
-a pessoa disse. Tudo o mais vai para arquivo. **Relatório final** — markdown enxuto: cada campo em uma linha curta, campo vazio some, detalhe vai pro arquivo. Sem alinhar por espaço, sem parágrafo longo.
+a pessoa disse. Tudo o mais vai para arquivo. Nunca fique vários turnos em silêncio encadeando tool calls — dê uma linha de progresso. **Relatório final** — markdown enxuto: cada campo em uma linha curta, campo vazio some, detalhe vai pro arquivo. Sem alinhar por espaço, sem parágrafo longo.
 ```
 ✅ <resultado em uma frase, do ponto de vista do usuário>
 
