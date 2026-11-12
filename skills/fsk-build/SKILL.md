@@ -8,10 +8,10 @@ effort: high
 
 1. **Entrada.** Sem critérios e acima de S0, escreva 3–6 e confirme. Criticidade alta sem spec, volte ao
    `fsk-plan`. Bug: `fsk-debug` primeiro.
-2. **Leia o terreno** pela escada do núcleo: código tocado, chamadores, rules que carregam para esses
-   caminhos, how-to da tarefa. Se existe `exploracao.md`, parta dele; área desconhecida sem exploração →
-   `fsk-explore`.
-3. **Liste o alcance** (chamadores, contratos, migrations, fixtures, telas). Isso é o escopo; o resto não.
+2. **Parta do mapa de ataque** da spec/`exploracao.md` (arquivos, onde, abordagem, referência a copiar) —
+   não redescubra o "o quê/onde". Mapa raso ou ausente → volte ao `fsk-plan`, não improvise a análise.
+3. **Sua carga é o "como":** menor mudança completa, padrão do repo e boas práticas, pela fatia do mapa.
+   Confirme o alcance (chamadores, contratos, migrations, fixtures, telas) contra o mapa; o resto é fora de escopo.
 4. **Por fatia vertical:** menor mudança completa → checagem direcionada (só o que tocou) → `fsk-prove`
    da fatia. Decisão não prevista: pare e pergunte.
 5. **Fechamento:** prova de todos os critérios (subagente independente só em criticidade alta; S2 médio

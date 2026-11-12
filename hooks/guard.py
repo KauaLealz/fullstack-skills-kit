@@ -113,9 +113,20 @@ def mode_stop(_data):
     files = _git(["diff", "--name-only", "HEAD"]).split()
     if [f for f in files if _prod(f)] and not _proven():
         print(json.dumps({"hookSpecificOutput": {"hookEventName": "Stop", "additionalContext":
-            "fsk: mexeu em código de produção sem prova real registrada. Antes de dizer 'pronto', invoque "
-            "o fsk-prove no canal real (navegador/API) — suíte verde é checagem, não prova — e dê uma linha "
-            "ao usuário sobre o estado (não encadeie tool calls em silêncio)."}}))
+            "fsk: você fez trabalho de código e não há prova real registrada. Antes de dizer 'pronto', "
+            "reengate a skill da sua situação (não improvise): bug/erro → fsk-debug; mudou código → "
+            "fsk-prove no canal real (navegador/API, não suíte verde) + fsk-review; vai entregar → fsk-ship; "
+            "aprendeu algo durável → fsk-learn. E dê uma linha ao usuário (não encadeie em silêncio)."}}))
+    sys.exit(0)
+
+
+def mode_route(_data):
+    # Reinjeta o mapa de roteamento a cada prompt: reforça a skill certa para cada caso.
+    print(json.dumps({"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext":
+        "fsk — roteie para a skill da situação (não improvise o trabalho dela): demanda nova → /fsk-plan · "
+        "implementar/ajustar → /fsk-build · bug/erro/lento → fsk-debug · onde fica/como funciona/o que afeta "
+        "→ fsk-explore · validar/testar/funciona? → fsk-prove · revisar/está bom? → fsk-review · "
+        "documentar/apresentação → fsk-docs · entregar/PR/push → /fsk-ship · sempre faça X/correção → fsk-learn."}}))
     sys.exit(0)
 
 
@@ -123,7 +134,7 @@ def main():
     if len(sys.argv) < 2:
         sys.exit(0)
     data = _input()
-    {"git": mode_git, "env": mode_env, "core": mode_core, "stop": mode_stop}.get(
+    {"git": mode_git, "env": mode_env, "core": mode_core, "stop": mode_stop, "route": mode_route}.get(
         sys.argv[1], lambda d: sys.exit(0))(data)
 
 
