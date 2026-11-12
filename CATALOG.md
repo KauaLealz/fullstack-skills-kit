@@ -1,115 +1,114 @@
-# CATALOG — tudo que o kit curou, por área
+# CATALOG — o que o kit traz
 
-Legenda: **tipo** skill·mcp·cli·ref · **custo** 🟢baixo(lazy) 🔴alto(MCP) · **onde** 🌐global ·📦projeto ·
-**carga** sempre·on-demand. Fonte da verdade: [install/manifest.yaml](./install/manifest.yaml).
+Duas camadas: **comportamento** (as skills `fsk-*`, sempre do kit) e **ferramentas** (MCPs e skills
+técnicas por stack, propostas pelo `/fsk-setup` conforme a stack). Fonte da verdade das ferramentas:
+[install/manifest.yaml](./install/manifest.yaml). Créditos: [NOTICE.md](./NOTICE.md).
 
-> A plataforma global instala só o 🌐. Os 📦 são ligados pela `fullstack-setup` conforme a stack.
+## 🧠 Comportamento — núcleo + 10 skills `fsk-*` (global, do kit)
 
-## 🧠 Disciplina & Fluxo (barato, a base)
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **Karpathy+Ponytail** | skill 🟢 | 🌐 sempre | Pensar antes de codar, mudança cirúrgica, anti-overengineering. Dono do YAGNI/KISS. |
-| **using-mcps-well** (nossa) | skill 🟢 | 🌐 sempre | Quando/como usar MCP sem desperdiçar contexto. |
-| **Matt Pocock — cadeia greenfield** | skill 🟢 | 🌐 on-demand | **Orquestra desenvolvimento novo**: `to-spec → implement → tdd → code-review → pr`. |
-| **diagnosing-bugs** (mattpocock) | skill 🟢 | 🌐 on-demand | Hipótese → reprodução → causa raiz. |
+| Item | Invocação | Papel |
+|---|---|---|
+| **núcleo** (`global/fsk-workflow.md`) | sempre | Pensar/mudar, navegação barata, travas, comunicação |
+| **/fsk-setup** | slash (sugerida) | Prepara o repo no padrão, idempotente |
+| **/fsk-plan** | slash + automática | Classifica e entrega o menor plano que fecha decisões |
+| **/fsk-build** | slash + automática | Constrói em fatias verticais, provando cada uma |
+| **/fsk-ship** | slash (sugerida) | Commit e PR no formato do repo, com evidência |
+| **fsk-prove** | agente | Prova sem viés (navegador > API > integração > unitário) |
+| **fsk-review** | agente | Fidelidade, regras, segurança, impacto, simplicidade; limpa o diff |
+| **fsk-explore** | agente | Contexto de uma área → ponteiros, não conteúdo |
+| **fsk-debug** | agente | Loop vermelho, causa raiz, correção mínima |
+| **fsk-docs** | agente | Documentação, apresentações, tour guiado |
+| **fsk-learn** | agente | Aprendizado → AGENTS.md, rules, how-to |
 
-> `spec-kit` e `gsd-core` **descartados** (pesados/redundantes) — a cadeia do Matt Pocock cobre a orquestração de forma leve.
+## 🧰 Ferramentas por stack (do `manifest.yaml`, instaladas com "ok")
 
-## 🔎 Code Intelligence (os 2 MCPs genéricos globais)
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **CodeGraph** | mcp 🔴 | 🌐 | Mapa do seu código (fluxo/impacto/blast-radius). |
-| **Context7** | mcp 🔴 | 🌐 | Docs das libs ao vivo (anti-alucinação de API). |
+Legenda: 🟢 barato (skill) · 🔴 caro (MCP) · 🌐 global · 📦 projeto
 
-## 🔀 Version Control
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **conventional-commit + git-commit** | cli 🟢 | 🌐 on-demand | Commit/PR via `gh` (sem MCP). |
-| **GitHub MCP** | mcp 🔴 | 📦 on-demand | **Só** Actions/code-scanning/Projects. |
 
-## 🎨 Frontend / UI / UX
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **ui-ux-pro-max** | skill 🟢 | 📦 | **Criar** UI (estilos, paletas, fontes, UX). |
-| **web-design-guidelines** (Vercel) | skill 🟢 | 📦 | **Revisar** UI → achados arquivo:linha. |
-| **frontend-design** (Anthropic) | skill 🟢 | 📦 | Camada anti-"cara de IA" (opcional). |
-| **shadcn** (skill oficial) | skill 🟢 | 📦 | Componentes shadcn sem reinventar. |
-| **better-design** | mcp 🔴 | 📦 | "No estilo da Stripe/Linear/Apple" — 31 design systems. |
-| **Material 3** | mcp 🔴 | 📦 | Projetos Material (componentes/tokens/a11y). |
-| **better-icons** | skill 🟢 | 📦 | 200k ícones, busca em lote (fixar 1 lib no AGENTS.md). |
-| **Figma MCP** | mcp 🔴 | 📦 | Quando há designs prontos no Figma. |
-| **Axe (a11y)** | mcp 🔴 | 📦 | Conformidade WCAG. |
-| **vercel-react** / **vue-best-practices** | skill 🟢 | 📦 | Boas práticas por framework (stack-specific). |
+### 🔎 Code Intelligence
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **CodeGraph (MCP)** | 🔴 | 🌐 | explore, build, review | entender fluxo/impacto/blast-radius que grep não segue (dispatch dinâmico) |
+| **Context7 (MCP)** | 🔴 | 🌐 | explore, build, review | usar lib/framework cuja API pode ter mudado de versão |
 
-## 🔧 Backend / API
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **OpenAPI Bridge** | mcp 🔴 | 📦 | 1 tool por endpoint da spec. |
-| **mcp-builder** (Anthropic) | skill 🟢 | 📦 | Construir MCP próprio. |
+### 🎨 Frontend / UI / UX
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Axe / Accessibility (MCP)** | 🔴 | 📦 | build, prove | checar conformidade WCAG com relatório |
+| **Better Design (31 design systems)** | 🔴 | 📦 | build, prove | 'construa no estilo da Stripe/Linear/Apple' — tokens+componentes de marca |
+| **Better Icons (ícones)** | 🟢 | 📦 | build, prove | buscar ícones existentes (200k, 150+ coleções) |
+| **Figma (MCP)** | 🔴 | 📦 | build, prove | o time tem designs prontos no Figma |
+| **frontend-design (Anthropic)** | 🟢 | 📦 | build, prove | direção estética — fugir da 'cara de IA' |
+| **Material 3 (MCP)** | 🔴 | 📦 | build, prove | projeto Material 3 (componentes/tokens/a11y) |
+| **shadcn MCP (opcional, sem-Bash)** | 🔴 | 📦 | build, prove | ambiente sem shell (chat puro) |
+| **shadcn (skill oficial)** | 🟢 | 📦 | build, prove | usar/instalar componentes shadcn (evita reinventar) |
+| **ui-ux-pro-max (criar)** | 🟢 | 📦 | build, prove | criar UI com estilo/paleta/tipografia/UX consistentes |
+| **Vercel React/Next Best Practices** | 🟢 | 📦 | build, prove | otimizar perf React/Next (waterfalls, bundle, render) |
+| **Vue Best Practices** | 🟢 | 📦 | build, prove | boas práticas/perf Vue |
+| **web-design-guidelines (Vercel, revisar)** | 🟢 | 📦 | build, prove | auditar UI contra Web Interface Guidelines |
 
-## 🗄️ Dados & Filas
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **Nautilus** (próprio) | mcp 🔴 | 📦 | Leitura multi-DB (8 bancos), read-only. |
-| **Migrations** (Neon/Supabase/CLI) | mcp 🔴 | 📦 | Escrita/schema — nunca aplica sem "ok". |
-| **Argonaut** (próprio) | mcp 🔴 | 📦 | Filas unificadas (Kafka/RabbitMQ/SQS/SNS/Redis). |
+### 🔧 Backend / API
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **MCP Builder (Anthropic)** | 🟢 | 📦 | build | construir um servidor MCP próprio |
+| **OpenAPI Bridge (MCP)** | 🔴 | 📦 | build | interagir com API descrita por OpenAPI (1 tool/endpoint) |
 
-## ☁️ Infra / DevOps / Secrets
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **AWS** (awslabs/mcp) | mcp 🔴 | 📦 | Projetos AWS. |
-| **Azure** (microsoft/mcp) | mcp 🔴 | 📦 | Projetos Azure. |
-| **Docker MCP Gateway** | mcp 🔴 | 📦 | Orquestrar MCPs com isolamento. |
-| **Terraform** (HashiCorp) | mcp 🔴 | 📦 | IaC: módulos/providers/validação. |
-| **Kubernetes** | mcp 🔴 | 📦 | Inspeção de cluster. |
-| **CI** (GitLab/CircleCI) | mcp 🔴 | 📦 | Logs/execução de pipeline. |
-| **Infisical** (secrets) | mcp 🔴 | 📦 | Secrets com telemetria zero. |
+### 🗄️ Dados (leitura)
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Nautilus (multi-DB read-only) [próprio]** | 🔴 | 📦 | explore, prove | inspecionar dados/esquema em LEITURA |
 
-## 📋 Tasks & Observabilidade
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **Linear** | mcp 🔴 | 📦 | Tickets (endpoint read-only). |
-| **Atlassian** (Jira) | mcp 🔴 | 📦 | Enterprise + auditoria. |
-| **Grafana** | mcp 🔴 | 📦 | Hub observabilidade (Prometheus+Loki+Tempo). |
-| **Sentry / Datadog / CloudWatch** | mcp 🔴 | 📦 | Por vendor do time. |
+### 🗄️ Dados (migrations)
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Migrations (provider MCP ou skill-CLI)** | 🔴 | 📦 | build, ship | criar/aplicar migration/schema |
 
-## ✅ QA / Testes
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **surgical-testing** (nossa) | skill 🟢 | 🌐 on-demand | **Decide o nível do teste**: e2e > integração > unitário (último recurso). Testa invariante de arquitetura, contrato e caminho de dinheiro/permissão. |
-| **e2e-browser-qa** | skill 🟢 | 📦 | Orquestra QA: plano por risco, evidências, relatório, converte p/ Playwright/Cypress. |
-| **Playwright MCP** | mcp 🔴 | 📦 | Driver de browser + evidência (ad-hoc). |
-| **Chrome DevTools MCP** | mcp 🔴 | 📦 | Performance/rede/console detalhado. |
-| **webapp-testing** (Anthropic) | skill 🟢 | 📦 | Scripts Playwright reproduzíveis p/ CI. |
+### 📨 Filas
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Argonaut (filas unificado) [próprio]** | 🔴 | 📦 | build, prove | inspecionar/diagnosticar filas e tópicos |
 
-## 🔐 Segurança
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **/security-review** (nativo) | skill 🟢 | 🌐 on-demand | Revisão rápida do diff. |
-| **cloudflare-security-audit** | skill 🟢 | 🌐 on-demand | Auditoria adversarial profunda. |
-| **Semgrep** | mcp 🔴 | 📦 | SAST/SCA/secrets contínuo. |
+### ☁️ Infra / DevOps
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **AWS (awslabs/mcp)** | 🔴 | 📦 | ship, setup | projeto em AWS |
+| **Azure (microsoft/mcp)** | 🔴 | 📦 | ship, setup | projeto em Azure |
+| **CI/CD (GitLab oficial / CircleCI)** | 🔴 | 📦 | ship, setup | ler logs de pipeline/rodar pipeline |
+| **Docker MCP Gateway** | 🔴 | 📦 | ship, setup | orquestrar MCPs containerizados com isolamento + segredos via Docker Desktop |
+| **Kubernetes (MCP)** | 🔴 | 📦 | ship, setup | inspecionar cluster (pods/logs) |
+| **Terraform (HashiCorp)** | 🔴 | 📦 | ship, setup | navegar módulos/providers/docs do Registry; validar IaC |
 
-## 📄 Documentos & Produtividade
-| Item | tipo | onde | Papel |
-|---|---|---|---|
-| **documents** (nossa, router) | skill 🟢 | 🌐 on-demand | Roteia p/ xlsx/pptx/pdf/docx (progressive disclosure). |
-| **i-have-adhd** | output-style 🟢 | 🌐 on-demand | Respostas action-first, sem preâmbulo. |
+### 🔐 Secrets
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Infisical (secrets)** | 🔴 | 📦 | setup, build | gerenciar segredos com telemetria zero |
 
-## 🏛️ Referência (rules/ — conteúdo, não skill)
-| Item | Papel |
-|---|---|
-| **Arquitetura & ADR** | Resiliência, escalabilidade, ADR, clean-code multi-linguagem, resiliência/observabilidade, refactoring. Lido pela disciplina e pelo review. |
+### 📋 Tasks / Tickets
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Atlassian (Jira/Confluence)** | 🔴 | 📦 | plan, ship | enterprise com Jira; auditoria por tool-call |
+| **Linear (task manager)** | 🔴 | 📦 | plan, ship | amarrar código a ticket Linear |
 
-## 🛠️ Skills originais do kit (o motor "anabolizante")
-| Item | Papel |
-|---|---|
-| **fullstack-setup** | Detecta stack + grill → instala núcleo + opcionais que casam + **bootstrap da PKB**. |
-| **project-onboarding** | Brownfield → minera código+git+PRs → gera a **PKB** (AGENTS.md + rules + pattern skills). |
-| **project-learning** | Enriquece a **PKB** continuamente; PROPÕE (com "ok") rule / pattern skill / AGENTS.md. |
-| **using-mcps-well** | Governa o uso eficiente dos MCPs. |
-| **surgical-testing** | Governa **onde** testar: e2e/integração primeiro, unitário só em último caso. |
-| **documents** | Router de documentos (xlsx/pptx/pdf/docx). |
+### 📈 Observabilidade
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **AWS CloudWatch (logs/métricas)** | 🔴 | 📦 | prove, debug | logs/alarmes/root-cause em AWS |
+| **Datadog (métricas/APM/logs)** | 🔴 | 📦 | prove, debug | time usa Datadog |
+| **Grafana (observabilidade hub)** | 🔴 | 📦 | prove, debug | consultar dashboards/datasources (Prometheus+Loki+Tempo)/alertas |
+| **Sentry (erros/APM)** | 🔴 | 📦 | prove, debug | time usa Sentry p/ erros/traces |
 
-> **PKB — Base de Conhecimento Pré-Destilada** ([docs/knowledge-base.md](./docs/knowledge-base.md)): o maior
-> multiplicador. Destila o padrão do projeto **uma vez** (formato de PR, "how to create DTO", convenções)
-> para o agente parar de redescobrir e gastar tokens a cada sessão. Complementa o CodeGraph.
+### ✅ QA / Testes
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Chrome DevTools (MCP)** | 🔴 | 📦 | prove | evidenciar bug de rede/performance/console detalhado |
+| **Playwright (MCP)** | 🔴 | 📦 | prove | exploração interativa de app + evidências (screenshot/trace) |
+
+### 🛡️ Segurança
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **Semgrep (SAST)** | 🔴 | 📦 | review | SAST/SCA/secrets contínuo em tempo de edição |
+
+### 📄 Documentos
+| Item | tipo | onde | fase | Papel |
+|---|---|---|---|---|
+| **docgen (MCP)** | 🔴 | 📦 | docs, prove, plan | gerar/ler docx/pdf/pptx/xlsx, HTML->PDF/slides/imagem, templates com campos |

@@ -1,68 +1,68 @@
-# fullstack-engineer-curated-skills
+# fullstack-skills-kit
 
-Kit curado de **skills, MCPs e ferramentas** para um engenheiro de software fullstack trabalhar com
-agentes de IA de forma **mais eficiente, contextualizada, rápida e assertiva** — em projeto pessoal,
-na empresa, ou em qualquer stack.
+Um núcleo de comportamento + **10 skills `fsk-*`** que levam uma demanda do pedido ao PR, no padrão de
+cada repo. A skill define **como pensar, quando parar, o que provar**; a técnica (como se cria endpoint,
+formato de PR, padrão de doc) vive **no projeto**, criada pelo `/fsk-setup` e alimentada pelo `fsk-learn`.
 
-Não é uma lista. É uma **curadoria com critério**: o que entra, por que entra, o que fica de fora,
-e **como as peças trabalham juntas sem conflito** nem desperdício de contexto.
+## Instalar
 
-## Escopo
-
-Foco **explícito** em **aplicações web** — frontend web, backend/API, dados, filas, infra, observabilidade,
-segurança e QA de web, ponta a ponta. **Fora de escopo por ora** (declarado, não esquecido): mobile/native
-(React Native, Flutter, iOS/Android), desktop nativo e ML/data-engineering. Isso mantém a curadoria densa e
-sem prometer o que não entrega.
-
-## Princípio-mestre
-
-> **Skill é barato. MCP é caro.**
-> Uma *skill* só entra no contexto quando dispara (lazy-load). Um *MCP* registra tools a cada turno
-> e custa **4–32x mais tokens** que a CLI equivalente para a mesma operação.
-
-Disso decorre tudo:
-
-- A **plataforma global** (`~/.claude`) carrega só o **barato** (skills de disciplina/fluxo) + **2 MCPs
-  genéricos** que servem qualquer projeto (CodeGraph, Context7).
-- **Todo o resto é por-projeto**, ligado pela skill `fullstack-setup` **só quando a stack pede** —
-  nada de MCP de Kafka num projeto sem fila.
-- Quando uma **CLI resolve** (ex: `gh` para commit), **não se usa MCP**.
-
-## Como funciona
-
-```
-1. Instala o núcleo global (uma vez)      → skills de disciplina + CodeGraph + Context7
-2. Em cada projeto: roda  /fullstack-setup → detecta a stack, faz um grill curto (vendors),
-                                              e liga só os opcionais que fazem sentido
-3. Usando o projeto: /project-learning     → aprende suas convenções e PROPÕE (com seu "ok")
-                                              AGENTS.md, rules e skills locais — fica mais rápido
-                                              conforme você usa
+```bash
+python install/fsk.py core                 # núcleo + 10 skills em ~/.claude (idempotente)
+python install/fsk.py core --target codex  # ou: opencode, cursor, gemini, antigravity, copilot
 ```
 
-## O que tem dentro
+Funciona em **7 provedores** (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, Antigravity, Copilot) —
+`SKILL.md` é o mesmo formato em 5 deles; o Copilot recebe prompt files. Detalhes e o que cada um lê:
+`docs/portabilidade.md`. No Claude Code também há o plugin: `/plugin marketplace add <este repo>`.
 
-| | |
+Depois, uma vez por repositório:
+
+```
+/fsk-setup                         # detecta a stack, minera convenções, gera AGENTS.md + rules
+```
+
+O `fsk.py` também faz: `validate` (schema do manifest), `detect`/`plan` (ferramentas da stack),
+`check-map` (confere que todo caminho citado no `AGENTS.md` existe — rodável em hook/CI).
+
+**Guardrails** (bloquear git destrutivo e leitura de `.env`, pre-commit `check-map`) são **opt-in**: o
+`/fsk-setup` pergunta e instala só com "ok" — nada vem travando por padrão.
+
+## As 10 skills
+
+| Skill | Papel |
 |---|---|
-| **Disciplina (sempre-on, barato)** | Karpathy+Ponytail (pensar antes, mudança cirúrgica, anti-overengineering) · using-mcps-well |
-| **Fluxo (on-demand)** | to-spec · diagnosing-bugs · code-review · security-audit · spec-kit (tarefa grande) |
-| **Code intelligence (2 MCPs globais)** | CodeGraph · Context7 |
-| **Por-projeto, por stack** | Frontend/UI · Backend/API · Banco · Filas · Infra · Secrets · Tasks · Observabilidade · QA · Segurança |
-| **Skills originais** | `fullstack-setup` · `project-learning` · `project-onboarding` · `using-mcps-well` · `surgical-testing` · `documents` |
+| `/fsk-setup` | Deixa o repo no padrão do workflow, idempotente (slash; o agente sugere) |
+| `/fsk-plan` | Classifica tipo × tamanho × criticidade e entrega o menor plano que fecha decisões e define a prova |
+| `/fsk-build` | Constrói em fatias verticais, cirúrgico, provando cada fatia |
+| `/fsk-ship` | Commit e PR no formato do repo, com evidência (slash; o agente sugere) |
+| `fsk-prove` | Evidência real de comportamento, sem viés (navegador > API > integração > unitário) |
+| `fsk-review` | Fidelidade, regras, segurança, impacto, simplicidade; limpa o diff |
+| `fsk-explore` | Levanta contexto de uma área e devolve ponteiros, não conteúdo |
+| `fsk-debug` | Loop vermelho, causa raiz, correção mínima |
+| `fsk-docs` | Documentação, apresentações e tour guiado, no padrão do projeto |
+| `fsk-learn` | Transforma aprendizado em AGENTS.md, rules e how-to |
 
-Catálogo completo em **[CATALOG.md](./CATALOG.md)**. Regras de convivência em **[COMPOSITION.md](./COMPOSITION.md)**.
-Fonte da verdade (machine-readable) em **[install/manifest.yaml](./install/manifest.yaml)**.
+`/fsk-plan` e `/fsk-build` também disparam sozinhas quando a demanda pede; as 6 de agente respondem a
+pedido em linguagem natural ("revisa isso", "por que quebrou?", "me guia pela mudança").
 
-## Instalação
+## Roteiro ponta a ponta
 
-Enquanto a `fullstack-setup` não está publicada, veja **[install/README.md](./install/README.md)** para
-instalação manual do núcleo. O objetivo final é: `/fullstack-setup` e pronto.
+```
+/fsk-setup  (1x)
+      │
+/fsk-plan ── classifica · Direto · Critérios · Spec · Spec+fatias · Mapa
+      │        S2+/alta: fsk-explore (impacto) antes de fechar a spec
+      ▼
+/fsk-build ── por fatia: muda ─► checa direcionado ─► fsk-prove
+      │        bug? fsk-debug antes · fechamento: fsk-prove ─► fsk-docs ─► fsk-review
+      ▼
+/fsk-ship ── commits + PR no padrão do repo ─► fsk-learn (retro curta)
 
-## Filosofia de curadoria
+fsk-explore sempre que faltar contexto.  fsk-docs também a pedido.  fsk-learn quando surgir algo durável.
+```
 
-- **Sem redundância.** Duas ferramentas que fazem a mesma coisa → fica a melhor (ex: shadcn **skill**
-  no lugar do shadcn MCP no Claude Code; `gh` CLI no lugar do GitHub MCP para commits).
-- **Sem orquestrador pesado.** `superpowers` e `gsd-core` ficaram **de fora** — contrariam a filosofia
-  de mudança mínima. A disciplina vem de Karpathy+Ponytail, leve.
-- **Observabilidade e cloud são categorias multi-vendor**, não um fornecedor fixo. A setup liga o que
-  o seu time usa (Grafana/Sentry/Datadog/CloudWatch...).
-- **Evolui com você.** `project-learning` transforma o kit num sistema que fica mais afiado por projeto.
+## Ferramentas por stack
+
+O núcleo é barato e sempre ativo. Ferramentas caras (MCPs) e skills técnicas por stack ficam no
+`install/manifest.yaml` e são propostas pelo `/fsk-setup` só quando a stack casa, instaladas com "ok".
+Os créditos às fontes de inspiração estão em `NOTICE.md`.

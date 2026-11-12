@@ -1,68 +1,65 @@
-# COMPOSITION — como as peças trabalham juntas (sem conflito, sem desperdício)
+# COMPOSITION — como o kit é composto
 
-Este é o diferencial do kit. Curar não é só escolher boas ferramentas — é garantir que elas
-**convivam**: sem redundância, sem brigar pelo mesmo gatilho, sem estourar o contexto.
+## Princípios
+1. **Skill define comportamento, nunca técnica.** O técnico de cada projeto vive no projeto (AGENTS.md,
+   rules, how-to), criado pelo setup e alimentado pelo aprendizado.
+2. **Poucas portas de entrada.** 4 skills via slash; o resto o agente aciona quando a situação pede.
+3. **Skills próprias.** Inspiradas em Matt Pocock, Ponytail, Karpathy e no e2e-browser-qa, com crédito
+   (`NOTICE.md`), mas escritas para o nosso fluxo. Nenhuma skill de processo de terceiros instalada.
+4. **Processo proporcional ao risco.** Rigor = maior entre tamanho e criticidade.
+5. **Prova o mais perto do usuário possível.** Navegador > integração real > unitário (só com motivo
+   escrito). Quem prova não é quem implementou.
+6. **Comunicação simples por padrão**, sem o usuário pedir.
+7. **Um dono por comportamento.** Nenhuma regra repetida em dois lugares.
+8. **O kit se adapta ao repo, não o contrário.** Fluxo e convenções já estabelecidos vencem.
+9. **Código simples e legível vence código esperto.**
+10. **Revisão humana é parte do produto.** A entrega vem pré-organizada para revisar rápido.
+11. **Comportamento de negócio só muda com pedido ou "ok".**
 
-## As 10 regras
+## Arquitetura em 4 camadas
 
-1. **CLI > MCP quando equivalem.** MCP custa 4–32x mais tokens que a CLI. Ex: `gh` para commit/PR,
-   não o GitHub MCP. Só use MCP quando read/grep/CLI **não** resolvem.
-2. **Nenhum orquestrador pesado.** `superpowers` e `gsd-core` ficam fora. A disciplina de trabalho
-   vem de Karpathy+Ponytail (always-on, leve) + skills de fluxo opt-in (mattpocock). Nada auto-injeta
-   processo a cada turno.
-3. **Um dono por princípio.** Karpathy+Ponytail é a **única** fonte do princípio de enxugamento
-   (YAGNI/KISS). Nenhuma outra skill repete essa regra no mesmo prompt — senão geram instruções
-   contraditórias.
-4. **Um MCP por motor de banco por conexão.** Não ligar dois MCPs que cobrem o mesmo Postgres — é
-   contexto dobrado para a mesma coisa. `nautilus` cobre leitura multi-DB; escrita só na área de migrations.
-5. **Segredo nunca vai bruto ao agente.** Secrets por MCP read-only / injeção via env (Infisical),
-   nunca `read_secret` jogando credencial no contexto.
-6. **Migration nunca aplica sem aprovação.** Preferir branching (Neon) ou preview antes de `apply`.
-   O agente propõe o diff da migration; quem aplica é você.
-7. **Observabilidade e cloud = categoria multi-vendor.** Ligar só o do time (Grafana hub, ou
-   Sentry/Datadog/CloudWatch conforme o caso). Nunca travar num fornecedor fixo.
-8. **Um só gate de design por tela.** `ui-ux-pro-max` **cria**, `web-design-guidelines` **revisa**.
-   `frontend-design` entra como camada anti-"cara de IA" — **não** como segundo gate estético
-   disparando junto com o ui-ux-pro-max.
-9. **Uma biblioteca de ícones fixa.** Escolha uma (ex: Lucide) e fixe no AGENTS.md para o agente não
-   misturar estilos. `better-icons` busca; o AGENTS.md manda no estilo.
-10. **Não duplicar memória.** AGENTS.md + rules/ são a memória **local** do projeto (fonte da verdade).
-    MCP de memória externo, se usado, é só para o que **atravessa** projetos — nunca repetir o que já
-    está no AGENTS.md.
+| Camada | O que é | Quando carrega |
+|---|---|---|
+| **Núcleo** | `global/fsk-workflow.md` importado no `~/.claude/CLAUDE.md` (≤ 55 linhas) | Sempre |
+| **Skills de comportamento** | 10 skills `fsk-*` globais | Sob demanda (slash ou agente) |
+| **Conhecimento do projeto** | `AGENTS.md` + `.claude/rules/` (com `paths`) + `how-to-*` + `.claude/specs/` | AGENTS.md sempre; rules pelo caminho do arquivo; o resto sob demanda |
+| **Ferramentas** | MCPs (incluindo docgen) e skills técnicas opcionais por stack (`manifest.yaml`) | Só onde o setup propôs e você aprovou |
 
-## Pares que se complementam (não são redundância)
+O núcleo existe porque comportamento "sempre ativo" não funciona como skill — skill só carrega quando
+dispara.
 
-| Par | Papel de cada um |
-|---|---|
-| `ui-ux-pro-max` + `web-design-guidelines` | criar · revisar |
-| `shadcn` (skill) + `frontend-design` | quais componentes/código · decisões estéticas |
-| `e2e-browser-qa` + `Playwright MCP`/`Chrome DevTools MCP` | orquestra o QA · driver de browser/evidência |
-| `webapp-testing` + `Playwright MCP` | suíte reproduzível p/ CI · exploração ad-hoc |
-| `nautilus` (read) + área de migrations (write) | ler dados/esquema · aplicar mudança com aprovação |
-| `/security-review` + `cloudflare-audit` + `Semgrep` | rápido no diff · auditoria profunda · SAST contínuo |
-| `CodeGraph` + `Context7` | mapa do SEU código · docs das libs de terceiros |
+**Guardrails (opt-in):** hooks mecânicos que bloqueiam o irreversível (git `--force`/`--no-verify`/
+`reset --hard`, leitura de `.env`) e um pre-commit `check-map`. Não vêm ligados — o `/fsk-setup`
+pergunta. O plugin do Claude Code só injeta o núcleo; o bloqueio é escolha do time.
 
-## Redundâncias resolvidas (o que ficou de fora e por quê)
+## Portabilidade (7 provedores)
+Base portável: **AGENTS.md** (todos leem) + **`SKILL.md`** (mesmo formato em Claude, Codex, OpenCode,
+Cursor, Gemini, Antigravity; Copilot usa prompt files gerados). `fsk.py core --target <provider>` instala
+em cada um. Rules de fonte única viram o formato do alvo (glob nativo onde há; AGENTS.md aninhado onde
+não). Ver `docs/portabilidade.md`.
 
-- **shadcn MCP** → fora no Claude Code (a **skill** já busca+instala via CLI). Só vale sem Bash.
-- **GitHub MCP** → não para commit/PR diário (use `gh` + conventional-commit). Fica só para
-  Actions/code-scanning/Projects.
-- **superpowers / gsd-core** → orquestradores pesados, contra a filosofia. Fora.
-- **frontend-design vs ui-ux-pro-max** → não rodam como dois gates; ui-ux-pro-max lidera o "criar",
-  frontend-design é camada de taste opcional.
+## Mudanças conscientes sobre o plano v2
+- **Decisão 15 (plugin) revertida:** o kit agora empacota como plugin do Claude Code (update/uninstall,
+  nuvem, CI, hooks) além do `fsk.py core`. Resolve as travas mecânicas e a distribuição.
+- **Decisão 3 (portabilidade) ampliada:** não é só o AGENTS.md — as skills (`SKILL.md`) são portáveis a 5
+  provedores e o instalador cobre os 7, com adaptadores por alvo para rules e hooks.
+- **docgen opcional:** `fsk-docs` gera binários via docgen quando existe, senão pelas skills oficiais de
+  documento — o conteúdo sai idêntico.
 
-## Global × Projeto
+## Acionamento (frontmatter do Claude Code)
 
-| Fica GLOBAL (`~/.claude`) | Fica no PROJETO (`.claude/`) |
-|---|---|
-| Disciplina (Karpathy+Ponytail), using-mcps-well | AGENTS.md, rules/ do projeto |
-| Skills de fluxo (to-spec, diagnosing-bugs, code-review) | Config dos MCPs da stack |
-| `fullstack-setup`, `project-learning`, `project-onboarding`, `documents` | Saída do onboarding, skills locais |
-| conventional-commit, /security-review | — |
-| **2 MCPs genéricos**: CodeGraph, Context7 | **Todos os outros MCPs** (ligados por stack) |
+| Skill | Frontmatter | Efeito |
+|---|---|---|
+| `/fsk-plan`, `/fsk-build` | `description` com gatilhos | Slash **e** o agente aciona sozinho quando a demanda pede |
+| `/fsk-setup`, `/fsk-ship` | `disable-model-invocation: true` | Só por slash; o agente **sugere** em uma linha |
+| explore, prove, review, debug, docs, learn | `user-invocable: false` | Fora do menu de slash; agente e pedido natural acionam |
 
-## Telemetria (sinalizada, mesmo sem perfil empresa ainda)
+## De 44 para 10
 
-Itens marcados no manifest com `telemetry: operational|anonymous` mandam algum dado para fora:
-Atlas (anônima — desligar com `ATLAS_NO_ANON_TELEMETRY=true`), Sentry/Datadog/Linear/Atlassian/Figma
-(operacional). Num contexto corporativo sensível, avalie antes de ligar.
+As skills de processo antigas (karpathy-ponytail, using-mcps-well, fullstack-setup, project-onboarding,
+project-learning, documents, surgical-testing e a cadeia Matt Pocock) foram **absorvidas** pelo núcleo e
+pelas 10 `fsk-*`. O que cada fonte deixou está em `NOTICE.md`. O manifest ficou só com ferramentas.
+```
+discipline+flow+documents+qa de processo  →  núcleo + fsk-*
+manifest                                   →  só MCPs e skills técnicas por stack (+ docgen)
+```
