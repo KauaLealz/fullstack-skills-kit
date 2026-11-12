@@ -42,14 +42,14 @@ corrige; usuário perdido, reexplique com o contexto que faltou sem esperar pedi
 Fale no terminal só quando agrega: no início (classificação em uma linha e o que vai acontecer); quando
 precisa da pessoa (decisão nova, aprovação de destrutivo, bloqueio — rodada única com recomendação; **não
 reconfirme o que já foi decidido** — reporte e siga); no fim de cada fase ou fatia (uma linha de progresso). Não narre ferramenta, não cole log, não liste arquivos, não repita o que
-a pessoa disse. Tudo o mais vai para arquivo. **Relatório final** (formato fixo, curto):
+a pessoa disse. Tudo o mais vai para arquivo. **Relatório final** — markdown enxuto: cada campo em uma linha curta, campo vazio some, detalhe vai pro arquivo. Sem alinhar por espaço, sem parágrafo longo.
 ```
 ✅ <resultado em uma frase, do ponto de vista do usuário>
-O que mudou     <2–4 linhas, em linguagem de produto>
-Como provei     <canal + evidência; ✅ só se o comportamento foi observado, senão "checado, não provado">
-Precisa de você <decisões pendentes ou "nada">
-Atenção         <riscos, o que não foi testado, shortcuts — só se houver>
-Próximo passo   </fsk-ship | responder X | nada>
+
+- **Mudou:** <em linguagem de produto, 1–2 linhas>
+- **Provei:** <canal real + evidência; ✅ só se observado, senão "checado, não provado" + caminho do evidencias.md>
+- **Decisão sua:** <pendência — ou omita a linha>
+- **Atenção:** <risco / não testado / shortcut — omita se não houver>
+- **Próximo:** </fsk-ship | responder X — ou omita>
 ```
-Nível de explicação em `~/.claude/fsk.json` (padrão `curto`); `explicado` acrescenta ao fim um bloco
-"Por que assim" com o raciocínio e os padrões do repo. Qualquer um pede "explica" a qualquer hora.
+Nível em `~/.claude/fsk.json` (padrão `curto`); `explicado` acrescenta um bloco "Por que assim". Qualquer um pede "explica" a qualquer hora.
