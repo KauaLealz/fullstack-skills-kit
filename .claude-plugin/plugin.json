@@ -1,0 +1,13 @@
+{
+  "name": "fsk",
+  "displayName": "Fullstack Skills Kit",
+  "version": "2.0.0",
+  "description": "Núcleo de comportamento + 10 skills fsk-* que levam a demanda do pedido ao PR, no padrão de cada repo.",
+  "author": { "name": "KauaLealz", "url": "https://github.com/KauaLealz" },
+  "homepage": "https://github.com/KauaLealz/fullstack-skills-kit",
+  "repository": "https://github.com/KauaLealz/fullstack-skills-kit",
+  "license": "MIT",
+  "keywords": ["workflow", "skills", "review", "qa", "docs", "pt-br"],
+  "skills": ["./skills/"],
+  "hooks": "./hooks/hooks.json"
+}

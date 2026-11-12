@@ -1,0 +1,19 @@
+{
+  "_comment": "Guardrails mecânicos OPT-IN. O /fsk-setup pergunta se o time quer e, com 'ok', mescla estes hooks no .claude/settings.json do projeto. Ajuste o caminho de guard.py (CLAUDE_PLUGIN_ROOT quando instalado via plugin, ou o caminho do repo quando via fsk.py core).",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/guard.py\" git" }
+        ]
+      },
+      {
+        "matcher": "Read|Edit",
+        "hooks": [
+          { "type": "command", "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/guard.py\" env" }
+        ]
+      }
+    ]
+  }
+}

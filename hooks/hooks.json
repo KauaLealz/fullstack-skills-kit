@@ -1,0 +1,12 @@
+{
+  "_comment": "Hook do plugin: só injeta o núcleo sempre ativo. Os guardrails mecânicos (bloquear git destrutivo / .env) NÃO vêm ligados — são opt-in pelo /fsk-setup, que grava hooks/guardrails.settings.json no projeto se o time aceitar.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/guard.py\" core" }
+        ]
+      }
+    ]
+  }
+}
