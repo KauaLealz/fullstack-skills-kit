@@ -15,10 +15,13 @@ de specs/RFC própria, use o formato dele e acrescente só os critérios de acei
 - [ ] <observável de fora> — esperado: <vindo do negócio> · canal: <navegador|API|estado|log> · durável: <sim|não>
 - [ ] <caminho infeliz, se criticidade média/alta>
 
-## Impacto (fsk-explore, em S2+/alta)
-- Chamadores: `arquivo:linhas`
-- Contratos afetados: <API, evento, schema>
-- Dados existentes: <tabela/coleção> · reversão: <como desfazer>
+## Plano de ataque (fsk-explore — o mapa que o build executa)
+| Fatia | Arquivo(s) : onde | Abordagem (como) | Porquê | Referência a copiar |
+|---|---|---|---|---|
+| 1 | `src/…:linhas` | <como> | <porquê> | `arquivo-exemplo:linhas` |
+
+- **Quem chama / o que quebra:** `arquivo:linhas` — <relação>
+- **Contratos:** <API, evento, schema> · **Dados:** <tabela/coleção> · reversão: <como desfazer>
 
 ## Decisões
 - <decisão> — <porquê> · <vira rule? qual>

@@ -40,9 +40,12 @@ sem bloquear o resto); decisões são do usuário. Desafie termo vago ou ambígu
 código concorda com o que foi dito. Termine quando nada aberto muda escopo, risco ou prova. Dúvida que
 está na cabeça de outra pessoa (PO, cliente): gere um questionário para ela, não chute.
 
-## Impacto
-Em S2+ ou criticidade alta, acione `fsk-explore` para levantar chamadores, contratos e dados afetados
-antes de fechar a spec. Em S1, a escada do núcleo basta.
+## Plano de ataque (o mapa que o build executa)
+Transforme os critérios num mapa concreto que o build só executa — via `fsk-explore` (o quanto a demanda
+pedir; sempre em S2+/alta). Por fatia, feche: **quais arquivos tocar**, **onde** (função/componente/
+`arquivo:linhas`), **a abordagem** (como), **o porquê**, a **feature de referência** a copiar, e o que pode
+quebrar (chamadores, contratos, dados). Plano raso joga a análise pro build; aqui a análise **fecha** — o
+build carrega o "como executar bem", não o "o quê/onde descobrir".
 
 ## Onde trabalhar (worktree)
 Aplique a política do setup. Com `perguntar por demanda`, pergunte em uma linha só para S2+ ou quando já
@@ -58,6 +61,10 @@ cada um, o canal de observação e se merece teste durável.
 Ficam na seção "Decisões" da spec, com o porquê. Decisão que vale para o projeto todo vira (ou atualiza)
 a rule que ela afeta, com uma linha de porquê — roteado ao `fsk-learn`.
 
+## Transparência (o usuário entende antes do "ok")
+Mostre em linguagem clara **o quê** será feito, **como** e **por quê** — o plano de ataque com os arquivos
+e a abordagem à vista, não só critérios abstratos. O "ok" é sobre esse plano.
+
 ## Pronto quando
-Classifica corretamente demandas de S0 a Neblina, nas três criticidades e em todos os tipos, e para
-pedindo aprovação dos critérios antes de qualquer código.
+Classifica corretamente demandas de S0 a Neblina, nas três criticidades e em todos os tipos; entrega o
+mapa de ataque (arquivos/onde/como/porquê) que o build executa; e para pedindo aprovação antes do código.
