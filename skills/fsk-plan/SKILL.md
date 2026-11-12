@@ -8,7 +8,8 @@ allowed-tools: Read Grep Glob
 # fsk-plan — planejamento roteado
 
 Entrega o menor plano que fecha as decisões e define a prova. Termina pedindo o "ok" dos critérios;
-nunca encadeia sozinho no build. Template da spec: `references/spec.md`.
+nunca encadeia sozinho no build. Template da spec: `references/spec.md`. Demanda nova que surge no meio do
+trabalho (refatoração, escopo novo) re-entra aqui e vira spec — não siga em prosa solta.
 
 ## Classificação (uma linha ao usuário)
 | Eixo | Valores |
