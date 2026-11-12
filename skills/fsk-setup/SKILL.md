@@ -44,8 +44,10 @@ com "ok".
    nativos Explore/Plan pulam a memória, por isso o setup os desliga em favor das `fsk-*`.
 7. **Guardrails mecânicos antes de regra escrita.** Sem lint/typecheck em hook ou CI, isso é achado.
    Regra que uma ferramenta consegue checar vira checagem, não texto. **Oferece (opt-in)** os guardrails
-   do kit — bloquear git destrutivo e leitura de `.env` (`hooks/guardrails.settings.json`) e um pre-commit
-   que roda `fsk.py check-map`; mescla no `.claude/settings.json` só com "ok". Nada disso vem ligado sozinho.
+   do kit — bloquear git destrutivo e leitura de `.env` (`hooks/guardrails.settings.json`) e os git hooks
+   (`fsk.py git-hooks`): pre-commit que barra segredo e roda `check-map`, e post-checkout que propaga os
+   não-versionados para worktrees novas (respeita husky; senão `.git/hooks`). `--local-mode` adiciona um
+   bloco no `.gitignore` para não versionar os artefatos de agente. Tudo mesclado só com "ok" — nada liga sozinho.
 8. **Etapas que só um humano faz** (secrets, painel de cloud, CI): gere um roteiro guiado, em vez de
    explicar a cada sessão.
 9. **Proponha a estrutura completa** (`references/project-layout.md`) e espere o "ok" antes de gravar.
@@ -55,7 +57,8 @@ com "ok".
     crie um worktree de teste, prepare o ambiente (dependências, copiar `.env` e não versionados, portas
     que não colidem, banco compartilhado ou isolado), suba o app e remova. A receita validada vai para a
     seção "Worktree" do `AGENTS.md`; a política, que é preferência de cada pessoa, vai para
-    `.claude/fsk.local.json` (fora do git).
+    `.claude/fsk.local.json` (fora do git). Criar worktree pela receita é automatizável com
+    `fsk.py worktree <nome>` (cria + copia os não-versionados que o `git worktree add` não leva).
 12. **Carimbe** `.claude/fsk.json` (versão do kit, commit de origem, tracker, data).
 
 ## Compatibilidade (o do time vence)
