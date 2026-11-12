@@ -13,6 +13,13 @@ Comandos:
                          prompt files (--project obrigatório). Núcleo: import (claude) ou bloco (demais).
   check-map [--path .]   Confere que todo caminho citado no AGENTS.md, nos `paths` das rules e nos
                          how-to existe. Sai com erro se houver ponteiro quebrado (rodável em hook/CI).
+  worktree NAME [--path .] [--branch B]
+                         Cria uma worktree em .worktrees/NAME e copia os não-versionados (artefatos de
+                         agente, .env) que o `git worktree add` não leva.
+  git-hooks [--path .] [--local-mode]
+                         Instala hooks git (respeita husky; senão .git/hooks): post-checkout copia
+                         não-versionados p/ worktree nova; pre-commit barra segredo + roda check-map.
+                         --local-mode adiciona bloco no .gitignore p/ não versionar artefatos de agente.
 
 Uso:
   python install/fsk.py validate
@@ -397,6 +404,143 @@ def cmd_check_map(path):
     return 0
 
 
+# ---------------------------------------------------------------- git-utils
+import subprocess, shutil
+
+GIT_ARTIFACTS = ["AGENTS.md", "CLAUDE.md", "GEMINI.md", ".claude", ".cursor", ".agents",
+                 ".github/copilot-instructions.md", ".github/prompts", ".github/instructions"]
+WT_COPY_DEFAULT = GIT_ARTIFACTS + [".env", ".env.local", ".env.development"]
+GI_START, GI_END = "# fsk:gitignore:start", "# fsk:gitignore:end"
+
+
+def _run(args, cwd=None):
+    return subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+
+
+def _load_fsk_json(base):
+    f = base / ".claude" / "fsk.json"
+    if f.exists():
+        try:
+            return json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+
+def _copy_untracked(src, dst, items):
+    copied = []
+    for it in items:
+        s, d = src / it, dst / it
+        if s.exists() and not d.exists():
+            d.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(s, d) if s.is_dir() else shutil.copy2(s, d)
+            copied.append(it)
+    return copied
+
+
+def _is_secret_path(p):
+    base = os.path.basename(p)
+    if re.match(r"^\.env(\.|$)", base) and not re.search(r"\.(example|sample|template|dist)$", base):
+        return True
+    return bool(re.search(r"\.(pem|key|p12|pfx)$", base) or re.search(r"(secret|credential)s?\.(json|ya?ml|txt)$", base, re.I))
+
+
+def _write_block_file(path, body, start, end):
+    block = f"{start}\n{body.rstrip()}\n{end}\n"
+    txt = path.read_text(encoding="utf-8") if path.exists() else ""
+    if start in txt and end in txt:
+        txt = txt.split(start)[0].rstrip("\n") + "\n\n" + block + txt.split(end, 1)[1].lstrip("\n")
+    else:
+        txt = (txt.rstrip("\n") + "\n\n" if txt.strip() else "") + block
+    path.write_text(txt, encoding="utf-8")
+
+
+def cmd_worktree(name, path, branch):
+    base = Path(path).resolve()
+    items = _load_fsk_json(base).get("worktree_copy", WT_COPY_DEFAULT)
+    br, wt = branch or name, base / ".worktrees" / name
+    r = _run(["git", "-C", str(base), "worktree", "add", "-b", br, str(wt)])
+    if r.returncode != 0:
+        r = _run(["git", "-C", str(base), "worktree", "add", str(wt), br])
+        if r.returncode != 0:
+            print("falha no git worktree add:\n" + r.stderr.strip())
+            return 1
+    _copy_untracked(base, wt, items)  # redundante se o hook post-checkout já copiou; idempotente
+    present = [it for it in items if (wt / it).exists()]
+    print(f"worktree: {wt}  (branch {br})")
+    print(f"não-versionados no worktree ({len(present)}): {', '.join(present) or '—'}")
+    print("prepare deps/portas pela receita de worktree do AGENTS.md.")
+    return 0
+
+
+HOOK_EVENTS = {"post-checkout": 'python "{fsk}" _hook post-checkout "$@"',
+               "pre-commit": 'python "{fsk}" _hook pre-commit'}
+
+
+def cmd_git_hooks(path, local_mode):
+    base = Path(path).resolve()
+    if not (base / ".git").exists():
+        print("não é um repo git.")
+        return 1
+    fsk = str((ROOT / "fsk.py").resolve())
+    installed = []
+    if (base / ".husky").exists():
+        for hook, tmpl in HOOK_EVENTS.items():
+            f = base / ".husky" / hook
+            line = tmpl.format(fsk=fsk)
+            txt = f.read_text(encoding="utf-8") if f.exists() else "#!/bin/sh\n"
+            if line not in txt:
+                f.write_text(txt.rstrip("\n") + "\n" + line + "\n", encoding="utf-8")
+            installed.append(f".husky/{hook}")
+    else:
+        hd = base / ".git" / "hooks"
+        hd.mkdir(parents=True, exist_ok=True)
+        for hook, tmpl in HOOK_EVENTS.items():
+            f = hd / hook
+            f.write_text(f"#!/bin/sh\n{tmpl.format(fsk=fsk)}\n", encoding="utf-8")
+            try:
+                os.chmod(f, 0o755)
+            except Exception:
+                pass
+            installed.append(f".git/hooks/{hook}")
+        lf = base / "lefthook.yml"
+        if lf.exists() or (base / ".lefthook.yml").exists():
+            print("aviso: repo usa lefthook — adicione ao lefthook.yml:\n"
+                  f"  post-checkout:\n    commands:\n      fsk: {{run: 'python \"{fsk}\" _hook post-checkout {{0}} {{1}} {{2}}'}}\n"
+                  f"  pre-commit:\n    commands:\n      fsk: {{run: 'python \"{fsk}\" _hook pre-commit'}}")
+    print(f"hooks instalados: {', '.join(installed)}")
+    if local_mode:
+        _write_block_file(base / ".gitignore", "\n".join(GIT_ARTIFACTS), GI_START, GI_END)
+        print(".gitignore: bloco do modo local (artefatos de agente fora do git)")
+    return 0
+
+
+def cmd_hook(event, args):
+    cwd = Path(".").resolve()
+    if event == "post-checkout":
+        common = _run(["git", "rev-parse", "--git-common-dir"]).stdout.strip()
+        gdir = _run(["git", "rev-parse", "--absolute-git-dir"]).stdout.strip()
+        if not common or not gdir:
+            return 0
+        common = (cwd / common).resolve() if not os.path.isabs(common) else Path(common).resolve()
+        if common == Path(gdir).resolve():
+            return 0  # worktree principal: nada a copiar
+        main_top = common.parent
+        items = _load_fsk_json(cwd).get("worktree_copy", WT_COPY_DEFAULT)
+        copied = _copy_untracked(main_top, cwd, items)
+        if copied:
+            print(f"fsk: copiados para o worktree ({len(copied)}): {', '.join(copied)}")
+        return 0
+    if event == "pre-commit":
+        staged = _run(["git", "diff", "--cached", "--name-only"]).stdout.split()
+        bad = [f for f in staged if _is_secret_path(f)]
+        if bad:
+            print("fsk: NÃO commite segredo: " + ", ".join(bad) + "\n(remova do stage; use variável de ambiente.)")
+            return 1
+        return cmd_check_map(".")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(prog="fsk", description="Fullstack Skills Kit CLI")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -410,11 +554,20 @@ def main():
     co.add_argument("--project", default=None)
     co.add_argument("--dry-run", action="store_true")
     cm = sub.add_parser("check-map"); cm.add_argument("--path", default=".")
+    wt = sub.add_parser("worktree"); wt.add_argument("name"); wt.add_argument("--path", default="."); wt.add_argument("--branch", default=None)
+    gh = sub.add_parser("git-hooks"); gh.add_argument("--path", default="."); gh.add_argument("--local-mode", action="store_true")
+    hk = sub.add_parser("_hook"); hk.add_argument("event"); hk.add_argument("rest", nargs="*")
     args = ap.parse_args()
     if args.cmd == "core":
         sys.exit(cmd_core(args.target, args.home, args.dry_run, args.project))
     if args.cmd == "check-map":
         sys.exit(cmd_check_map(args.path))
+    if args.cmd == "worktree":
+        sys.exit(cmd_worktree(args.name, args.path, args.branch))
+    if args.cmd == "git-hooks":
+        sys.exit(cmd_git_hooks(args.path, args.local_mode))
+    if args.cmd == "_hook":
+        sys.exit(cmd_hook(args.event, args.rest))
     data = load()
     if args.cmd == "validate":
         sys.exit(cmd_validate(data))
