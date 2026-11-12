@@ -11,15 +11,23 @@ Prova existe para pegar a quebra que você não veria. "Passou" significa "não 
 condições testadas" — e as condições são ditas. Catálogo de smoke/regressão/exploratório, oráculos e
 severidade: `references/qa-amplo.md`.
 
+**Checagem não é prova.** `tsc`, lint, typecheck e teste unitário rodam sem subir o sistema — provam que
+compila e que a lógica isolada bate, **não** que o comportamento acontece. Verde neles nunca é
+"provado"/"funciona": é o degrau de checagem (o **último** da escada), não a prova.
+
 ## Canal (o mais perto do usuário primeiro)
 Navegador (jornada do usuário) > requisição real com banco e fila reais > integração na borda do módulo
 > unitário só quando nada acima observa o efeito, com a frase do motivo escrita no arquivo. **Frontend:
 só navegador.** Para descer de nível, nomeie o que o nível de cima não consegue observar naquele caso
-concreto — alegação genérica ("é complexo") não serve.
+concreto — alegação genérica ("é complexo") não serve. **Subir o sistema é o padrão, não opção:** antes
+de descer de canal ou degradar, suba de verdade (inicie o Docker/serviço, rode o comando de subir do
+`AGENTS.md`). "Não subi" só vale com o motivo real escrito — "tentei subir, falhou por `<erro>`" — nunca
+como atalho por pressa.
 
 ## Quando o ambiente não sobe (prova degradada)
-Lib, design system, serverless, legado que não roda, mudança que atravessa repositórios: não dá para
-subir a jornada inteira. Prove o que dá — contrato e tipo, integração no pedaço que roda, consumidor real
+Só **depois de tentar subir de verdade** e o ambiente genuinamente não subir: lib, design system,
+serverless, legado que não roda, mudança que atravessa repositórios. Não é atalho para quando subir dá
+trabalho — é para quando subir é impossível. Prove o que dá — contrato e tipo, integração no pedaço que roda, consumidor real
 em staging quando existir — e **diga no relatório**: "provado por X; não executado end-to-end por falta
 de Y". Nunca chame de provado o que não foi observado. Infra/config e dados/migração provam pelo efeito
 real (recurso criado; migration aplicada e revertida), não pela tela.
@@ -57,12 +65,15 @@ de falha que explica. Suíte herdada: não abra frente de migração; ao tocar u
 nível e apague o antigo no mesmo commit; suíte frágil encontrada é reportada, não consertada por conta.
 
 ## Execução
-Direcionado durante o trabalho; suíte completa uma vez no fechamento (ou CI). Subagente nunca roda a
-suíte completa.
+A suíte (tsc, lint, unitário, integração) é **checagem**: roda direcionada durante o trabalho e uma vez
+no fechamento (ou CI). A **prova** dos critérios é separada — comportamento no canal real. Suíte verde não
+fecha a prova. Subagente nunca roda a suíte completa.
 
 ## Saída
-Veredito na primeira linha. Depois a tabela `ID | resultado (✅ ❌ ⚠️ ⏸) | canal | evidência`, com
-comando e saída real truncada. Cobertura explícita: o que **não** foi testado e por quê. Achados com
+Veredito na primeira linha, **honesto ao canal**: ✅ só com o comportamento observado no canal real.
+Parou em checagem/unitário sem subir o sistema? O veredito é "⚠️ checado, não provado end-to-end" e a
+cobertura explícita nomeia o que falta subir — nunca "✅ provado". Depois a tabela `ID | resultado
+(✅ ❌ ⚠️ ⏸) | canal | evidência`, com comando e saída real truncada. Cobertura explícita: o que **não** foi testado e por quê. Achados com
 confiança declarada (confirmado, provável, suspeita). Questione o requisito quando o comportamento
 "correto" é ruim para o usuário, como observação separada. No fechamento de S2+/alta, grave o
 `evidencias.md` carimbando o **SHA do commit provado** (o `fsk-docs` só o formata para PR/binário quando
