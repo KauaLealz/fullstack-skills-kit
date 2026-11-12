@@ -15,7 +15,8 @@ effort: high
 4. **Por fatia vertical:** menor mudança completa → checagem direcionada (só o que tocou) → `fsk-prove`
    da fatia. Decisão não prevista: pare e pergunte.
 5. **Fechamento:** prova de todos os critérios (subagente independente só em criticidade alta; S2 médio
-   prova inline), suíte completa uma vez ou CI, `fsk-review`, relatório no formato do núcleo.
+   prova inline), suíte completa (é checagem, não prova) uma vez ou CI, `fsk-review`, relatório. Suíte
+   verde não é "provado": a prova é o `fsk-prove` no canal real.
 
 ## Disciplina do diff
 - **Diff mínimo desde o início:** não reformate, não reindente, não reordene, não renomeie e não

@@ -46,7 +46,7 @@ a pessoa disse. Tudo o mais vai para arquivo. **Relatório final** (formato fixo
 ```
 ✅ <resultado em uma frase, do ponto de vista do usuário>
 O que mudou     <2–4 linhas, em linguagem de produto>
-Como provei     <1 linha + caminho do evidencias.md>
+Como provei     <canal + evidência; ✅ só se o comportamento foi observado, senão "checado, não provado">
 Precisa de você <decisões pendentes ou "nada">
 Atenção         <riscos, o que não foi testado, shortcuts — só se houver>
 Próximo passo   </fsk-ship | responder X | nada>

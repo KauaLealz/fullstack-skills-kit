@@ -9,8 +9,9 @@ effort: medium
 
 1. **Dossiê de revisão primeiro.** O `fsk-docs` gera o `revisao.md` a partir de spec, `notas.md`,
    `evidencias.md`, achados do review e diff — nada de memória. Confira que o **SHA** do `evidencias.md`
-   bate com o diff; se o review mexeu no código depois da prova, re-prove antes de abrir. Mostre o dossiê
-   e só siga com "ok".
+   bate com o diff; se o review mexeu no código depois da prova, re-prove antes de abrir. **Se a prova só
+   tem canal de checagem/unitário** (sem comportamento no canal real nem a justificativa escrita de por
+   que não subiu), bloqueia e manda provar no canal real antes de entregar. Mostre o dossiê e só siga com "ok".
 2. **Formato do repo vence.** Siga `rules/pr.md` e `rules/commits.md`; sem elas, infira do histórico real
    (log e PRs mesclados) e proponha gravar a rule. Sem padrão nenhum, use `references/pr-padrao.md`.
 3. **Diff limpo** (sem log temporário), commits por intenção no formato do repo, branch na convenção,
