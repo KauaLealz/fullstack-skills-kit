@@ -4,15 +4,20 @@
 Ferramenta executável do kit curado. Cross-platform (Windows/macOS/Linux).
 
 Comandos:
-  validate            Valida o schema do manifest (campos, ids duplicados, áreas, trust).
-  doctor [--links]    Diagnóstico: itens #VERIFY, telemetria, confiança. --links checa HTTP dos sources.
-  detect [--path .]   Detecta a stack do projeto (tokens) a partir dos arquivos-sinal.
-  plan   [--path .]   Monta o plano de instalação: núcleo global + opcionais que casam com a stack,
-                      com custo, confiança e telemetria. NÃO instala nada (propor-e-confirmar).
+  validate               Valida o schema do manifest (campos, ids duplicados, áreas, trust).
+  doctor [--links]       Diagnóstico: itens #VERIFY, telemetria, confiança. --links checa HTTP dos sources.
+  detect [--path .]      Detecta a stack do projeto (tokens) a partir dos arquivos-sinal.
+  plan   [--path .]      Monta o plano de ferramentas opcionais que casam com a stack. NÃO instala.
+  core   [--target claude|codex|opencode|cursor|gemini|antigravity|copilot] [--home ~] [--project .] [--dry-run]
+                         Instala núcleo + skills fsk-* no alvo. SKILL.md serve 5 provedores; copilot gera
+                         prompt files (--project obrigatório). Núcleo: import (claude) ou bloco (demais).
+  check-map [--path .]   Confere que todo caminho citado no AGENTS.md, nos `paths` das rules e nos
+                         how-to existe. Sai com erro se houver ponteiro quebrado (rodável em hook/CI).
 
 Uso:
   python install/fsk.py validate
-  python install/fsk.py plan --path .
+  python install/fsk.py core
+  python install/fsk.py check-map --path .
 Requisito: PyYAML (pip install pyyaml).
 """
 from __future__ import annotations
@@ -33,7 +38,8 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent
 MANIFEST = ROOT / "manifest.yaml"
-REQUIRED = ["id", "name", "area", "type", "cost", "scope", "load", "stack_match"]
+REQUIRED = ["id", "name", "area", "phase", "type", "cost", "scope", "load", "stack_match"]
+KIT = ROOT.parent  # raiz do repo do kit (install/ fica dentro)
 
 
 def load():
@@ -217,6 +223,180 @@ def cmd_plan(data, path):
     return 0
 
 
+# ---------------------------------------------------------------- core (instala multi-alvo)
+# Portabilidade: SKILL.md é o mesmo formato em 5 provedores; Copilot usa prompt files.
+# O núcleo vai no arquivo de memória de cada alvo (import no Claude, bloco nos demais);
+# onde não há memória global (cursor/copilot), ele entra no AGENTS.md do projeto (via /fsk-setup).
+TARGETS = {
+    "claude":      {"skills": "~/.claude/skills",         "mem": "~/.claude/CLAUDE.md",         "mem_mode": "import", "fmt": "skill"},
+    "codex":       {"skills": "~/.codex/skills",          "mem": "~/.codex/AGENTS.md",          "mem_mode": "block",  "fmt": "skill"},
+    "opencode":    {"skills": "~/.config/opencode/skills","mem": "~/.config/opencode/AGENTS.md","mem_mode": "block",  "fmt": "skill"},
+    "cursor":      {"skills": "~/.cursor/skills",         "mem": None,                          "mem_mode": "project","fmt": "skill"},
+    "gemini":      {"skills": "~/.gemini/skills",         "mem": "~/.gemini/GEMINI.md",         "mem_mode": "block",  "fmt": "skill"},
+    "antigravity": {"skills": "~/.gemini/config/skills",  "mem": "~/.gemini/config/AGENTS.md",  "mem_mode": "block",  "fmt": "skill"},
+    "copilot":     {"skills": None,                       "mem": None,                          "mem_mode": "project","fmt": "prompt"},
+}
+FSK_START, FSK_END = "<!-- fsk:start -->", "<!-- fsk:end -->"
+
+
+def _expand(p, base):
+    return base / p[2:] if p.startswith("~/") else Path(p)
+
+
+def _write_block(path, body):
+    """Escreve/atualiza o bloco fsk delimitado, idempotente."""
+    block = f"{FSK_START}\n{body.rstrip()}\n{FSK_END}\n"
+    txt = path.read_text(encoding="utf-8") if path.exists() else ""
+    if FSK_START in txt and FSK_END in txt:
+        pre = txt.split(FSK_START)[0]
+        post = txt.split(FSK_END, 1)[1].lstrip("\n")
+        txt = pre.rstrip("\n") + ("\n\n" if pre.strip() else "") + block + ("\n" + post if post.strip() else "")
+    else:
+        txt = (txt.rstrip("\n") + "\n\n" if txt.strip() else "") + block
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(txt, encoding="utf-8")
+
+
+def _skill_to_prompt(skill_md):
+    """Converte um SKILL.md em .prompt.md (Copilot/VS Code)."""
+    text = skill_md.read_text(encoding="utf-8")
+    name, desc, body = skill_md.parent.name, "", text
+    m = re.match(r"^---\n(.*?)\n---\n(.*)$", text, re.S)
+    if m:
+        fm, body = m.group(1), m.group(2)
+        for line in fm.splitlines():
+            if line.startswith("name:"):
+                name = line.split(":", 1)[1].strip()
+            if line.startswith("description:"):
+                desc = line.split(":", 1)[1].strip()
+    return name, f"---\nmode: agent\ndescription: {desc}\n---\n{body.lstrip()}"
+
+
+def cmd_core(target, home, dry, project):
+    import shutil
+    if target not in TARGETS:
+        print(f"alvo inválido: {target}. Use: {', '.join(TARGETS)}")
+        return 1
+    t = TARGETS[target]
+    base = Path(home) if home else Path.home()
+    core_src = KIT / "global" / "fsk-workflow.md"
+    core_body = core_src.read_text(encoding="utf-8")
+    skills = sorted(p for p in (KIT / "skills").glob("fsk-*") if p.is_dir())
+    proj = Path(project).resolve() if project else None
+    print(f"alvo: {target}")
+
+    # 1) skills
+    if t["fmt"] == "skill" and t["skills"]:
+        sdst = _expand(t["skills"], base)
+        print(f"skills ({len(skills)}): {sdst}")
+    elif t["fmt"] == "prompt":
+        if not proj:
+            print("copilot precisa de --project <repo> (gera .github/prompts/).")
+            return 1
+        print(f"prompt files ({len(skills)}): {proj / '.github' / 'prompts'}")
+
+    # 2) núcleo
+    if t["mem_mode"] == "import":
+        print(f"núcleo: fsk-workflow.md + @import em {_expand(t['mem'], base)}")
+    elif t["mem_mode"] == "block":
+        print(f"núcleo: bloco fsk em {_expand(t['mem'], base)}")
+    else:
+        tgt = (proj / ("AGENTS.md" if target != "copilot" else ".github/copilot-instructions.md")) if proj else "AGENTS.md do projeto (via /fsk-setup)"
+        print(f"núcleo: bloco fsk em {tgt}")
+
+    if dry:
+        print("\n(dry-run: nada escrito)")
+        return 0
+
+    # --- escrita ---
+    if t["fmt"] == "skill" and t["skills"]:
+        sdst = _expand(t["skills"], base)
+        sdst.mkdir(parents=True, exist_ok=True)
+        for sk in skills:
+            d = sdst / sk.name
+            if d.exists():
+                shutil.rmtree(d)
+            shutil.copytree(sk, d)
+    elif t["fmt"] == "prompt":
+        pdst = proj / ".github" / "prompts"
+        pdst.mkdir(parents=True, exist_ok=True)
+        for sk in skills:
+            name, content = _skill_to_prompt(sk / "SKILL.md")
+            (pdst / f"{name}.prompt.md").write_text(content, encoding="utf-8")
+
+    if t["mem_mode"] == "import":
+        dest = _expand(t["mem"], base).parent
+        shutil.copy2(core_src, dest / "fsk-workflow.md")
+        claude_md = _expand(t["mem"], base)
+        txt = claude_md.read_text(encoding="utf-8") if claude_md.exists() else ""
+        if "@fsk-workflow.md" not in txt:
+            claude_md.parent.mkdir(parents=True, exist_ok=True)
+            claude_md.write_text((txt.rstrip("\n") + "\n\n" if txt.strip() else "") + "@fsk-workflow.md\n", encoding="utf-8")
+    elif t["mem_mode"] == "block":
+        _write_block(_expand(t["mem"], base), core_body)
+    elif proj:
+        mem = proj / (".github/copilot-instructions.md" if target == "copilot" else "AGENTS.md")
+        _write_block(mem, core_body)
+
+    print("OK: instalado (idempotente).")
+    return 0
+
+
+# ---------------------------------------------------------------- check-map
+def _candidate_paths(text):
+    """Caminhos plausíveis citados em backticks: contêm '/' e casam um caminho de projeto."""
+    out = []
+    for tok in re.findall(r"`([^`]+)`", text):
+        cand = tok.strip().split()[0].split(":")[0] if tok.strip() else ""
+        if "/" not in cand or "*" in cand:
+            continue
+        if cand.startswith(("http", "https", "@", "/", "~", ".claude/skills/how-to-<")):
+            continue
+        if not re.match(r"^[\w./\-]+$", cand):
+            continue
+        if not re.search(r"\.\w{1,6}$", cand):  # só arquivos com extensão
+            continue
+        out.append(cand)
+    return out
+
+
+def cmd_check_map(path):
+    base = Path(path).resolve()
+    sources = []
+    if (base / "AGENTS.md").exists():
+        sources.append(base / "AGENTS.md")
+    rdir = base / ".claude" / "rules"
+    if rdir.exists():
+        sources += sorted(rdir.glob("*.md"))
+    sdir = base / ".claude" / "skills"
+    if sdir.exists():
+        sources += sorted(sdir.glob("how-to-*/**/*.md"))
+    if not sources:
+        print(f"check-map: nada para checar em {base} (sem AGENTS.md/rules/how-to).")
+        return 0
+    broken, checked = [], 0
+    for src in sources:
+        text = src.read_text(encoding="utf-8", errors="ignore")
+        rel = src.relative_to(base)
+        for g in re.findall(r'^\s*-\s*["\']?([^"\'\n]*\*[^"\'\n]*)["\']?\s*$', text, re.M):
+            g = g.strip()
+            checked += 1
+            if not any(base.glob(g)):
+                broken.append((rel, g, "glob não casa nenhum arquivo"))
+        for cand in _candidate_paths(text):
+            checked += 1
+            if not (base / cand).exists():
+                broken.append((rel, cand, "não existe"))
+    print(f"check-map: {checked} ponteiro(s) em {len(sources)} fonte(s).")
+    if broken:
+        for rel, p, why in broken:
+            print(f"  ✗ {rel}: `{p}` — {why}")
+        print(f"\nFALHOU: {len(broken)} ponteiro(s) quebrado(s).")
+        return 1
+    print("OK: todo caminho citado existe.")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(prog="fsk", description="Fullstack Skills Kit CLI")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -224,7 +404,17 @@ def main():
     d = sub.add_parser("doctor"); d.add_argument("--links", action="store_true")
     de = sub.add_parser("detect"); de.add_argument("--path", default=".")
     pl = sub.add_parser("plan"); pl.add_argument("--path", default=".")
+    co = sub.add_parser("core")
+    co.add_argument("--target", default="claude")
+    co.add_argument("--home", default=None)
+    co.add_argument("--project", default=None)
+    co.add_argument("--dry-run", action="store_true")
+    cm = sub.add_parser("check-map"); cm.add_argument("--path", default=".")
     args = ap.parse_args()
+    if args.cmd == "core":
+        sys.exit(cmd_core(args.target, args.home, args.dry_run, args.project))
+    if args.cmd == "check-map":
+        sys.exit(cmd_check_map(args.path))
     data = load()
     if args.cmd == "validate":
         sys.exit(cmd_validate(data))

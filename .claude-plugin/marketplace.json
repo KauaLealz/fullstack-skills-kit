@@ -1,0 +1,13 @@
+{
+  "name": "fsk-marketplace",
+  "owner": { "name": "KauaLealz", "url": "https://github.com/KauaLealz" },
+  "plugins": [
+    {
+      "name": "fsk",
+      "source": "./",
+      "displayName": "Fullstack Skills Kit",
+      "description": "Núcleo + 10 skills fsk-* (comportamento). Guardrails são opt-in pelo /fsk-setup.",
+      "version": "2.0.0"
+    }
+  ]
+}

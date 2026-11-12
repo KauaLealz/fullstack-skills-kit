@@ -1,0 +1,48 @@
+# Testes de acionamento — ~32 frases reais → skill esperada.
+# Rode a cada mudança de `description`. Regras: cada frase dispara a skill esperada e nenhuma outra;
+# fsk-setup e fsk-ship NUNCA disparam sozinhas (disable-model-invocation); as nativas do Claude Code
+# (/run /verify /code-review /debug /simplify + auto-memory) são concorrentes e não devem roubar o gatilho.
+# "expected: none" = nenhuma fsk-* auto-dispara (o agente pode SUGERIR a skill entre parênteses).
+
+tests:
+  # --- fsk-plan (demanda nova) ---
+  - { phrase: "quero adicionar login com Google",                 expected: fsk-plan }
+  - { phrase: "precisamos de um relatório de vendas por mês",     expected: fsk-plan }
+  - { phrase: "vamos criar o cadastro de clientes",               expected: fsk-plan }
+  - { phrase: "we need to add a password reset flow",             expected: fsk-plan, lang: en }
+  # --- fsk-build (critérios fechados / implementar) ---
+  - { phrase: "implementa o que a gente combinou na spec",        expected: fsk-build }
+  - { phrase: "faz essa função de exportar CSV",                  expected: fsk-build }
+  - { phrase: "commita essas mudanças locais",                    expected: fsk-build, note: "commit local é do build, não do ship" }
+  - { phrase: "implement the discount rule from the tickets",     expected: fsk-build, lang: en }
+  # --- fsk-debug (concorre com /debug nativo) ---
+  - { phrase: "quebrou o checkout, dá erro 500",                  expected: fsk-debug, rival: "/debug nativo" }
+  - { phrase: "por que o login não funciona?",                    expected: fsk-debug, rival: "/debug nativo" }
+  - { phrase: "essa página está lenta demais",                    expected: fsk-debug }
+  - { phrase: "it throws a NullPointer on the server",            expected: fsk-debug, lang: en, rival: "/debug nativo" }
+  # --- fsk-prove (concorre com /verify nativo) ---
+  - { phrase: "valida se o pagamento funciona",                   expected: fsk-prove, rival: "/verify nativo" }
+  - { phrase: "testa esse fluxo de cadastro",                     expected: fsk-prove }
+  - { phrase: "funciona mesmo? prova aí",                         expected: fsk-prove }
+  - { phrase: "check that the webhook actually fires",            expected: fsk-prove, lang: en, rival: "/verify nativo" }
+  # --- fsk-review (concorre com /code-review e /simplify nativos) ---
+  - { phrase: "revisa esse PR",                                   expected: fsk-review, rival: "/code-review nativo" }
+  - { phrase: "está bom pra mergear?",                            expected: fsk-review }
+  - { phrase: "dá uma simplificada nesse código",                 expected: fsk-review, rival: "/simplify nativo" }
+  - { phrase: "review the changes on this branch",               expected: fsk-review, lang: en, rival: "/code-review nativo" }
+  # --- fsk-explore ---
+  - { phrase: "onde fica a lógica de autenticação?",             expected: fsk-explore }
+  - { phrase: "como funciona o fluxo de pagamento aqui?",        expected: fsk-explore }
+  - { phrase: "o que quebra se eu mudar essa função?",           expected: fsk-explore }
+  # --- fsk-docs ---
+  - { phrase: "documenta essa feature",                          expected: fsk-docs }
+  - { phrase: "gera uma apresentação do que mudou",             expected: fsk-docs }
+  - { phrase: "me guia pela mudança",                            expected: fsk-docs, note: "tour guiado" }
+  # --- fsk-learn (concorre com auto-memory nativa) ---
+  - { phrase: "sempre use camelCase nos endpoints aqui",        expected: fsk-learn, rival: "auto-memory nativa" }
+  - { phrase: "da próxima vez, rode o lint antes",              expected: fsk-learn, rival: "auto-memory nativa" }
+  # --- none: setup/ship nunca auto-disparam (agente sugere) ---
+  - { phrase: "configura esse projeto pro nosso fluxo",         expected: none, suggest: fsk-setup }
+  - { phrase: "prepara o repo",                                  expected: none, suggest: fsk-setup }
+  - { phrase: "abre o PR e manda pro main",                     expected: none, suggest: fsk-ship }
+  - { phrase: "qual a capital da França?",                      expected: none, note: "fora do kit" }
