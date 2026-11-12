@@ -20,6 +20,9 @@ Comandos:
                          Instala hooks git (respeita husky; senão .git/hooks): post-checkout copia
                          não-versionados p/ worktree nova; pre-commit barra segredo + roda check-map.
                          --local-mode adiciona bloco no .gitignore p/ não versionar artefatos de agente.
+  check-proof [--base REF] [--block]
+                         Freio da prova: se a mudança tem código de produção mas não há evidencias.md
+                         com canal real (navegador/API), avisa (ou bloqueia com --block, p/ CI de merge).
 
 Uso:
   python install/fsk.py validate
@@ -537,8 +540,59 @@ def cmd_hook(event, args):
         if bad:
             print("fsk: NÃO commite segredo: " + ", ".join(bad) + "\n(remova do stage; use variável de ambiente.)")
             return 1
+        _warn_unproven(staged)  # aviso, não bloqueia o commit local
         return cmd_check_map(".")
     return 0
+
+
+# ---------------------------------------------------------------- check-proof (freio da prova)
+CODE_EXT = (".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".java", ".rb", ".php", ".cs", ".rs",
+            ".kt", ".swift", ".vue", ".svelte", ".scala", ".c", ".cpp")
+
+
+def _is_prod_code(f):
+    if not f.endswith(CODE_EXT):
+        return False
+    if re.search(r"(\.(test|spec)\.|/__tests__/|/tests?/|\.d\.ts$|\.stories\.)", f):
+        return False
+    return not f.startswith(("docs/", ".claude/", ".github/", "hooks/", "install/"))
+
+
+def _proof_is_real(base):
+    specs = base / ".claude" / "specs"
+    if not specs.exists():
+        return False
+    for ev in specs.glob("*/evidencias.md"):
+        t = ev.read_text(encoding="utf-8", errors="ignore").lower()
+        if re.search(r"navegador|api real|integra[çc][ãa]o|end-to-end|e2e|não executado end-to-end|tentei subir", t):
+            return True
+    return False
+
+
+def _warn_unproven(files):
+    prod = [f for f in files if _is_prod_code(f)]
+    if prod and not _proof_is_real(Path(".").resolve()):
+        print(f"fsk (aviso): {len(prod)} arquivo(s) de produção sem prova real registrada em "
+              ".claude/specs/*/evidencias.md (canal navegador/API). Suíte verde é checagem, não prova.")
+
+
+def cmd_check_proof(base_ref, block):
+    base = Path(".").resolve()
+    if base_ref:
+        files = _run(["git", "diff", "--name-only", f"{base_ref}...HEAD"]).stdout.split()
+    else:
+        files = _run(["git", "diff", "--cached", "--name-only"]).stdout.split()
+    prod = [f for f in files if _is_prod_code(f)]
+    if not prod:
+        print("check-proof: sem código de produção na mudança — nada a provar.")
+        return 0
+    if _proof_is_real(base):
+        print(f"check-proof: ok — evidencias.md com canal real ({len(prod)} arquivo(s) de produção).")
+        return 0
+    msg = (f"{len(prod)} arquivo(s) de produção mudaram sem .claude/specs/*/evidencias.md declarando canal "
+           "real (navegador/API/integração) nem justificativa de prova degradada. Rode o fsk-prove no canal real.")
+    print(("check-proof BLOQUEADO — " if block else "check-proof AVISO — ") + msg)
+    return 1 if block else 0
 
 
 def main():
@@ -557,6 +611,7 @@ def main():
     wt = sub.add_parser("worktree"); wt.add_argument("name"); wt.add_argument("--path", default="."); wt.add_argument("--branch", default=None)
     gh = sub.add_parser("git-hooks"); gh.add_argument("--path", default="."); gh.add_argument("--local-mode", action="store_true")
     hk = sub.add_parser("_hook"); hk.add_argument("event"); hk.add_argument("rest", nargs="*")
+    cp = sub.add_parser("check-proof"); cp.add_argument("--base", default=None); cp.add_argument("--block", action="store_true")
     args = ap.parse_args()
     if args.cmd == "core":
         sys.exit(cmd_core(args.target, args.home, args.dry_run, args.project))
@@ -568,6 +623,8 @@ def main():
         sys.exit(cmd_git_hooks(args.path, args.local_mode))
     if args.cmd == "_hook":
         sys.exit(cmd_hook(args.event, args.rest))
+    if args.cmd == "check-proof":
+        sys.exit(cmd_check_proof(args.base, args.block))
     data = load()
     if args.cmd == "validate":
         sys.exit(cmd_validate(data))
