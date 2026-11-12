@@ -1,0 +1,22 @@
+# Freio de merge do fsk (opt-in). O /fsk-setup copia este arquivo para
+# .github/workflows/ quando o time aceita. Bloqueia o PR se a mudança tem código
+# de produção sem um .claude/specs/*/evidencias.md declarando canal real
+# (navegador/API/integração) ou a justificativa de prova degradada.
+name: fsk-proof
+on:
+  pull_request:
+    branches: [main, develop, master]
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Obter o fsk.py
+        run: git clone --depth 1 https://github.com/KauaLealz/fullstack-skills-kit.git /tmp/fsk
+      - name: Verificar prova (canal real)
+        run: python /tmp/fsk/install/fsk.py check-proof --base "origin/${{ github.base_ref }}" --block

@@ -1,6 +1,6 @@
 ---
 name: fsk-prove
-description: Prova comportamento de verdade e sem viés — navegador > API real > integração > unitário (só com motivo escrito). Lê os critérios antes do diff; em S2+/alta roda em subagente que não viu a implementação. Dispara em "valida", "testa", "funciona?" e no fechamento de cada fatia. Não use para revisar código (fsk-review) nem para migrar a suíte existente.
+description: Prova comportamento de verdade e sem viés — navegador > API real > integração > unitário (só com motivo escrito). Lê os critérios antes do diff; em S2+/alta roda em subagente que não viu a implementação. Dispara em "valida", "testa", "funciona?", ao terminar/fechar uma mudança de código, e no fechamento de cada fatia. Não use para revisar código (fsk-review) nem para migrar a suíte existente.
 user-invocable: false
 effort: medium
 ---

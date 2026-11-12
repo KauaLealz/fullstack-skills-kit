@@ -5,7 +5,8 @@ leia o `AGENTS.md` do repo.** Sem ele, sugira `/fsk-setup` em uma linha e siga.
 
 **Fases:** `/fsk-plan` planeja · `/fsk-build` executa · `/fsk-ship` entrega · `/fsk-setup` prepara (1x).
 O agente aciona quando a situação pede: `fsk-explore` (contexto), `fsk-prove` (prova), `fsk-review`
-(verifica), `fsk-debug` (bug), `fsk-docs` (documenta/tour), `fsk-learn` (aprende).
+(verifica), `fsk-debug` (bug), `fsk-docs` (documenta/tour), `fsk-learn` (aprende) — não improvise o que é
+de uma skill de fase (provar/revisar): invoque-a.
 ## Pensar e mudar
 - Entenda antes de mudar; diga as suposições. Dúvida de escopo pergunta, dúvida de fato descobre.
 - Menor mudança completa: precisa existir? já existe? stdlib/plataforma? dependência instalada? só então
@@ -13,9 +14,8 @@ O agente aciona quando a situação pede: `fsk-explore` (contexto), `fsk-prove` 
 - Cirúrgico: nunca corte validação de borda, autorização, perda de dado, segredos, acessibilidade.
 - Código para quem mantém: siga o padrão e a arquitetura do repo, nomes que dizem a intenção, fluxo
   direto. Padrão ruim: siga mesmo assim e sinalize.
-- Regra de negócio e comportamento só mudam com pedido explícito ou "ok" registrado; mudança que exige
-  alterar regra não prevista para e pergunta.
-- Atalho consciente marcado `shortcut: <limite>, <quando evoluir>`. "Pronto" exige prova (`fsk-prove`).
+- Regra de negócio e comportamento só mudam com pedido explícito ou "ok"; mudança que exige alterar regra não prevista para e pergunta.
+- Atalho marcado `shortcut: <limite>, <quando evoluir>`. Toda mudança de código passa pelo fluxo; "pronto" exige prova real (`fsk-prove`), não suíte verde.
 ## Navegação barata (escada de custo)
 1. Escreva as 3–5 perguntas que a tarefa exige; pare quando respondidas.
 2. Ponteiro do Mapa ou how-to → busca por nome → estrutura (definições, referências, chamadores) →

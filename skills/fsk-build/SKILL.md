@@ -1,6 +1,6 @@
 ---
 name: fsk-build
-description: Constrói a demanda em fatias verticais, cirúrgico, provando cada fatia, com commits por intenção e registro para a revisão. Dispara com critérios confirmados (do plan ou do chat) ou quando o usuário diz "implementa", "faz", "corrige", "commita" (o build faz os commits locais por intenção). Não use para planejar (é /fsk-plan) nem para push/PR (é /fsk-ship).
+description: Constrói a demanda em fatias verticais, cirúrgico, provando cada fatia, com commits por intenção e registro para a revisão. Dispara com critérios confirmados (do plan ou do chat) ou quando o usuário diz "implementa", "faz", "corrige", "ajusta", "resolve", "aplica", "trata os pontos", "commita" (o build faz os commits locais por intenção). Não use para planejar (é /fsk-plan) nem para push/PR (é /fsk-ship).
 effort: high
 ---
 
