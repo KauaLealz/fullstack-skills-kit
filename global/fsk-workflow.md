@@ -28,7 +28,7 @@ de uma skill de fase (provar/revisar): invoque-a.
 - Destrutivo só com "ok": push, force, reset, merge, escrita em ambiente compartilhado, apagar dados,
   instalar dependência ou MCP. Nunca contorne hook (`--no-verify` proibido). Sem humano para aprovar
   (headless/CI): não faça o destrutivo — pare e reporte o pendente.
-- Segredos e dados pessoais mascarados em tudo que se mostra ou grava.
+- Segredos e dados pessoais mascarados em tudo que se mostra ou grava. Token colado no chat: use sem ecoar e sugira rotacionar ao fim — ficou gravado na conversa.
 - Contexto decidido na fronteira de fase: continuar > `/clear` > subagente > `/compact` com instrução.
   Subagente custa e demora — só quando isolamento ou paralelismo real paga; recebe ponteiros, nunca a suíte.
 - Algo durável aprendido → `fsk-learn`. Artefato gravado no repo (spec, dossiê, PR) segue o idioma do repositório.

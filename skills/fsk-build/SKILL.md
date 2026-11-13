@@ -41,6 +41,12 @@ exploração salvas fora do repo e passadas por ponteiro. Merge da ponta da inte
 fechamento único no fim. Estado por fatia na spec (feita · em andamento · bloqueada) para retomar de onde
 parou; demanda abandonada é marcada, não apagada.
 
+## Modo autônomo ("implemente tudo, não pare")
+Os gates somem; o rito **fica**. Antes de começar: feche TODAS as decisões em lote (uma rodada). Por
+fatia: `notas.md` + prova direcionada + **uma linha de progresso** (nunca fique mudo). No fim: `fsk-prove`
+dos critérios, `evidencias.md`, `fsk-review` e relatório único. "Não pare" significa não esperar "ok" —
+não significa pular prova, notas ou review.
+
 ## Freios
 Fora do escopo se anota, não se conserta. Demanda cresceu, reclassifique na fronteira. Commits locais
 ok; push, PR e merge são do `fsk-ship`.

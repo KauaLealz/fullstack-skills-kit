@@ -14,7 +14,7 @@ trabalho (refatoração, escopo novo) re-entra aqui e vira spec — não siga em
 ## Classificação (uma linha ao usuário)
 | Eixo | Valores |
 |---|---|
-| Tipo | feature · ajuste · bug · refactor · dados/migração · infra/config · spike · documentação |
+| Tipo | feature · ajuste · bug · refactor · dados/migração · infra/config · spike · documentação · **design/UX** |
 | Tamanho | S0 trivial · S1 um fluxo · S2 várias camadas/decisões · S3 multi-sessão · Neblina |
 | Criticidade | **alta**: dinheiro, auth/permissão, tenant, dados pessoais, dado irreversível, contrato público, produção quebrada · **média**: comportamento visível ao usuário · **baixa**: resto |
 
@@ -28,7 +28,10 @@ trabalho (refatoração, escopo novo) re-entra aqui e vira spec — não siga em
 | Mapa | Neblina | Só decisões, uma por vez, com destino declarado, até virar S2/S3 |
 
 ## Ajustes por tipo
-Bug sem spec (o sintoma vira critério; o build começa no `fsk-debug`). Spike sai com resposta e
+Bug sem spec (o sintoma vira critério; o build começa no `fsk-debug`). **Design/UX passa pelo plan como
+qualquer demanda:** cada pedido visual vira critério verificável (logo trocada, contraste AA, estados
+hover/vazio/erro, responsivo) — a prova é screenshot por critério e o review confere cobertura; sem isso,
+"faltou X" só aparece na bronca do usuário. Spike sai com resposta e
 protótipo descartável fora da main, não código de produção. Refactor tem critério "comportamento
 idêntico" e, com raio largo, sequência expandir → migrar em lotes → contrair. Dados/migração sempre
 declara reversão e ordem de deploy. Documentação vai direto ao `fsk-docs`.
