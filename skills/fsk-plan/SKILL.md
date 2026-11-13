@@ -36,12 +36,17 @@ protótipo descartável fora da main, não código de produção. Refactor tem c
 idêntico" e, com raio largo, sequência expandir → migrar em lotes → contrair. Dados/migração sempre
 declara reversão e ordem de deploy. Documentação vai direto ao `fsk-docs`.
 
-## Entrevista
-Rodadas pela fronteira de decisões: todas as decisões desbloqueadas, numeradas, cada uma com
-recomendação e redigida para "sim" aceitar a recomendação. Fatos o agente descobre (em `fsk-explore`,
-sem bloquear o resto); decisões são do usuário. Desafie termo vago ou ambíguo do domínio e cheque se o
-código concorda com o que foi dito. Termine quando nada aberto muda escopo, risco ou prova. Dúvida que
-está na cabeça de outra pessoa (PO, cliente): gere um questionário para ela, não chute.
+## Entrevista (protocolo de profundidade — detalhe em `references/entrevista.md`)
+**Ordem obrigatória: entenda ANTES de perguntar.** Primeiro `fsk-explore` no terreno da demanda; cada
+pergunta sai **ancorada no que o código faz hoje** ("hoje X acontece em `arquivo:linha` — mantém ou
+muda?"), nunca genérica. Depois, **varra as dimensões do catálogo** (dados/retroativo, bordas, permissões,
+estados UX, consumidores/relatórios, rollout/reversão…): cada dimensão vira pergunta **ou** é descartada
+com motivo escrito na spec ("sem impacto em X porque Y") — pular em silêncio é plano raso.
+É **multi-rodada**: a regra de "rodada única" do núcleo vale para aprovação, não para descoberta; rode
+quantas rodadas a fronteira de decisões pedir, cada decisão numerada, com recomendação, redigida para
+"sim" aceitar. Fatos o agente descobre; decisões são do usuário. Desafie termo vago e cheque se o código
+concorda com o que foi dito. Termine só quando a varredura fechou E nada aberto muda escopo, risco ou
+prova. Dúvida na cabeça de outra pessoa (PO, cliente): questionário para ela, não chute.
 
 ## Plano de ataque (o mapa que o build executa)
 Transforme os critérios num mapa concreto que o build só executa — via `fsk-explore` (o quanto a demanda
