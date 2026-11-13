@@ -26,6 +26,9 @@ de specs/RFC própria, use o formato dele e acrescente só os critérios de acei
 ## Decisões
 - <decisão> — <porquê> · <vira rule? qual>
 
+## Varredura (dimensões descartadas, com motivo)
+- <dimensão> — sem impacto porque <motivo>   ← o que não está aqui nem em Decisões não foi pensado
+
 ## Fatias (S3: verticais, com dependências)
 1. <fatia> — depende de: <—> · critério: <…>
 2. <fatia> — depende de: 1
