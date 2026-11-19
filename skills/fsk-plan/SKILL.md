@@ -33,7 +33,10 @@ qualquer demanda:** cada pedido visual vira critério verificável (logo trocada
 hover/vazio/erro, responsivo) — a prova é screenshot por critério e o review confere cobertura; sem isso,
 "faltou X" só aparece na bronca do usuário. Spike sai com resposta e
 protótipo descartável fora da main, não código de produção. Refactor tem critério "comportamento
-idêntico" e, com raio largo, sequência expandir → migrar em lotes → contrair. Dados/migração sempre
+idêntico" e, com raio largo, sequência expandir → migrar em lotes → contrair. **Mudança em massa**
+(mesma alteração em muitos arquivos) é planejada como codemod: a spec traz o inventário exato (grep →
+arquivos + contagem), exclusões, o risco (AST × regex; o que pode casar errado) e a amostra de validação —
+o build executa o protocolo de script, não edição manual. Dados/migração sempre
 declara reversão e ordem de deploy. Documentação vai direto ao `fsk-docs`.
 
 ## Entrevista (protocolo de profundidade — detalhe em `references/entrevista.md`)

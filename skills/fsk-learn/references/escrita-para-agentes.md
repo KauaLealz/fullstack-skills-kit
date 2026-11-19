@@ -18,6 +18,11 @@ só fica o que muda o comportamento padrão do modelo.
 Mantenha < 150 linhas. Ele diz **onde** está cada coisa (Mapa, comandos, crítico, vocabulário,
 ponteiros); o **como** mora nas rules e how-to, alcançados pelos ponteiros.
 
+## Forma da rule e do how-to
+Rule: a regra em 1–3 linhas + **evidência citada** (`arquivo:linha` ou link do PR de onde veio) + rodapé
+`origem: <commit-sha>`. How-to: o **template concreto** — o trecho de código-modelo real do repo, onde o
+arquivo novo vive, e 2–3 do/don'ts — nunca prosa abstrata ("siga o padrão do projeto" não ensina nada).
+
 ## Teste antes de gravar
 - Isso muda o que o agente faria por padrão? Se não, não grave.
 - Uma ferramenta consegue checar? Então vira checagem (lint/hook/CI), não texto.

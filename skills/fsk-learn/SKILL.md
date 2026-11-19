@@ -24,9 +24,13 @@ confirmação; na dúvida entre pessoal e time, pergunte.
 |---|---|
 | `AGENTS.md` | Só roteamento: comandos não óbvios, Mapa, o que é crítico, ponteiros |
 | `.claude/rules/<tema>.md` (com `paths`) | Convenção do time em 2+ exemplos ou declarada; correção do usuário vira rule com "ok" (gosto pessoal fica na memória local) |
-| `.claude/skills/how-to-<tarefa>/` | Procedimento do projeto repetido 2+ vezes |
+| `.claude/skills/how-to-<tarefa>/` | Procedimento do projeto repetido 2+ vezes — com o **template concreto** (código-modelo real do repo + onde fica + do/don't), não descrição abstrata |
 | Checagem automática (lint, hook, CI) | Erro mecânico que uma ferramenta pega — preferível a qualquer texto |
 | Seção "Decisões" da spec ou a rule afetada | Decisão com porquê |
+
+**Evidência e carimbo (anti-alucinação de convenção):** toda rule/how-to nasce de evidência real **citada
+no próprio arquivo** (`arquivo:linha` ou PR) e leva o **commit de origem** (`origem: <sha>`). Convenção
+sem evidência não grava. O carimbo torna o drift detectável: o código citado mudou → revalide ou remova.
 
 ## Retrospectiva curta (fim de ship, ou build que deu errado)
 Onde o agente se perdeu (falta ponteiro no Mapa?), que erro uma checagem pegaria, que regra o review
