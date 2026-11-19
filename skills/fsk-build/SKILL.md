@@ -42,7 +42,9 @@ codemod, desvio do mapa, evidencias preenchido): `references/situacoes.md`.
 A mesma tentativa falhou 3× → pare, registre em `notas.md`, replaneje — não insista variando detalhe.
 Abordagem do mapa não serve → desvio **registrado** (e pergunta, se muda comportamento), nunca troca
 silenciosa. Edição órfã (sem fatia no mapa) é volta. Não releia o que já está no contexto. Fora do escopo
-se anota, não se conserta. Demanda cresceu → reclassifica na fronteira. Retomado ("continue") → leia
+se anota, não se conserta. **Mudança na spec segue a política dela** (spec.md §Política): esclarecimento
+aditivo edita+Changelog; critério/escopo/comportamento → para e volta ao plan — nunca ajuste a spec para
+caber o código. Demanda cresceu → reclassifica na fronteira. Retomado ("continue") → leia
 `notas.md`/spec e siga de onde parou.
 
 ## Saída · Pronto quando

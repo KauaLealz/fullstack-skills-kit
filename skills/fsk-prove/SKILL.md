@@ -17,8 +17,10 @@ que a lógica isolada bate, não que o comportamento acontece. Catálogo amplo (
 
 ## Protocolo
 
-1. **Leia os critérios antes do diff** — o esperado vem da spec, nunca recalculado pela implementação.
-   Critério ambíguo → "bloqueado", pergunta. Concentre nos **modos de falha prováveis** da spec.
+1. **Leia a seção "Para o QA" da spec antes do diff** — setup, roteiro por critério, negativos
+   obrigatórios e modos de falha prováveis já estão lá; o esperado vem da spec, nunca recalculado pela
+   implementação. Critério ambíguo → "bloqueado", pergunta. **Divergência código×spec nunca se resolve
+   editando a spec** — ou o código muda, ou volta ao plan.
 2. **Suba o sistema — é o padrão, não opção** (Docker/serviço/comando do AGENTS.md). "Não subi" só com
    motivo real escrito ("tentei, falhou por `<erro>`"), nunca por pressa.
 3. **Prove pela pirâmide, de cima para baixo** (exploratório → E2E → aceitação → integração → unitário):
