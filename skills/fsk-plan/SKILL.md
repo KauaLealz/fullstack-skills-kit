@@ -1,6 +1,6 @@
 ---
 name: fsk-plan
-description: Classifica a demanda por tipo × tamanho × criticidade, entrevista até o entendimento compartilhado (Combinado) e entrega o plano de ataque que o build executa. Dispara em demanda nova acima de trivial ("quero", "precisamos", "adicionar", "mudar", "criar"). Não use para implementar (é /fsk-build), para bug já localizado (fsk-debug) nem para dúvida de código (fsk-explore).
+description: Classifica a demanda por tipo × tamanho × risco, entrevista até o entendimento compartilhado (Combinado) e entrega o plano de ataque que o build executa. Dispara em demanda nova acima de trivial ("quero", "precisamos", "adicionar", "mudar", "criar"). Não use para implementar (é /fsk-build), para bug já localizado (fsk-debug) nem para dúvida de código (fsk-explore).
 effort: high
 allowed-tools: Read Grep Glob
 ---
@@ -23,11 +23,11 @@ preenchida — o que "bom" significa).
    | Eixo | Valores |
    |---|---|
    | Tipo | feature · ajuste · bug · refactor · dados/migração · infra/config · spike · documentação · design/UX · **massa** (mesma mudança em N arquivos) |
-   | Tamanho | S0 trivial · S1 um fluxo · S2 várias camadas/decisões · S3 multi-sessão · Neblina |
-   | Criticidade | **alta**: dinheiro, auth/permissão, tenant, dados pessoais, dado irreversível, contrato público, produção quebrada · **média**: visível ao usuário · **baixa**: resto |
-2. **Roteie** (rigor = maior entre tamanho e criticidade): Direto (S0+baixa → "pode ir ao build") ·
-   Critérios (S1 → 3–6 no chat) · Spec (S2 ou alta → entrevista + `spec.md`) · Spec+fatias (S3) ·
-   Mapa (Neblina → uma decisão por vez até virar S2/S3).
+   | Tamanho | **trivial** · **pequeno** (um fluxo) · **médio** (várias partes/decisões) · **grande** (vários dias) · **nebuloso** |
+   | Risco | **alto**: dinheiro, auth/permissão, tenant, dados pessoais, dado irreversível, contrato público, produção quebrada · **médio**: visível ao usuário · **baixo**: resto |
+2. **Roteie** (o rigor acompanha o maior entre tamanho e risco): Direto (trivial e sem risco → "pode ir ao build") ·
+   Critérios (pequeno → 3–6 no chat) · Spec (médio pra cima ou risco alto → entrevista + `spec.md`) · Spec+fatias (grande) ·
+   Mapa (nebuloso → uma decisão por vez até dar pra dimensionar).
 3. **Explore antes de perguntar** (`fsk-explore`): o que o código faz hoje no caminho da demanda. O que o
    código/spec/tracker já respondem **não vira pergunta**; contradição entre fontes **é** a pergunta.
 4. **Entreviste até o entendimento** (protocolo em `entrevista.md`): monte a árvore de decisões, pode os
@@ -42,7 +42,7 @@ preenchida — o que "bom" significa).
    Focus). Critérios de aceite observáveis de fora, caminho infeliz em média/alta, canal de prova e se
    merece teste durável em cada um.
 7. **Transparência e "ok":** mostre o plano inteiro (o quê/como/porquê, arquivos à vista) — o "ok" é
-   sobre isso. Worktree: aplique a política do setup (pergunte só em S2+ ou com trabalho aberto).
+   sobre isso. Worktree: aplique a política do setup (pergunte só no trabalho maior ou com algo já aberto).
 
 ## Profundidade (ajustes por tipo)
 Bug: sintoma vira critério, build começa no `fsk-debug`. Design/UX: cada pedido visual vira critério
@@ -62,5 +62,5 @@ Combinado, não fica para depois). Plano raso joga a análise pro build — aqui
 
 ## Saída · Pronto quando
 Classificação + Combinado confirmado + spec com plano de ataque e Varredura + "ok" do usuário. Pronto
-quando: classifica de S0 a Neblina em todos os tipos; o build executa sem redescobrir; o usuário sabe
+quando: classifica do trivial ao nebuloso em todos os tipos; o build executa sem redescobrir; o usuário sabe
 exatamente o que vai acontecer antes do primeiro edit.

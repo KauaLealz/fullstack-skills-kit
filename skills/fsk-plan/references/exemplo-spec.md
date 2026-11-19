@@ -6,7 +6,7 @@ fatia; a Varredura registra o que foi descartado e por quê.
 
 ```markdown
 # Cupom por categoria
-**Classificação:** feature · S2 · criticidade **alta** (mexe em dinheiro/total do pedido)
+**Classificação:** feature · médio · risco **alto** (mexe em dinheiro/total do pedido)
 **Worktree:** sim: .worktrees/cupom-categoria
 
 ## Combinado (ecoado e confirmado em 14/11)

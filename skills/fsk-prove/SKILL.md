@@ -1,6 +1,6 @@
 ---
 name: fsk-prove
-description: Prova comportamento de verdade e sem viés — navegador > API real > integração > unitário (só com motivo escrito); checagem (tsc/lint/unitário) nunca é prova. Lê os critérios antes do diff; em criticidade alta roda em subagente que não viu a implementação. Dispara em "valida", "testa", "funciona?", ao terminar/fechar uma mudança de código e no fechamento de cada fatia. Não use para revisar código (fsk-review) nem para migrar a suíte existente.
+description: Prova comportamento de verdade e sem viés — navegador > API real > integração > unitário (só com motivo escrito); checagem (tsc/lint/unitário) nunca é prova. Lê os critérios antes do diff; em trabalho de risco alto roda em subagente que não viu a implementação. Dispara em "valida", "testa", "funciona?", ao terminar/fechar uma mudança de código e no fechamento de cada fatia. Não use para revisar código (fsk-review) nem para migrar a suíte existente.
 user-invocable: false
 effort: medium
 ---
@@ -36,14 +36,14 @@ que a lógica isolada bate, não que o comportamento acontece. Catálogo amplo (
 5. **Registre:** veredito na 1ª linha, honesto ao canal (✅ só com comportamento observado; parou na
    checagem → "⚠️ checado, não provado end-to-end"); tabela `ID | resultado | canal | evidência` com
    comando e saída real; cobertura explícita (o que NÃO foi testado e por quê); confiança declarada
-   (confirmado/provável/suspeita). No fechamento de S2+/alta → `evidencias.md` com o **SHA provado**;
+   (confirmado/provável/suspeita). No fechamento de trabalho maior ou arriscado → `evidencias.md` com o **SHA provado**;
    artefatos da prova (prints, saídas, capturas) salvos em `.claude/specs/<slug>/evidencias/` — a pasta da
    demanda carrega tudo dela.
 
 ## Profundidade
 | Dimensão | Regra |
 |---|---|
-| **Isolamento** | Alta/S3: subagente novo que só recebe critérios + como subir. S2 médio: inline com a mesma disciplina |
+| **Isolamento** | Risco alto ou trabalho grande: subagente novo que só recebe critérios + como subir. No médio: inline com a mesma disciplina |
 | **Degradada** | Só após tentar subir: lib/serverless/legado/cross-repo → prove o que dá (contrato, integração parcial, staging) e diga "provado por X; não executado end-to-end por Y". Infra/migração provam pelo efeito real (recurso criado; migration aplicada E revertida) |
 | **Navegador** | Driver do AGENTS.md/manifest; sem driver → API + roteiro manual, fallback registrado; SSO/MFA → sessão de teste do setup |
 | **Teste durável** | Só p/ contrato publicado, dinheiro, permissão/tenant, invariante de arquitetura, falha, bug ocorrido. 3 perguntas antes (que mudança futura pega? coberto acima? quebra em refactor neutro?). Forma: 1 falha/teste, nome que acusa, dado real, sem dublê do rodável, mensagem que explica, e **falha sem a mudança** (git stash quando barato) |
@@ -58,6 +58,6 @@ sem convergir → "suspeita" e volta ao plano. Questione requisito ruim para o u
 separada.
 
 ## Saída · Pronto quando
-Veredito + tabela + cobertura + achados; `evidencias.md` carimbado em S2+/alta (ship confere o SHA).
+Veredito + tabela + cobertura + achados; `evidencias.md` carimbado no trabalho maior ou arriscado (ship confere o SHA).
 Pronto quando: prova em navegador e API com evidência real; ambíguo bloqueado, não adivinhado; nenhum
 "provado" sem comportamento observado.

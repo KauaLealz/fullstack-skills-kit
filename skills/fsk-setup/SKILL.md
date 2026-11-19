@@ -45,7 +45,7 @@ As skills `fsk-*` vêm do `fsk.py core` (globais); aqui se decide só o lado-pro
    (custo+telemetria); `fsk.py gitignore` (pessoal fora do git); e **gera os scripts adaptativos** em
    `.claude/scripts/` com os comandos reais do projeto — `subir.sh` (sobe + aguarda healthcheck) e
    `testar.sh` (runner da stack, só o que mudou). `check-proof` fica como job de CI se o time quiser.
-9. **Worktrees:** política (`nunca` · `perguntar` · `sempre S2+`) em `fsk.local.json`; se ≠ `nunca`,
+9. **Worktrees:** política (`nunca` · `perguntar` · `sempre no maior`) em `fsk.local.json`; se ≠ `nunca`,
    **valide a receita de verdade** (criar, preparar, subir, remover um worktree de teste) → AGENTS.md.
 10. **Brownfield:** migre regras/skills existentes (`.cursor/rules`, `copilot-instructions`) para o
     formato do alvo; remova os antigos **só depois** de migrados e com "ok".
