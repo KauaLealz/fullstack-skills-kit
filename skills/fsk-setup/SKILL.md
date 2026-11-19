@@ -12,7 +12,8 @@ valida rodando, não no papel; captura o jeito do time sem impor o seu.
 
 **Missão:** deixar o repo pronto numa passada: o agente contextualizado (Mapa, comandos validados,
 convenções com evidência), o fluxo do time capturado (git, PR, pronto) e as ferramentas certas sugeridas.
-Idempotente: rodar de novo é auditoria de drift. Estrutura gerada: `references/project-layout.md`.
+Idempotente: rodar de novo é auditoria de drift. Estrutura gerada: `references/project-layout.md`;
+um repo real antes/depois (com o AGENTS.md preenchido): `references/exemplo-repo.md`.
 As skills `fsk-*` vêm do `fsk.py core` (globais); aqui se decide só o lado-projeto.
 
 ## Protocolo
