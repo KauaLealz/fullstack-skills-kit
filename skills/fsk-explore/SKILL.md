@@ -25,8 +25,11 @@ partida, ou pergunta direta do usuário. Para o resto, a escada de custo do núc
 1. **Receba perguntas, não um tema.** Quem chama diz o que precisa saber (3–5 perguntas). Sem perguntas
    claras, formule e confirme em uma linha.
 2. **Siga a escada de custo do núcleo** e as ferramentas registradas no `AGENTS.md`: CLI primeiro;
-   navegação por símbolos se houver; CodeGraph só para fluxo que a busca por nome não segue ou para raio
-   de impacto.
+   navegação por símbolos se houver. **CodeGraph** (quando há `.codegraph/` no repo): prefira ao
+   grep/find para entender ou localizar código — `codegraph_explore` (MCP) ou
+   `codegraph explore "<símbolos ou pergunta>"` (shell) devolve o código dos símbolos e os caminhos de
+   chamada numa só ida, inclusive os saltos de dispatch dinâmico que a busca por nome não segue; use-o
+   também para raio de impacto. Sem `.codegraph/`, pule — indexar é decisão do usuário.
 3. **Git e comentários como contexto barato:** histórico do arquivo para o porquê; arquivos que mudam
    juntos para dependência escondida; PRs recentes da área para o padrão vigente. Comentários existentes
    (porquê/invariante/pegadinha) e marcadores `TODO`/`FIXME`/`HACK`/`shortcut:` da área são sinal de
