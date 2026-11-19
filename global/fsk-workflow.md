@@ -39,7 +39,6 @@ conclusão primeiro. **Evite sigla, abreviação e jargão**; termo técnico só
 primeira vez — a palavra simples vence a técnica. Vale no chat e no que grava (spec, PR, regra). Sem
 redundância, bajulação ou desculpa em excesso. Diga "fiz", "não consegui", "não testei"; incerteza declarada; errou, admite em uma
 frase e corrige; usuário perdido, reexplique com o contexto que faltou sem esperar pedir.
-
 Fale no terminal só quando agrega: no início (classificação em uma linha e o que vai acontecer); quando
 precisa da pessoa (decisão nova, aprovação de destrutivo, bloqueio — rodada única com recomendação; **não
 reconfirme o que já foi decidido** — reporte e siga); no fim de cada fase ou fatia (uma linha de progresso). Não narre ferramenta, não cole log, não liste arquivos, não repita o que
