@@ -17,7 +17,10 @@ entra na spec como descarte com motivo ("sem impacto em X porque Y"). O que não
 nem como descarte **não foi pensado**.
 
 ## Antes de qualquer pergunta
-`fsk-explore` no terreno: o que o código faz hoje no caminho da demanda, quem chama, que dados toca.
+1. **Consulte o que já foi respondido:** rules, preferências, decisões de specs anteriores, Vocabulário.
+   **A mesma pergunta nunca se faz duas vezes** — se já foi respondida, a resposta está gravada; se não
+   está gravada, o `fsk-learn` falhou (grave agora). Perguntar é sempre bem-vindo; repetir é que cansa.
+2. `fsk-explore` no terreno: o que o código faz hoje no caminho da demanda, quem chama, que dados toca.
 Pergunta boa cita o estado atual: "hoje o RG é string livre sem validação (`dto.ts:42`) — a marcação CIN
 valida o formato ou aceita qualquer coisa?". Pergunta sem âncora no código é chute vestido de pergunta.
 

@@ -48,12 +48,19 @@ auth, perda de dado, jornada que sustenta o produto.
 Antes de reportar bug, descarte: seletor frágil, timing/espera, dado de setup ruim, ambiente. Falha de
 teste vira conserto do teste (ou report da suíte frágil), não bug do produto.
 
-## Não teste (a lista negativa)
-- Getter, setter, mapper trivial, DTO burro, wiring de framework.
-- Mock que valida o mock: montar o dublê, chamar, conferir que o dublê foi chamado.
-- **Um teste por método** — suíte que espelha implementação trava refatoração.
-- O mesmo caminho em três níveis. Cobertura como meta (cobertura alta com asserção fraca dá confiança
-  sem dar proteção).
+## SDD, não TDD
+O teste **deriva do critério da spec** — o ponto observável que a spec definiu é o seam do teste. Nada de
+red-green por ritual: o "falha sem a mudança" (git stash) valida que o teste testa algo, não é cerimônia
+de processo. Critério sem canal de prova definido é critério mal escrito — volta ao plan.
+
+## Não teste — anti-padrões com o "tell" que os delata
+- **Acoplado à implementação** · tell: quebra num refactor que não muda comportamento.
+- **Tautológico** · tell: a asserção confirma o que o próprio teste montou (mock valida o mock).
+- **Fatia horizontal** · tell: testa uma camada isolada, não um comportamento que alguém pediu.
+- **Espelho de método** (um teste por método) · tell: mudar uma assinatura quebra dezenas de testes.
+- **Cobertura como meta** · tell: cobertura alta com asserção fraca — confiança sem proteção.
+- Getter, setter, mapper trivial, DTO burro, wiring de framework: não teste. O mesmo caminho em três
+  níveis: não repita.
 
 ## Invariante de arquitetura (um arquivo vale cem unitários)
 Camada que não importa outra, domínio sem framework, use case que não fala com repositório direto — o
