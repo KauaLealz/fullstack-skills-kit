@@ -48,9 +48,13 @@ paths:
   - "src/api/**/*.ts"
 ---
 # API — convenções
-- Todo endpoint valida a entrada.
+- Todo endpoint valida a entrada. (evidência: `src/api/users.ts:12-30`, PR #84)
 - Erro no formato padrão do projeto (ver feature de referência no Mapa).
+
+origem: a1b2c3d
 ```
+Toda rule cita a evidência de onde nasceu e leva o commit de origem — sem evidência, não grava; código
+citado mudou, revalida ou remove (drift detectável).
 
 ## fsk.json (versionado) e fsk.local.json (fora do git)
 

@@ -35,3 +35,35 @@ auth, perda de dado, jornada que sustenta o produto.
 ## Separar falha do produto de falha do teste
 Antes de reportar bug, descarte: seletor frágil, timing/espera, dado de setup ruim, ambiente. Falha de
 teste vira conserto do teste (ou report da suíte frágil), não bug do produto.
+
+## Não teste (a lista negativa)
+- Getter, setter, mapper trivial, DTO burro, wiring de framework.
+- Mock que valida o mock: montar o dublê, chamar, conferir que o dublê foi chamado.
+- **Um teste por método** — suíte que espelha implementação trava refatoração.
+- O mesmo caminho em três níveis. Cobertura como meta (cobertura alta com asserção fraca dá confiança
+  sem dar proteção).
+
+## Invariante de arquitetura (um arquivo vale cem unitários)
+Camada que não importa outra, domínio sem framework, use case que não fala com repositório direto — o
+próximo agente "melhora" isso sem perceber. Ferramentas: **ArchUnit** (Java/Kotlin),
+**dependency-cruiser** / **eslint-plugin-boundaries** (TS/JS), **import-linter** (Python).
+
+## Teste direcionado por stack (anti-voltas; o do repo vai no AGENTS.md)
+| Stack | Direcionado |
+|---|---|
+| Jest | `jest --findRelatedTests <arquivos>` · `--onlyChanged` |
+| Vitest | `vitest related <arquivos>` · `vitest run <caminho>` |
+| Playwright | `npx playwright test e2e/fluxo.spec.ts` · `--grep "@tag"` |
+| pytest | `pytest caminho/test_x.py::test_y` · `-k "expressão"` |
+| Maven/Gradle | `mvn test -Dtest=Classe#metodo` · `gradle test --tests "*Classe*"` |
+| Go | `go test ./pacote/... -run TestNome` |
+
+## As duas únicas exceções de prova (com evidência manual + card da infra)
+1. **Hotfix urgente** — produção quebrada não espera o runner subir.
+2. **Mudança trivial, lista fechada:** texto, label, tradução, cor, espaçamento, comentário, log, rename
+   interno sem mudança de contrato. Qualquer coisa que altere **o que o sistema faz** está fora da lista,
+   por menor que seja o diff.
+
+## Sinais de que a suíte azedou (reporte)
+Demora tanto que pulam · falha vermelha virou ruído ("esse sempre quebra") · mudar uma assinatura quebra
+dezenas de testes · ninguém sabe qual bug real a suíte já pegou.

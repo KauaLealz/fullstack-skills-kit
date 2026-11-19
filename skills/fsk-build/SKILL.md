@@ -41,6 +41,23 @@ exploração salvas fora do repo e passadas por ponteiro. Merge da ponta da inte
 fechamento único no fim. Estado por fatia na spec (feita · em andamento · bloqueada) para retomar de onde
 parou; demanda abandonada é marcada, não apagada.
 
+## Anti-voltas (construção cirúrgica)
+A mesma tentativa falhou 3 vezes → pare, registre em `notas.md` e replaneje (hipótese nova ou pergunta);
+não insista variando detalhe. A abordagem do mapa não serve → **não troque em silêncio**: registre o
+desvio em `notas.md` (e pergunte, se muda comportamento). Não releia o que já está no contexto; não
+"explore de novo" o que o mapa já aponta. Cada edição pertence a uma fatia do mapa — edição órfã é volta.
+
+## Mudança em massa (codemod, não edição manual)
+Mesma alteração em muitos arquivos (remover valor, migrar string→enum, rename de API): **nunca** edite N
+arquivos na mão — escreva um script e trate-o como produto:
+1. **Inventário exato** (grep → lista de arquivos + contagem, registrada na spec/notas) e exclusões
+   (vendor, gerado, "Não ler").
+2. **Script idempotente** — AST (jscodeshift/comby/ast-grep) quando estrutura importa; sed/regex só para
+   texto inequívoco. Salvo em `.claude/specs/<slug>/` para auditoria e reuso.
+3. **Amostra primeiro:** aplique em 2–3 arquivos, revise o diff da amostra; só então aplique no todo.
+4. **Validação mecânica:** contagem aplicada = inventário; grep residual = 0; typecheck/lint; prova
+   direcionada. Commit **mecânico** separado (o revisor pula com segurança).
+
 ## Modo autônomo ("implemente tudo, não pare")
 Os gates somem; o rito **fica**. Antes de começar: feche TODAS as decisões em lote (uma rodada). Por
 fatia: `notas.md` + prova direcionada + **uma linha de progresso** (nunca fique mudo). No fim: `fsk-prove`
