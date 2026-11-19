@@ -2,6 +2,23 @@
 
 Proponha isto e grave só com "ok". O do time sempre vence; aqui é o default quando não há nada.
 
+## As três camadas (precedência: projeto → usuário → kit)
+
+| Camada | Onde vive | O que carrega | Versionado? |
+|---|---|---|---|
+| **Projeto (time)** | `AGENTS.md` + `.claude/rules` + `how-to` + `specs` | convenção, fluxo de entrega, mapa | ✅ git do time |
+| **Usuário (pessoal)** | `~/.claude/` (CLAUDE.md, memória) + `.claude/fsk.local.json` | preferências (worktree, explicação, estilo de entrega) | ❌ nunca |
+| **Kit (default)** | `~/.claude/skills/fsk-*` + núcleo | comportamento base, sobrescrevível pelas camadas acima | — |
+
+## Bloco fsk no `.gitignore` (o setup sempre oferece)
+```gitignore
+# fsk:gitignore:start
+.claude/fsk.local.json
+.worktrees/
+# modo local (dev solo) acrescenta: AGENTS.md, CLAUDE.md, .claude/, .cursor/, .agents/ …
+# fsk:gitignore:end
+```
+
 ```
 AGENTS.md                         # roteador < 150 linhas
 CLAUDE.md                         # @AGENTS.md

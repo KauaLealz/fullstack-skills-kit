@@ -1,82 +1,46 @@
 ---
 name: fsk-build
-description: Constrói a demanda em fatias verticais, cirúrgico, provando cada fatia, com commits por intenção e registro para a revisão. Dispara com critérios confirmados (do plan ou do chat) ou quando o usuário diz "implementa", "faz", "corrige", "ajusta", "resolve", "aplica", "trata os pontos", "commita" (o build faz os commits locais por intenção). Não use para planejar (é /fsk-plan) nem para push/PR (é /fsk-ship).
+description: Constrói a demanda executando o plano de ataque — fatias verticais, cirúrgico, provando cada fatia, commits por intenção e registro para a revisão. Dispara com critérios confirmados (do plan ou do chat) ou quando o usuário diz "implementa", "faz", "corrige", "ajusta", "resolve", "aplica", "trata os pontos", "commita" (commits locais são daqui). Não use para planejar (é /fsk-plan) nem para push/PR (é /fsk-ship).
 effort: high
 ---
 
 # fsk-build — execução cirúrgica
 
-1. **Entrada.** Sem critérios e acima de S0, escreva 3–6 e confirme. Criticidade alta sem spec, volte ao
-   `fsk-plan`. Bug: `fsk-debug` primeiro.
-2. **Parta do mapa de ataque** da spec/`exploracao.md` (arquivos, onde, abordagem, referência a copiar) —
-   não redescubra o "o quê/onde". Mapa raso ou ausente → volte ao `fsk-plan`, não improvise a análise.
-3. **Sua carga é o "como":** menor mudança completa, padrão do repo e boas práticas, pela fatia do mapa.
-   Confirme o alcance (chamadores, contratos, migrations, fixtures, telas) contra o mapa; o resto é fora de escopo.
-4. **Por fatia vertical:** menor mudança completa → checagem direcionada (só o que tocou) → `fsk-prove`
-   da fatia. Decisão não prevista: pare e pergunte.
-5. **Fechamento:** prova de todos os critérios (subagente independente só em criticidade alta; S2 médio
-   prova inline), suíte completa (é checagem, não prova) uma vez ou CI, `fsk-review`, relatório. Suíte
-   verde não é "provado": a prova é o `fsk-prove` no canal real.
+**Missão:** executar o mapa do plan rápido e bem — a análise já fechou lá; aqui a carga é o **como**:
+menor mudança completa, padrão do repo, boas práticas, sem dar voltas.
 
-## Disciplina do diff
-- **Diff mínimo desde o início:** não reformate, não reindente, não reordene, não renomeie e não
-  "aproveite para melhorar" nada que a demanda não exige. Pedido explícito disso é anotado em `notas.md`
-  e vai em commit mecânico separado.
-- **Commits por intenção:** mudança mecânica (rename, mover, formatação), refactor e mudança de
-  comportamento em commits separados, para o revisor pular o mecânico com segurança.
-- **Registro corrido para a revisão:** cada decisão tomada, cada mudança de comportamento aprovada e cada
-  lugar de menor confiança vão para `.claude/specs/<slug>/notas.md` no momento em que acontecem (uma
-  linha cada). É a matéria-prima do dossiê; nada é reconstruído de memória no fim. Ao ser retomado
-  ("continue"), leia `notas.md`/spec para saber onde parou — não recomece do zero nem reexplore.
+## Protocolo
 
-## Worktree
-Se o plan decidiu por worktree, crie pela receita do `AGENTS.md` (branch na convenção do repo), prepare
-o ambiente e trabalhe lá; a pasta principal fica intocada. Diga o caminho em uma linha.
+1. **Entrada:** sem critérios e acima de S0 → escreva 3–6 e confirme. Alta sem spec → volte ao plan.
+   Bug → `fsk-debug` primeiro.
+2. **Parta do mapa de ataque** (spec/`exploracao.md`): arquivos, onde, abordagem, referência a copiar.
+   Mapa raso ou ausente → **volte ao `fsk-plan`**, não improvise a análise. Confirme o alcance
+   (chamadores, contratos, migrations, fixtures, telas) contra o mapa — o resto é fora de escopo.
+3. **Por fatia vertical:** menor mudança completa → checagem direcionada (só o que tocou) → `fsk-prove`
+   da fatia → commit por intenção → linha em `notas.md` (decisão, aprovação, baixa confiança — no momento
+   em que acontece). Decisão não prevista: pare e pergunte.
+4. **Fechamento:** prova de todos os critérios (subagente independente só em alta; S2 médio inline),
+   suíte completa uma vez ou CI (**checagem, não prova**), `fsk-review`, relatório do núcleo.
 
-## S3 — fatias em paralelo
-Fatias de fato independentes e grandes rodam em paralelo, um subagente por fatia em worktree a partir de
-uma branch de integração (poucas ou acopladas → sequência; política de worktree `nunca` → sequência na
-pasta atual). Notas de
-exploração salvas fora do repo e passadas por ponteiro. Merge da ponta da integração antes de reportar;
-fechamento único no fim. Estado por fatia na spec (feita · em andamento · bloqueada) para retomar de onde
-parou; demanda abandonada é marcada, não apagada.
+## Profundidade
+| Dimensão | Regra |
+|---|---|
+| **Diff** | Mínimo desde o início: sem reformatar/reordenar/renomear/"aproveitar para melhorar"; pedido explícito → `notas.md` + commit mecânico separado |
+| **Commits** | Por intenção: mecânico · refactor · comportamento — o revisor pula o mecânico |
+| **Comentários** | Ler antes (TODO/FIXME/`shortcut:` não se apaga em silêncio); escrever só invariante/porquê/pegadinha — nunca narrar a linha nem falar com o revisor; mudou o código, o comentário acompanha ou morre |
+| **Massa (codemod)** | N arquivos, mesma mudança → script, nunca mão: inventário exato (grep+contagem na spec) → script idempotente salvo em `.claude/specs/<slug>/` (AST p/ estrutura, regex só p/ texto inequívoco) → amostra de 2–3 com diff revisado → aplicar → validação mecânica (contagem=inventário, grep residual 0, typecheck) → commit mecânico |
+| **Worktree** | Decidido no plan → crie pela receita do AGENTS.md; pasta principal intocada; caminho dito em 1 linha |
+| **S3 paralelo** | Fatias grandes e independentes → subagente por fatia em worktree a partir de branch de integração (ponteiros, nunca texto colado); poucas/acopladas → sequência; estado por fatia na spec (feita·andamento·bloqueada) p/ retomar |
+| **Autônomo** | "Implemente tudo, não pare": gates somem, **rito fica** — decisões em lote antes; por fatia notas+prova+1 linha de progresso; evidencias+review+relatório único no fim |
 
-## Comentários (ler antes, escrever quase nunca)
-**Ler:** comentário existente é contexto de primeira classe — carrega o porquê que o código não mostra.
-Antes de mudar um trecho comentado, leia e respeite (ou registre por que ignora). `TODO`/`FIXME`/`HACK`/
-`shortcut:` da área tocada: não apague em silêncio — resolva, ou reporte em `notas.md`.
-**Escrever:** só o que o código não consegue dizer — invariante, porquê de decisão não-óbvia, pegadinha,
-`shortcut:` estruturado. Nunca: narrar a linha, repetir o nome da função, explicar a mudança ao revisor
-(isso é `notas.md`/PR). **Manter:** mudou o código, o comentário acompanha ou morre — desatualizado é
-pior que nenhum.
+## Freios (anti-voltas)
+A mesma tentativa falhou 3× → pare, registre em `notas.md`, replaneje — não insista variando detalhe.
+Abordagem do mapa não serve → desvio **registrado** (e pergunta, se muda comportamento), nunca troca
+silenciosa. Edição órfã (sem fatia no mapa) é volta. Não releia o que já está no contexto. Fora do escopo
+se anota, não se conserta. Demanda cresceu → reclassifica na fronteira. Retomado ("continue") → leia
+`notas.md`/spec e siga de onde parou.
 
-## Anti-voltas (construção cirúrgica)
-A mesma tentativa falhou 3 vezes → pare, registre em `notas.md` e replaneje (hipótese nova ou pergunta);
-não insista variando detalhe. A abordagem do mapa não serve → **não troque em silêncio**: registre o
-desvio em `notas.md` (e pergunte, se muda comportamento). Não releia o que já está no contexto; não
-"explore de novo" o que o mapa já aponta. Cada edição pertence a uma fatia do mapa — edição órfã é volta.
-
-## Mudança em massa (codemod, não edição manual)
-Mesma alteração em muitos arquivos (remover valor, migrar string→enum, rename de API): **nunca** edite N
-arquivos na mão — escreva um script e trate-o como produto:
-1. **Inventário exato** (grep → lista de arquivos + contagem, registrada na spec/notas) e exclusões
-   (vendor, gerado, "Não ler").
-2. **Script idempotente** — AST (jscodeshift/comby/ast-grep) quando estrutura importa; sed/regex só para
-   texto inequívoco. Salvo em `.claude/specs/<slug>/` para auditoria e reuso.
-3. **Amostra primeiro:** aplique em 2–3 arquivos, revise o diff da amostra; só então aplique no todo.
-4. **Validação mecânica:** contagem aplicada = inventário; grep residual = 0; typecheck/lint; prova
-   direcionada. Commit **mecânico** separado (o revisor pula com segurança).
-
-## Modo autônomo ("implemente tudo, não pare")
-Os gates somem; o rito **fica**. Antes de começar: feche TODAS as decisões em lote (uma rodada). Por
-fatia: `notas.md` + prova direcionada + **uma linha de progresso** (nunca fique mudo). No fim: `fsk-prove`
-dos critérios, `evidencias.md`, `fsk-review` e relatório único. "Não pare" significa não esperar "ok" —
-não significa pular prova, notas ou review.
-
-## Freios
-Fora do escopo se anota, não se conserta. Demanda cresceu, reclassifique na fronteira. Commits locais
-ok; push, PR e merge são do `fsk-ship`.
-
-## Pronto quando
-Uma demanda S1 e uma S2 de ponta a ponta, com `notas.md` e commits por intenção; a S2 feita em worktree
-com a pasta principal intocada.
+## Saída · Pronto quando
+Commits por intenção + `notas.md` vivo + prova por fatia; push/PR são do `fsk-ship`. Pronto quando: S1 e
+S2 de ponta a ponta com notas e commits por intenção; S2 em worktree com a principal intocada; suíte
+verde nunca chamada de "provado".

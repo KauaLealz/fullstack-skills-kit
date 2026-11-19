@@ -388,11 +388,21 @@ def cmd_check_map(path):
     for src in sources:
         text = src.read_text(encoding="utf-8", errors="ignore")
         rel = src.relative_to(base)
-        for g in re.findall(r'^\s*-\s*["\']?([^"\'\n]*\*[^"\'\n]*)["\']?\s*$', text, re.M):
-            g = g.strip()
-            checked += 1
-            if not any(base.glob(g)):
-                broken.append((rel, g, "glob não casa nenhum arquivo"))
+        for line in text.splitlines():
+            if not re.match(r'^\s*-\s', line):
+                continue
+            # só conta como glob o que está em crase (convenção destes docs); negrito markdown
+            # (**texto**) também tem "*" mas não é padrão de arquivo.
+            for g in re.findall(r'`([^`\n]*\*[^`\n]*)`', line):
+                g = g.strip()
+                checked += 1
+                try:
+                    matched = any(base.glob(g))
+                except ValueError:
+                    broken.append((rel, g, "padrão de glob inválido"))
+                    continue
+                if not matched:
+                    broken.append((rel, g, "glob não casa nenhum arquivo"))
         for cand in _candidate_paths(text):
             checked += 1
             if not (base / cand).exists():
@@ -512,9 +522,11 @@ def cmd_git_hooks(path, local_mode):
                   f"  post-checkout:\n    commands:\n      fsk: {{run: 'python \"{fsk}\" _hook post-checkout {{0}} {{1}} {{2}}'}}\n"
                   f"  pre-commit:\n    commands:\n      fsk: {{run: 'python \"{fsk}\" _hook pre-commit'}}")
     print(f"hooks instalados: {', '.join(installed)}")
+    gi = [".claude/fsk.local.json", ".worktrees/"]  # pessoal nunca versiona
     if local_mode:
-        _write_block_file(base / ".gitignore", "\n".join(GIT_ARTIFACTS), GI_START, GI_END)
-        print(".gitignore: bloco do modo local (artefatos de agente fora do git)")
+        gi += GIT_ARTIFACTS
+    _write_block_file(base / ".gitignore", "\n".join(gi), GI_START, GI_END)
+    print(".gitignore: bloco fsk" + (" (modo local: artefatos de agente fora do git)" if local_mode else " (pessoal fora do git)"))
     return 0
 
 

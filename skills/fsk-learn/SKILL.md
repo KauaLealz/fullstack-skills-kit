@@ -1,56 +1,52 @@
 ---
 name: fsk-learn
-description: Transforma aprendizado durável em AGENTS.md, rule ou how-to e mantém o Mapa sempre verdadeiro. Dispara em correção do usuário, "sempre faça X aqui", padrão repetido, decisão com porquê, drift entre rule e código, fim de ship. Propõe o diff e grava só com "ok". Não use para implementar nem para revisar código.
+description: Transforma aprendizado durável em regra viva — convenção do time vira rule/how-to no projeto (por PR, com evidência e carimbo), preferência pessoal vira nota global do usuário, e o Mapa nunca fica falso. Dispara em correção do usuário, "sempre faça X aqui", padrão repetido, decisão com porquê, drift entre rule e código, fim de ship. Propõe o diff e grava só com "ok". Não use para implementar nem para revisar código.
 user-invocable: false
 effort: medium
 ---
 
 # fsk-learn — aprendizado contínuo
 
-Guia de escrita para agente em `references/escrita-para-agentes.md`. Sempre: **proponha o diff, grave com
-"ok".**
+**Missão:** cada sessão deixar o agente mais contextualizado e mais barato — sem inchar, sem alucinar
+convenção, sem regra morta. Guia de escrita: `references/escrita-para-agentes.md`. Sempre: **propõe o
+diff, grava com "ok".**
 
-## Gatilhos
-Correção do usuário, padrão repetido, decisão com porquê, drift entre rule e código, atrito (demorou para
-achar algo, chamada de ferramenta cara, informação que faltou), fim de ship.
+## Protocolo
 
-**Pessoal × time (divisão com a memória nativa).** A memória automática do Claude Code já guarda
-preferência individual, local e sem "ok" — deixe com ela. O `fsk-learn` cuida só da **convenção do
-time**: vira rule ou how-to e entra por PR, com "ok". Não promova gosto de um dev a regra do time sem
-confirmação; na dúvida entre pessoal e time, pergunte.
-
-## Destino
-| Destino | Quando |
-|---|---|
-| `AGENTS.md` | Só roteamento: comandos não óbvios, Mapa, o que é crítico, ponteiros |
-| `.claude/rules/<tema>.md` (com `paths`) | Convenção do time em 2+ exemplos ou declarada; correção do usuário vira rule com "ok" (gosto pessoal fica na memória local) |
-| `.claude/skills/how-to-<tarefa>/` | Procedimento do projeto repetido 2+ vezes — com o **template concreto** (código-modelo real do repo + onde fica + do/don't), não descrição abstrata |
-| Checagem automática (lint, hook, CI) | Erro mecânico que uma ferramenta pega — preferível a qualquer texto |
-| Seção "Decisões" da spec ou a rule afetada | Decisão com porquê |
-
-**Evidência e carimbo (anti-alucinação de convenção):** toda rule/how-to nasce de evidência real **citada
-no próprio arquivo** (`arquivo:linha` ou PR) e leva o **commit de origem** (`origem: <sha>`). Convenção
-sem evidência não grava. O carimbo torna o drift detectável: o código citado mudou → revalide ou remova.
-
-## Retrospectiva curta (fim de ship, ou build que deu errado)
-Onde o agente se perdeu (falta ponteiro no Mapa?), que erro uma checagem pegaria, que regra o review
-deixou passar, que instrução do `AGENTS.md` não muda comportamento (remover), que ferramenta saiu cara,
-que informação faltou (ex: logs do servidor acessíveis).
+1. **Detecte o gatilho:** correção do usuário · "sempre faça X" · padrão repetido · decisão com porquê ·
+   drift rule×código · atrito (demorou a achar, ferramenta cara, informação que faltou) · fim de ship.
+2. **Classifique o alcance** (a pergunta que define o destino):
+   | Alcance | Destino | Exemplo |
+   |---|---|---|
+   | **Time/projeto** | `.claude/rules/<tema>.md` (`paths`) ou `how-to-<tarefa>/` — versionado, entra por PR | "endpoint sempre valida entrada" |
+   | **Pessoal** | memória do usuário / `~/.claude` — nunca no git do time | "prefiro PR sem emoji" |
+   | **Roteamento** | `AGENTS.md` (Mapa, comandos, crítico, vocabulário, fluxo de entrega) | arquivo central mudou de lugar |
+   | **Mecânico** | checagem (lint/hook/CI) — preferível a qualquer texto | import proibido entre camadas |
+   | **Da demanda** | seção Decisões da spec | "nesta tela, paginação server-side" |
+   Na dúvida entre pessoal e time, **pergunte** — não promova gosto de um dev a regra do time.
+3. **Exija evidência e carimbe:** rule/how-to nasce de 2+ exemplos ou declaração, **cita a evidência no
+   próprio arquivo** (`arquivo:linha`/PR) e leva `origem: <sha>`. How-to carrega o **template concreto**
+   (código-modelo real + onde vive + do/don'ts). Convenção sem evidência não grava.
+4. **Proponha o diff e espere o "ok".** Com "ok", grave; errado/velho → corrija ou remova (é git).
+5. **Precedência na leitura:** projeto → usuário (global) → default do kit. O projeto vence sempre.
 
 ## Mapa sempre verdadeiro
-O `AGENTS.md` é atualizado no mesmo trabalho que o torna falso, nunca depois. Três gatilhos: (1) o ship
-detecta mudança estrutural no diff; (2) o `fsk-explore` acha um ponteiro quebrado e reporta; (3) o
-`fsk.py check-map` acusa caminho inexistente. Atualização de mapa é mecânica (caminho, nome, comando):
-mostre o diff e aplique com "ok" junto do resto. Vale o mesmo para `paths` de rules e how-to que citam
-arquivos movidos.
+O AGENTS.md é corrigido **no mesmo trabalho** que o torna falso: (1) o ship detecta mudança estrutural no
+diff; (2) o explore reporta ponteiro quebrado; (3) `fsk.py check-map` acusa caminho inexistente.
+Atualização mecânica (caminho/nome/comando): mostre o diff e aplique com "ok". Vale para `paths` de rules
+e how-to que citam arquivos movidos.
 
-## Ledger de atalhos
-Liste os `shortcut:` com limite e gatilho de evolução; marque os sem gatilho.
+## Retrospectiva curta (fim de ship, ou build que deu errado)
+Onde o agente se perdeu (falta ponteiro?) · que erro uma checagem pegaria · que regra o review deixou
+passar · instrução que não muda comportamento (**remover** — poda é parte do trabalho) · ferramenta cara ·
+informação que faltou. Ledger de `shortcut:` com limite e gatilho; marque os sem gatilho.
 
-## Passar o trabalho adiante (outro harness, outra pessoa)
-Documento curto em pasta temporária, apontando para spec, commits e evidências em vez de copiar, com
-dados sensíveis mascarados.
+## Freios
+Uma ocorrência não vira regra. Nada repetido entre AGENTS.md e rules (um dono por regra). Não copie o que
+um comando já responde. Regra que envelheceu se **deleta**, não se estaciona. Passagem de bastão (outro
+harness/pessoa): documento curto com ponteiros, dados mascarados.
 
-## Pronto quando
-Uma correção do usuário vira rule; uma mudança que move um arquivo citado no Mapa sai com o `AGENTS.md`
-atualizado no mesmo PR.
+## Saída · Pronto quando
+Diff proposto + destino + evidência; gravado só com "ok". Pronto quando: correção do usuário vira rule
+com evidência e carimbo; arquivo citado no Mapa movido sai com AGENTS.md atualizado no mesmo PR; gosto
+pessoal nunca aparece no git do time.
