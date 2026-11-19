@@ -5,7 +5,15 @@ só fica o que muda o comportamento padrão do modelo.
 
 ## Princípios
 - **Curto, imperativo, dizendo o que fazer** (não o que evitar). Proibição só como trava dura, junto do
-  alvo positivo.
+  alvo positivo — negação solta vira modo de falha (o modelo faz o que leu, não o "não").
+- **Context pointers:** a redação da `description` decide o disparo — diga o que faz **e quando usar**,
+  com as palavras que o pedido real usaria. Description fraca = skill instalada que nunca roda.
+- **Two loads:** toda instrução custa duas vezes — contexto (tokens sempre carregados) e cognição (o que
+  o modelo precisa manter na cabeça). Corte o que não paga as duas.
+- **Critério de conclusão com demanda:** "todo chamador contabilizado" força trabalho; "produza uma
+  lista" aceita qualquer coisa. Todo passo termina num critério que **exige** o resultado.
+- **Leading words:** palavras que o modelo já conhece ancoram comportamento barato ("sênior preguiçoso",
+  "QA cético" valem parágrafos) — use-as em personas, títulos e regras.
 - **Uma regra, um lugar.** Nada repetido entre `AGENTS.md` e rules; skill aponta para skill, não copia.
 - **Não copie o que o ambiente já responde** num comando (scripts do `package.json`, configs). Registre o
   que não se descobre olhando: convenção não escrita, o porquê, a pegadinha.
