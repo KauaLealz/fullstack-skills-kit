@@ -17,6 +17,8 @@ Comandos:
                          Cria uma worktree em .worktrees/NAME e copia os não-versionados (artefatos de
                          agente, .env) que o `git worktree add` não leva.
   gitignore [--path .]   Escreve o bloco fsk no .gitignore (pessoal fora do git: *.local.*, .worktrees/).
+  scan PADRÃO [--path .] Busca com guardrails (pula vendor/gerado/.git/.env) + inventário (arquivos +
+                         ocorrências de um regex). Alimenta o codemod do build e a conferência do review.
   check-proof [--base REF] [--block]
                          Utilitário opcional de CI: se a mudança tem código de produção sem evidencias.md
                          de canal real (navegador/API), avisa (ou falha com --block num job de merge).
@@ -537,6 +539,40 @@ def cmd_check_proof(base_ref, block):
     return 1 if block else 0
 
 
+# ---------------------------------------------------------------- scan (busca com guardrails + inventário)
+SCAN_SKIP_DIR = {"node_modules", "dist", "build", ".next", "vendor", ".git",
+                 "__pycache__", "coverage", ".venv", "target", ".worktrees"}
+
+
+def cmd_scan(pattern, path):
+    base = Path(path).resolve()
+    try:
+        rx = re.compile(pattern)
+    except re.error as e:
+        print(f"padrão inválido: {e}")
+        return 1
+    files, total = [], 0
+    for root, dirs, fs in os.walk(base):
+        dirs[:] = [d for d in dirs if d not in SCAN_SKIP_DIR and not d.startswith(".")]
+        for fn in fs:
+            if re.match(r"^\.env(\.|$)", fn) and not re.search(r"\.(example|sample|template)$", fn):
+                continue  # guardrail: não abre segredo
+            p = Path(root) / fn
+            try:
+                n = len(rx.findall(p.read_text(encoding="utf-8", errors="ignore")))
+            except Exception:
+                continue
+            if n:
+                files.append((str(p.relative_to(base)).replace("\\", "/"), n))
+                total += n
+    print(f"padrão: {pattern!r} · arquivos: {len(files)} · ocorrências: {total}")
+    for rel, n in sorted(files)[:60]:
+        print(f"  {n:4}  {rel}")
+    if len(files) > 60:
+        print(f"  … +{len(files) - 60} arquivos")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(prog="fsk", description="Fullstack Skills Kit CLI")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -553,7 +589,10 @@ def main():
     wt = sub.add_parser("worktree"); wt.add_argument("name"); wt.add_argument("--path", default="."); wt.add_argument("--branch", default=None)
     gi = sub.add_parser("gitignore"); gi.add_argument("--path", default=".")
     cp = sub.add_parser("check-proof"); cp.add_argument("--base", default=None); cp.add_argument("--block", action="store_true")
+    sc = sub.add_parser("scan"); sc.add_argument("pattern"); sc.add_argument("--path", default=".")
     args = ap.parse_args()
+    if args.cmd == "scan":
+        sys.exit(cmd_scan(args.pattern, args.path))
     if args.cmd == "core":
         sys.exit(cmd_core(args.target, args.home, args.dry_run, args.project))
     if args.cmd == "check-map":

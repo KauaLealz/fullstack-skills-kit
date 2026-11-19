@@ -34,11 +34,10 @@ As skills `fsk-*` vêm do `fsk.py core` (globais); aqui se decide só o lado-pro
      vira a seção **Fluxo de entrega** do AGENTS.md; **o `fsk-ship` segue isso à risca**.
    - Tracker, o que é crítico no produto, deploy, vendors, padrão de doc, definição de "pronto",
      **eixos de qualidade** (a11y, responsivo, performance, i18n…) → `rules/eixos.md`.
-   - **Modo:** compartilhado (artefatos versionados) ou local (dev solo — tudo fora do git).
 6. **Gere a estrutura** (`project-layout.md`): AGENTS.md abrindo com o bloco do núcleo + Mapa + Não ler +
-   Fluxo de entrega + Vocabulário; rules com `paths`, evidência citada e `origem: <sha>`; `.claude/`
-   completo; **bloco fsk no `.gitignore`** (pessoal nunca versiona: `fsk.local.json`, `.worktrees/`;
-   modo local acrescenta os artefatos de agente). Espere o "ok" antes de gravar.
+   Fluxo de entrega + Vocabulário; rules do time com `paths`, evidência citada e `origem: <sha>`; `.claude/`
+   completo; **bloco fsk no `.gitignore`** (`fsk.py gitignore`) protegendo o pessoal (`*.local.*`,
+   `.worktrees/`). O que é do time sobe; o que é seu fica com sufixo `.local` e não sobe. Espere o "ok".
 7. **Sem infraestrutura de prova:** proponha o mínimo (runner e2e por um comando + smoke da auth e das
    jornadas críticas) e grave as jornadas no AGENTS.md.
 8. **Proponha ferramentas e scripts (tudo opt-in, com "ok"):** ferramentas da stack pelo manifest

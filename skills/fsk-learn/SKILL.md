@@ -22,15 +22,16 @@ drift e contra-exemplos): `references/exemplos.md`. Sempre: **propõe o diff, gr
    proposto na hora · "sempre faça X" · padrão repetido · decisão com porquê · drift rule×código ·
    atrito · **fecho de qualquer fase** (toda fase ensina algo; persiste só o que dura — sem nada durável,
    nenhuma cerimônia). Esperar ser invocado manualmente é falha desta skill.
-2. **Classifique o alcance** (a pergunta que define o destino):
+2. **Pergunte "seu ou do time?"** ao salvar — é o que define o destino:
    | Alcance | Destino | Exemplo |
    |---|---|---|
-   | **Time/projeto** | `.claude/rules/<tema>.md` (`paths`) ou `how-to-<tarefa>/` — versionado, entra por PR | "endpoint sempre valida entrada" |
-   | **Pessoal** | memória do usuário / `~/.claude` — nunca no git do time | "prefiro PR sem emoji" |
+   | **Do time** | `.claude/rules/<tema>.md` (`paths`) ou `how-to-<tarefa>/` — **versionado, entra por PR** | "endpoint sempre valida entrada" |
+   | **Seu (pessoal)** | `.claude/rules/<tema>.local.md` — **gitignored** (fica no projeto, não sobe) | "prefiro PR sem emoji" |
    | **Roteamento** | `AGENTS.md` (Mapa, comandos, crítico, vocabulário, fluxo de entrega) | arquivo central mudou de lugar |
-   | **Mecânico** | checagem (lint/hook/CI) — preferível a qualquer texto | import proibido entre camadas |
+   | **Mecânico** | checagem (lint/CI) — preferível a qualquer texto | import proibido entre camadas |
    | **Da demanda** | seção Decisões da spec | "nesta tela, paginação server-side" |
-   Na dúvida entre pessoal e time, **pergunte** — não promova gosto de um dev a regra do time.
+   Na dúvida, **pergunte** — não promova gosto de um dev a regra do time, nem versione o que é pessoal.
+   (Vale para o projeto todo e todo projeto seu? Aí vai no `~/.claude` global, sem perguntar o repo.)
 3. **Absorva a intenção, não a frase:** o comportamento já existe em rule/núcleo? Reforce lá, não
    duplique. É novo? Escreva o princípio em linguagem natural positiva — não transcreva a fala do usuário.
 4. **Exija evidência e carimbe:** rule/how-to nasce de 2+ exemplos ou declaração, **cita a evidência no

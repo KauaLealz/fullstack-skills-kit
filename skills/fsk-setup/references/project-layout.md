@@ -19,26 +19,30 @@ Proponha isto e grave só com "ok". O do time sempre vence; aqui é o default qu
 # fsk:gitignore:end
 ```
 
+Tudo respeita o que o Claude Code lê nativamente. Do time = versionado; do usuário = `.local` (gitignored).
 ```
-AGENTS.md                         # roteador < 150 linhas
-CLAUDE.md                         # @AGENTS.md
+AGENTS.md                         # roteador < 150 linhas (abre com o bloco do núcleo) — [commit]
+CLAUDE.md                         # @AGENTS.md — [commit]
+CLAUDE.local.md                   # suas notas pessoais do projeto — [gitignored]
 .claude/
-  fsk.json                        # versão do kit, commit de origem, tracker, data
-  fsk.local.json                  # preferências pessoais (política de worktree) — fora do git
+  settings.json                   # permissões/env do time — [commit]
+  settings.local.json             # suas overrides — [gitignored auto pelo Claude Code]
+  fsk.json                        # versão do kit, commit de origem, tracker — [commit]
+  fsk.local.json                  # suas preferências do kit (worktree, explicação) — [gitignored]
   rules/
-    <tema>.md                     # api, data, ui, security, testing, pr, commits, docs… só o que existe
+    <tema>.md                     # convenção do TIME (paths + evidência + origem) — [commit]
+    <tema>.local.md               # sua preferência pessoal — [gitignored]
   skills/
-    how-to-<tarefa>/SKILL.md      # técnico DO PROJETO, derivado de exemplos reais
-  specs/
-    <slug>/
-      spec.md                     # critérios, impacto, decisões, fatias
-      exploracao.md               # ponteiros de contexto (fsk-explore)
-      notas.md                    # registro corrido do build: decisões, aprovações, baixa confiança
-      evidencias.md               # relatório de prova (fsk-docs)
-      revisao.md                  # dossiê para o revisor humano (fsk-docs, no ship)
-  docs-templates/                 # opcional: templates da empresa (.docx com {{campos}}, CSS de PDF)
-docs/                             # documentação para humanos, se o projeto já tem ou se você pedir
+    how-to-<tarefa>/SKILL.md      # técnico DO PROJETO, com template concreto — [commit]
+  scripts/
+    subir.sh · testar.sh          # adaptativos, gerados pelo setup com os comandos reais — [commit]
+  specs/<slug>/                   # spec.md · exploracao.md · notas.md · evidencias.md (+evidencias/) · revisao.md
+  docs-templates/                 # opcional: templates da empresa — [commit]
+docs/                             # documentação para humanos
 ```
+O `.gitignore` (via `fsk.py gitignore`) protege o pessoal: `*.local.*`, `.claude/fsk.local.json`,
+`.worktrees/`. Nada de "modo compartilhado × local": o que é do time sobe, o que é seu fica com sufixo
+`.local` e não sobe — o `fsk-learn` decide pela pergunta "seu ou do time?".
 
 ## AGENTS.md — seções (roteador, não enciclopédia)
 

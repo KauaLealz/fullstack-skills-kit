@@ -6,7 +6,7 @@
       "name": "fsk",
       "source": "./",
       "displayName": "Fullstack Skills Kit",
-      "description": "Núcleo + 10 skills fsk-* (comportamento). Guardrails são opt-in pelo /fsk-setup.",
+      "description": "Núcleo + 10 skills fsk-* (comportamento). Sem hooks; utilitários via fsk.py.",
       "version": "2.0.0"
     }
   ]
