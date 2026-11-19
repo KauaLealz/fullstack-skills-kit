@@ -61,7 +61,8 @@ perceber (inclusive de arquitetura, como camada que não pode importar outra), c
 bug que já aconteceu. No nível mais alto que observa. Antes de escrever, três perguntas: que mudança
 futura isso pega? já está coberto acima? quebra se eu refatorar sem mudar comportamento? Forma: uma
 falha possível por teste, nome que diz o que quebrou, dado real, sem dublê do que dá para rodar, mensagem
-de falha que explica. Suíte herdada: não abra frente de migração; ao tocar um teste acoplado, suba de
+de falha que explica. Teste novo deve **falhar sem a mudança** (confirme com `git stash` quando barato) —
+teste que nunca viu o vermelho pode não estar testando nada. Suíte herdada: não abra frente de migração; ao tocar um teste acoplado, suba de
 nível e apague o antigo no mesmo commit; suíte frágil encontrada é reportada, não consertada por conta.
 
 ## Execução
@@ -70,6 +71,8 @@ no fechamento (ou CI). A **prova** dos critérios é separada — comportamento 
 fecha a prova. Subagente nunca roda a suíte completa.
 
 ## Saída
+**Detector de racionalização:** "deveria funcionar", "provavelmente", "em teoria", "deve estar ok" são
+bandeiras de prova ausente — escreveu isso, volte e observe antes de reportar.
 Veredito na primeira linha, **honesto ao canal**: ✅ só com o comportamento observado no canal real.
 Parou em checagem/unitário sem subir o sistema? O veredito é "⚠️ checado, não provado end-to-end" e a
 cobertura explícita nomeia o que falta subir — nunca "✅ provado". Depois a tabela `ID | resultado

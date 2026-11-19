@@ -38,6 +38,8 @@ Percorra o diff trecho a trecho: "que critério, decisão ou pedido explica isto
 | **Overengineering** (abstração, camada, opção, config, generalização para caso que não existe) | Simplifica na hora |
 | **Antipadrão** (contraria o padrão/arquitetura do repo, duplica o que existe, contorna o mecanismo da casa) | Ajusta para o padrão do repo |
 | **Não justificada** (dependência nova, mudança de contrato, alteração em teste existente, config sem motivo) | Bloqueia e pergunta |
+| **Comentário leviano** (narra a linha, repete o nome, fala com o revisor) | Remove na hora |
+| **Comentário órfão** (o diff mudou o código e deixou o comentário mentindo; TODO/FIXME apagado sem resolução) | Atualiza/restaura na hora |
 
 Exceções, só estas: pedido explícito do usuário (em `notas.md`) ou formatação que uma ferramenta
 obrigatória do repo aplica sozinha (vai em commit mecânico separado). Depois de reverter ou ajustar, rode

@@ -22,6 +22,9 @@ de specs/RFC própria, use o formato dele e acrescente só os critérios de acei
 
 - **Quem chama / o que quebra:** `arquivo:linhas` — <relação>
 - **Contratos:** <API, evento, schema> · **Dados:** <tabela/coleção> · reversão: <como desfazer>
+- **Modos de falha prováveis (Review Focus):** <os 2–3 jeitos mais prováveis DESTA mudança quebrar — o
+  fsk-review e o fsk-prove concentram aqui>
+
 
 ## Decisões
 - <decisão> — <porquê> · <vira rule? qual>

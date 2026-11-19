@@ -41,6 +41,15 @@ exploração salvas fora do repo e passadas por ponteiro. Merge da ponta da inte
 fechamento único no fim. Estado por fatia na spec (feita · em andamento · bloqueada) para retomar de onde
 parou; demanda abandonada é marcada, não apagada.
 
+## Comentários (ler antes, escrever quase nunca)
+**Ler:** comentário existente é contexto de primeira classe — carrega o porquê que o código não mostra.
+Antes de mudar um trecho comentado, leia e respeite (ou registre por que ignora). `TODO`/`FIXME`/`HACK`/
+`shortcut:` da área tocada: não apague em silêncio — resolva, ou reporte em `notas.md`.
+**Escrever:** só o que o código não consegue dizer — invariante, porquê de decisão não-óbvia, pegadinha,
+`shortcut:` estruturado. Nunca: narrar a linha, repetir o nome da função, explicar a mudança ao revisor
+(isso é `notas.md`/PR). **Manter:** mudou o código, o comentário acompanha ou morre — desatualizado é
+pior que nenhum.
+
 ## Anti-voltas (construção cirúrgica)
 A mesma tentativa falhou 3 vezes → pare, registre em `notas.md` e replaneje (hipótese nova ou pergunta);
 não insista variando detalhe. A abordagem do mapa não serve → **não troque em silêncio**: registre o
