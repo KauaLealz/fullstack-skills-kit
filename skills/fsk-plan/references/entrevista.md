@@ -1,8 +1,20 @@
-# Entrevista — catálogo de varredura (profundidade que não depende de memória)
+# Entrevista — árvore de decisões + catálogo de varredura
 
-A entrevista rasa faz 2 perguntas óbvias e fecha. A profunda **varre este catálogo**: para cada dimensão
-que toca a demanda, ou vira pergunta ao usuário, ou entra na spec como descarte com motivo ("sem impacto
-em X porque Y"). O que não aparece nem como pergunta nem como descarte **não foi pensado**.
+A entrevista rasa faz 2 perguntas óbvias e fecha. A profunda trabalha em **árvore por tema**:
+
+1. **Monte a árvore de decisões** da demanda e **pode** os ramos que a exploração já fechou (o que o
+   código/tracker/conversa respondem não vira pergunta; **contradição entre fontes é a pergunta**).
+2. **Agrupe o que sobrou por tema** — cada tema é uma rodada. O critério de entrar na árvore: ambíguo,
+   **perigoso inferir**, ou muda escopo/risco/prova. Respostas podem abrir ramos novos → rodada nova.
+3. **Forma da pergunta:** 2–4 opções, a recomendada primeiro, cada opção com a **consequência em uma
+   frase** ("per capita conta zero → famílias sem renda entram na faixa mínima").
+4. **Encerramento:** pare quando só restarem decisões que não mudam o resultado ou cujo erro não custa
+   refazer — não entreviste por entrevistar.
+5. **Eco do Combinado:** feche devolvendo o entendimento em linguagem simples e confirme antes da spec.
+
+Para garantir amplitude, **varra este catálogo**: cada dimensão que toca a demanda ou vira pergunta, ou
+entra na spec como descarte com motivo ("sem impacto em X porque Y"). O que não aparece nem como pergunta
+nem como descarte **não foi pensado**.
 
 ## Antes de qualquer pergunta
 `fsk-explore` no terreno: o que o código faz hoje no caminho da demanda, quem chama, que dados toca.

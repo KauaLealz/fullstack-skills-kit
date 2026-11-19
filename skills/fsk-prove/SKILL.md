@@ -1,86 +1,53 @@
 ---
 name: fsk-prove
-description: Prova comportamento de verdade e sem viés — navegador > API real > integração > unitário (só com motivo escrito). Lê os critérios antes do diff; em S2+/alta roda em subagente que não viu a implementação. Dispara em "valida", "testa", "funciona?", ao terminar/fechar uma mudança de código, e no fechamento de cada fatia. Não use para revisar código (fsk-review) nem para migrar a suíte existente.
+description: Prova comportamento de verdade e sem viés — navegador > API real > integração > unitário (só com motivo escrito); checagem (tsc/lint/unitário) nunca é prova. Lê os critérios antes do diff; em criticidade alta roda em subagente que não viu a implementação. Dispara em "valida", "testa", "funciona?", ao terminar/fechar uma mudança de código e no fechamento de cada fatia. Não use para revisar código (fsk-review) nem para migrar a suíte existente.
 user-invocable: false
 effort: medium
 ---
 
 # fsk-prove — prova sem viés
 
-Prova existe para pegar a quebra que você não veria. "Passou" significa "não encontrei problema nas
-condições testadas" — e as condições são ditas. Catálogo de smoke/regressão/exploratório, oráculos e
-severidade: `references/qa-amplo.md`.
+**Missão:** pegar a quebra que você não veria. "Passou" = "não encontrei problema nas condições
+testadas" — e as condições são ditas. **Checagem não é prova:** tsc/lint/unitário provam que compila e
+que a lógica isolada bate, não que o comportamento acontece. Catálogo amplo (modos, oráculos, severidade,
+"não teste", ferramentas): `references/qa-amplo.md`.
 
-**Checagem não é prova.** `tsc`, lint, typecheck e teste unitário rodam sem subir o sistema — provam que
-compila e que a lógica isolada bate, **não** que o comportamento acontece. Verde neles nunca é
-"provado"/"funciona": é o degrau de checagem (o **último** da escada), não a prova.
+## Protocolo
 
-## Canal (o mais perto do usuário primeiro)
-Navegador (jornada do usuário) > requisição real com banco e fila reais > integração na borda do módulo
-> unitário só quando nada acima observa o efeito, com a frase do motivo escrita no arquivo. **Frontend:
-só navegador.** Para descer de nível, nomeie o que o nível de cima não consegue observar naquele caso
-concreto — alegação genérica ("é complexo") não serve. **Subir o sistema é o padrão, não opção:** antes
-de descer de canal ou degradar, suba de verdade (inicie o Docker/serviço, rode o comando de subir do
-`AGENTS.md`). "Não subi" só vale com o motivo real escrito — "tentei subir, falhou por `<erro>`" — nunca
-como atalho por pressa.
+1. **Leia os critérios antes do diff** — o esperado vem da spec, nunca recalculado pela implementação.
+   Critério ambíguo → "bloqueado", pergunta. Concentre nos **modos de falha prováveis** da spec.
+2. **Suba o sistema — é o padrão, não opção** (Docker/serviço/comando do AGENTS.md). "Não subi" só com
+   motivo real escrito ("tentei, falhou por `<erro>`"), nunca por pressa.
+3. **Prove no canal mais perto do usuário:** navegador (jornada) > requisição real com banco/fila reais >
+   integração na borda > unitário só quando nada acima observa — com o motivo no arquivo. **Frontend: só
+   navegador.** Para descer, nomeie o que o nível de cima não observa neste caso concreto.
+4. **Observe além da tela:** console, rede, estado persistido (recarregue). Varie uma coisa por vez;
+   intermitente repete 2–3× com taxa registrada; separe falha do produto de falha do teste. Critério de
+   auth/permissão/tenant/entrada → **prove o negativo** (sem permissão, outro tenant, deslogado,
+   entrada maliciosa simples).
+5. **Registre:** veredito na 1ª linha, honesto ao canal (✅ só com comportamento observado; parou na
+   checagem → "⚠️ checado, não provado end-to-end"); tabela `ID | resultado | canal | evidência` com
+   comando e saída real; cobertura explícita (o que NÃO foi testado e por quê); confiança declarada
+   (confirmado/provável/suspeita). No fechamento de S2+/alta → `evidencias.md` com o **SHA provado**.
 
-## Quando o ambiente não sobe (prova degradada)
-Só **depois de tentar subir de verdade** e o ambiente genuinamente não subir: lib, design system,
-serverless, legado que não roda, mudança que atravessa repositórios. Não é atalho para quando subir dá
-trabalho — é para quando subir é impossível. Prove o que dá — contrato e tipo, integração no pedaço que roda, consumidor real
-em staging quando existir — e **diga no relatório**: "provado por X; não executado end-to-end por falta
-de Y". Nunca chame de provado o que não foi observado. Infra/config e dados/migração provam pelo efeito
-real (recurso criado; migration aplicada e revertida), não pela tela.
+## Profundidade
+| Dimensão | Regra |
+|---|---|
+| **Isolamento** | Alta/S3: subagente novo que só recebe critérios + como subir. S2 médio: inline com a mesma disciplina |
+| **Degradada** | Só após tentar subir: lib/serverless/legado/cross-repo → prove o que dá (contrato, integração parcial, staging) e diga "provado por X; não executado end-to-end por Y". Infra/migração provam pelo efeito real (recurso criado; migration aplicada E revertida) |
+| **Navegador** | Driver do AGENTS.md/manifest; sem driver → API + roteiro manual, fallback registrado; SSO/MFA → sessão de teste do setup |
+| **Teste durável** | Só p/ contrato publicado, dinheiro, permissão/tenant, invariante de arquitetura, falha, bug ocorrido. 3 perguntas antes (que mudança futura pega? coberto acima? quebra em refactor neutro?). Forma: 1 falha/teste, nome que acusa, dado real, sem dublê do rodável, mensagem que explica, e **falha sem a mudança** (git stash quando barato) |
+| **Suíte herdada** | Não abre migração; teste acoplado tocado sobe de nível e apaga o antigo no mesmo commit; frágil → reporta, não conserta por conta |
+| **Execução** | Direcionado durante; suíte completa 1× no fechamento (ou CI); subagente nunca roda a suíte global |
 
-## Ferramenta de navegador
-Quem dirige o navegador vem do `AGENTS.md`/manifest (ex.: Playwright, Chrome DevTools MCP). Sem driver
-(WSL, container, máquina travada), caia para prova por API + verificação manual roteirizada e registre o
-fallback. Login SSO/MFA/captcha: use a sessão de teste semeada no setup ou peça acesso.
+## Freios
+**Detector de racionalização:** "deveria funcionar", "provavelmente", "em teoria" = prova ausente —
+volte e observe. Produção-like: nada irreversível, pare antes do efeito real. Eficiência: URL direta,
+sessão reaproveitada, cenários agrupados, 3 tentativas iguais → pare. Cheiro estranho: siga com timebox;
+sem convergir → "suspeita" e volta ao plano. Questione requisito ruim para o usuário como observação
+separada.
 
-## Anti-viés
-- Leia os critérios **antes** do diff; o esperado vem da spec, nunca recalculado pela implementação.
-- Criticidade **alta** (ou S3): rode em subagente novo que só recebe os critérios + como subir o app. Em
-  S2 médio, prove inline com a mesma disciplina (ler os critérios antes do diff) — subagente só se pagar.
-- Critério ambíguo vira "bloqueado" e você pergunta.
-
-## Como observar
-Além da tela: console, rede e estado persistido (recarregue a página). Varie uma coisa por vez. Repita
-2–3 vezes o que parecer intermitente e registre a taxa. Separe falha do produto de falha do teste
-(seletor, timing, dado ruim, ambiente). Siga um cheiro estranho com limite de tempo; sem convergir,
-marque "suspeita" e volte ao plano. Eficiência: URL direta depois do primeiro caminho, sessão logada
-reaproveitada, cenários com o mesmo setup agrupados, pare depois de 3 tentativas iguais.
-
-## Segurança na prova
-Quando o critério toca auth, permissão, tenant ou entrada de usuário, prove o negativo: sem permissão,
-outro tenant, entrada maliciosa simples, rota protegida deslogado. Em ambiente que parece produção, nada
-irreversível — pare antes do efeito real.
-
-## Teste durável (só quando vale)
-Só para contrato publicado, dinheiro, permissão/tenant, invariante que o próximo agente quebraria sem
-perceber (inclusive de arquitetura, como camada que não pode importar outra), comportamento sob falha,
-bug que já aconteceu. No nível mais alto que observa. Antes de escrever, três perguntas: que mudança
-futura isso pega? já está coberto acima? quebra se eu refatorar sem mudar comportamento? Forma: uma
-falha possível por teste, nome que diz o que quebrou, dado real, sem dublê do que dá para rodar, mensagem
-de falha que explica. Teste novo deve **falhar sem a mudança** (confirme com `git stash` quando barato) —
-teste que nunca viu o vermelho pode não estar testando nada. Suíte herdada: não abra frente de migração; ao tocar um teste acoplado, suba de
-nível e apague o antigo no mesmo commit; suíte frágil encontrada é reportada, não consertada por conta.
-
-## Execução
-A suíte (tsc, lint, unitário, integração) é **checagem**: roda direcionada durante o trabalho e uma vez
-no fechamento (ou CI). A **prova** dos critérios é separada — comportamento no canal real. Suíte verde não
-fecha a prova. Subagente nunca roda a suíte completa.
-
-## Saída
-**Detector de racionalização:** "deveria funcionar", "provavelmente", "em teoria", "deve estar ok" são
-bandeiras de prova ausente — escreveu isso, volte e observe antes de reportar.
-Veredito na primeira linha, **honesto ao canal**: ✅ só com o comportamento observado no canal real.
-Parou em checagem/unitário sem subir o sistema? O veredito é "⚠️ checado, não provado end-to-end" e a
-cobertura explícita nomeia o que falta subir — nunca "✅ provado". Depois a tabela `ID | resultado
-(✅ ❌ ⚠️ ⏸) | canal | evidência`, com comando e saída real truncada. Cobertura explícita: o que **não** foi testado e por quê. Achados com
-confiança declarada (confirmado, provável, suspeita). Questione o requisito quando o comportamento
-"correto" é ruim para o usuário, como observação separada. No fechamento de S2+/alta, grave o
-`evidencias.md` carimbando o **SHA do commit provado** (o `fsk-docs` só o formata para PR/binário quando
-pedido; o `fsk-ship` confere que o SHA ainda bate com o diff, e re-prova se o review mexeu depois).
-
-## Pronto quando
-Prova em navegador e por API com evidência real; critério ambíguo é bloqueado, não adivinhado.
+## Saída · Pronto quando
+Veredito + tabela + cobertura + achados; `evidencias.md` carimbado em S2+/alta (ship confere o SHA).
+Pronto quando: prova em navegador e API com evidência real; ambíguo bloqueado, não adivinhado; nenhum
+"provado" sem comportamento observado.

@@ -1,39 +1,53 @@
 ---
 name: fsk-ship
-description: Entrega a mudança — dossiê de revisão, push e PR no formato do repo, com evidência e Mapa atualizado no mesmo PR. Dispara por "abre PR", "entrega", "manda pro main", "push" (o agente sugere, nunca aciona sozinho; o commit local é do /fsk-build). Não use para planejar/implementar (fsk-plan/fsk-build) nem só para revisar (fsk-review).
+description: Entrega a mudança seguindo o fluxo de git do time à risca — dossiê de revisão, rodada final "está 100%?", push/PR no formato do repo com evidência e Mapa atualizado no mesmo PR. Dispara por "abre PR", "entrega", "manda pro main", "push" (o agente sugere, nunca aciona sozinho; o commit local é do /fsk-build). Não use para planejar/implementar (fsk-plan/fsk-build) nem só para revisar (fsk-review).
 disable-model-invocation: true
 effort: medium
 ---
 
 # fsk-ship — entrega
 
-1. **Dossiê de revisão primeiro.** O `fsk-docs` gera o `revisao.md` a partir de spec, `notas.md`,
-   `evidencias.md`, achados do review e diff — nada de memória. Confira que o **SHA** do `evidencias.md`
-   bate com o diff; se o review mexeu no código depois da prova, re-prove antes de abrir. **Se a prova só
-   tem canal de checagem/unitário** (sem comportamento no canal real nem a justificativa escrita de por
-   que não subiu), bloqueia e manda provar no canal real antes de entregar. Mostre o dossiê e só siga com "ok".
-2. **Formato do repo vence.** Siga `rules/pr.md` e `rules/commits.md`; sem elas, infira do histórico real
-   (log e PRs mesclados) e proponha gravar a rule. Sem padrão nenhum, use `references/pr-padrao.md`.
-3. **Diff limpo** (sem log temporário), commits por intenção no formato do repo, branch na convenção,
-   ordem de deploy com migration, via CLI do repo (`gh`/`glab`, ou Bitbucket/Azure DevOps conforme o
-   host). **Push, PR e merge só com "ok".** Feche as tarefas no tracker. Liste os `shortcut:` novos.
-4. **Mapa em dia (obrigatório antes do PR).** Rode `fsk.py check-map` e compare o diff com o `AGENTS.md`.
-   Se a mudança criou, moveu, renomeou ou apagou algo que o Mapa cita (ponto de entrada, arquivo central,
-   feature de referência, domínio novo), mudou um comando listado ou tornou falso um item de "Não ler",
-   "Crítico" ou "Vocabulário", o `fsk-learn` atualiza o `AGENTS.md` **no mesmo PR**, em commit próprio. O
-   PR não abre com mapa desatualizado.
-5. **Alerta de tamanho:** mudança de comportamento acima de ~400 linhas → proponha dividir em PRs
-   empilhados. É alerta, não bloqueio.
-6. **Comentários no PR** (depois do PR criado, com "ok"): um por item de "Onde olhar com atenção" (máx.
-   5), ancorado na linha, via `gh`/`glab`. Cada um em até 3 linhas: por que o ponto merece atenção, o que
-   foi decidido, o que conferir. Nunca em linha mecânica, nunca repetindo o corpo do PR. Prefixo
-   `🤖 fsk:`. Se o time não usa comentário de bot, não poste e avise uma vez.
-7. **Worktree:** depois do merge (ou quando o usuário disser que terminou), proponha remover o worktree e
-   a branch local; liste worktrees antigos esquecidos. Remoção só com "ok".
-8. **Depois do PR:** CI vermelho → `fsk-debug`; conflito de merge → resolve com "ok"; comentário do
-   revisor → responde e ajusta no mesmo PR; conferência pós-merge quando o fluxo do time pede.
-9. **Fecho:** acione o `fsk-learn` para a retrospectiva curta.
+**Missão:** levar o trabalho para fora da máquina do jeito que o **time** entrega, com o revisor humano
+recebendo tudo pré-organizado. Nada sai sem "ok". PR padrão (só sem formato do time):
+`references/pr-padrao.md`.
 
-## Pronto quando
-PR no formato do repo com comentários nos pontos de atenção; mudança que move um arquivo citado no Mapa
-sai com o `AGENTS.md` atualizado no mesmo PR; worktree removido após o merge.
+## Protocolo
+
+1. **O fluxo do time primeiro.** Leia a seção **Fluxo de entrega** do AGENTS.md (gitflow, trunk-based,
+   develop→main, naming, squash×merge, quem mergeia) e `rules/pr.md`/`commits.md` — **siga à risca**.
+   Sem seção: infira do histórico real (log + PRs mesclados), **confirme com o usuário** e proponha ao
+   `fsk-learn` gravar. O que a dúvida revelar (formato de PR, estratégia de merge) **nunca se adivinha** —
+   pergunta, e a resposta vira convenção gravada (projeto) ou preferência pessoal (global do usuário).
+2. **Dossiê de revisão** (`revisao.md` via `fsk-docs`, de spec+notas+evidencias+review+diff — nada de
+   memória). Confira o **SHA** do `evidencias.md` contra o diff; review mexeu depois → re-prova. Prova só
+   com canal de checagem e sem justificativa → **bloqueia** e manda provar no canal real.
+3. **Rodada final "está 100%?"** — pergunte; houve ajuste → corrige, re-prova e pergunta de novo.
+4. **Mapa em dia (obrigatório):** `fsk.py check-map` + diff×AGENTS.md; mudança estrutural → `fsk-learn`
+   atualiza o AGENTS.md **no mesmo PR**, commit próprio. PR não abre com mapa falso.
+5. **Base atualizada:** traga a base do fluxo (`git merge <base>`) se avançou e rode a prova direcionada.
+6. **Saída pelo fluxo do time** (branch na convenção, commits no formato, ordem de deploy com migration,
+   CLI do host — `gh`/`glab`/Bitbucket/Azure). **Push, PR e merge só com "ok".** Feche o card no tracker.
+   Liste os `shortcut:` novos.
+7. **Comentários no PR** (com "ok"): máx. 5, um por "Onde olhar", ancorado na linha, 3 linhas, prefixo
+   `🤖 fsk:`; nunca em linha mecânica. Time sem bot → não posta e avisa uma vez.
+8. **Pós-PR:** CI vermelho → `fsk-debug`; conflito → resolve com "ok"; comentário do revisor → responde e
+   ajusta no mesmo PR; conferência pós-merge se o fluxo pede.
+9. **Limpeza e retro:** worktree/branch local removidos após o merge com "ok"; `fsk-learn` para a
+   retrospectiva curta.
+
+## Profundidade
+| Dimensão | Regra |
+|---|---|
+| Tamanho | >~400 linhas de comportamento → propõe PRs empilhados (alerta, não bloqueio) |
+| Evidência | antes/depois no corpo; captura se visual, saída real se não |
+| Risco de merge | porta de mão única×dupla + raio de impacto declarados no PR |
+| Preferência | precedência: convenção do projeto → preferência do usuário (global) → default do kit |
+
+## Freios
+Nunca contorne hook. Nunca adivinhe convenção de entrega. Commits locais são do build; aqui é publicação.
+Headless/CI: nada destrutivo — para e reporta.
+
+## Saída · Pronto quando
+Reporta o que saiu da máquina (branch/PR com link/merge), estado do worktree e do card. Pronto quando: PR
+no fluxo e formato do time com comentários ancorados; mapa atualizado no mesmo PR; worktree limpo após o
+merge com "ok".
