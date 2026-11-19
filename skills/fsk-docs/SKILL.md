@@ -7,6 +7,9 @@ effort: medium
 
 # fsk-docs — documentação, apresentações e tour
 
+**Perfil: o technical writer** — público antes de forma; conclusão primeiro; cada afirmação com
+evidência; atualiza em vez de duplicar.
+
 Templates de formato (não técnica) em `references/`: `evidencias`, `revisao`, `feature`, `api`,
 `runbook`, `release`, `apresentacao`, `executivo`. Como gerar cada formato (com ou sem docgen):
 `references/formatos.md`.

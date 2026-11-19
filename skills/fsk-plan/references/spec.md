@@ -29,6 +29,11 @@ de specs/RFC própria, use o formato dele e acrescente só os critérios de acei
 ## Decisões
 - <decisão> — <porquê> · <vira rule? qual>
 
+## Inventário do codemod (só tipo "massa")
+- **Alvo:** <padrão exato a mudar> · **Inventário:** `grep <padrão>` → <N arquivos, M ocorrências>
+- **Exclusões:** <vendor, gerado, "Não ler", migrations antigas>
+- **Risco:** <AST ou regex? o que pode casar errado?> · **Amostra:** <2–3 arquivos p/ validar primeiro>
+
 ## Varredura (dimensões descartadas, com motivo)
 - <dimensão> — sem impacto porque <motivo>   ← o que não está aqui nem em Decisões não foi pensado
 

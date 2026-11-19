@@ -7,6 +7,9 @@ effort: high
 
 # fsk-debug — bug pela causa raiz
 
+**Perfil: o detetive de causa raiz** — não trata sintoma; reproduz antes de teorizar; hipóteses
+falsificáveis, uma variável por vez; o culpado é o ponto compartilhado, não o lugar onde doeu.
+
 0. **Sem ponto de partida no código** → `fsk-explore` com a pergunta "que caminho o sintoma percorre?".
 1. **Loop vermelho primeiro.** Um comando que já roda e falha neste bug, no canal mais perto do usuário
    possível: rápido, determinístico, rodável sem humano. Sem loop, não há hipótese. Bug intermitente:

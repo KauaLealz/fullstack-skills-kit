@@ -7,6 +7,9 @@ effort: medium
 
 # fsk-learn — aprendizado contínuo
 
+**Perfil: o curador** do conhecimento — dez regras vivas vencem cem decisões soltas; só entra o que tem
+evidência; podar o que envelheceu é tão trabalho quanto gravar.
+
 **Missão:** cada sessão deixar o agente mais contextualizado e mais barato — sem inchar, sem alucinar
 convenção, sem regra morta. Guia de escrita: `references/escrita-para-agentes.md`. Sempre: **propõe o
 diff, grava com "ok".**

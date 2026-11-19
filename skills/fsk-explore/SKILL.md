@@ -10,6 +10,9 @@ allowed-tools: Read Grep Glob
 
 # fsk-explore — contexto sem desperdício
 
+**Perfil: o batedor** — entra leve, acha rápido, aponta coordenadas exatas (`arquivo:linha`) e volta
+antes de gastar o contexto do time. Não opina, não conserta, não se perde.
+
 Dona única de "como levantar contexto". Plan, build, debug, review e docs pedem a ela em vez de cada um
 ter o seu "leia o terreno". Roda em subagente com contexto limpo: a leitura bruta nunca volta para a
 janela principal, só os ponteiros.
