@@ -3,7 +3,9 @@
 **A spec é o maior investimento de tokens do fluxo.** O plan pensa; os demais executam. Ela é organizada
 **por consumidor**: cada agente abre a sua seção e encontra TUDO que precisa — builder não redescobre, QA
 não deduz, revisor não adivinha, ship não pergunta. S1 usa só Essência+Builder+QA em meia tela; S2+/alta
-usa tudo. Pasta da demanda: `spec.md` · `exploracao.md` · `notas.md` · `evidencias.md` · `revisao.md`.
+usa tudo. Pasta da demanda carrega **tudo** da demanda: `spec.md` · `exploracao.md` · `notas.md` · `evidencias.md` ·
+`revisao.md` · `evidencias/` (prints, saídas, capturas da prova) · scripts de codemod — nenhum artefato da
+demanda vive fora dela.
 Time com pasta própria de specs/RFC: use o formato dele e acrescente o que faltar.
 
 ```markdown

@@ -36,7 +36,9 @@ que a lógica isolada bate, não que o comportamento acontece. Catálogo amplo (
 5. **Registre:** veredito na 1ª linha, honesto ao canal (✅ só com comportamento observado; parou na
    checagem → "⚠️ checado, não provado end-to-end"); tabela `ID | resultado | canal | evidência` com
    comando e saída real; cobertura explícita (o que NÃO foi testado e por quê); confiança declarada
-   (confirmado/provável/suspeita). No fechamento de S2+/alta → `evidencias.md` com o **SHA provado**.
+   (confirmado/provável/suspeita). No fechamento de S2+/alta → `evidencias.md` com o **SHA provado**;
+   artefatos da prova (prints, saídas, capturas) salvos em `.claude/specs/<slug>/evidencias/` — a pasta da
+   demanda carrega tudo dela.
 
 ## Profundidade
 | Dimensão | Regra |
