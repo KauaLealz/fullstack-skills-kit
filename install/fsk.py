@@ -16,13 +16,10 @@ Comandos:
   worktree NAME [--path .] [--branch B]
                          Cria uma worktree em .worktrees/NAME e copia os não-versionados (artefatos de
                          agente, .env) que o `git worktree add` não leva.
-  git-hooks [--path .] [--local-mode]
-                         Instala hooks git (respeita husky; senão .git/hooks): post-checkout copia
-                         não-versionados p/ worktree nova; pre-commit barra segredo + roda check-map.
-                         --local-mode adiciona bloco no .gitignore p/ não versionar artefatos de agente.
+  gitignore [--path .]   Escreve o bloco fsk no .gitignore (pessoal fora do git: *.local.*, .worktrees/).
   check-proof [--base REF] [--block]
-                         Freio da prova: se a mudança tem código de produção mas não há evidencias.md
-                         com canal real (navegador/API), avisa (ou bloqueia com --block, p/ CI de merge).
+                         Utilitário opcional de CI: se a mudança tem código de produção sem evidencias.md
+                         de canal real (navegador/API), avisa (ou falha com --block num job de merge).
 
 Uso:
   python install/fsk.py validate
@@ -486,78 +483,18 @@ def cmd_worktree(name, path, branch):
     return 0
 
 
-HOOK_EVENTS = {"post-checkout": 'python "{fsk}" _hook post-checkout "$@"',
-               "pre-commit": 'python "{fsk}" _hook pre-commit'}
+GITIGNORE_BASE = [".claude/settings.local.json", "CLAUDE.local.md",
+                  ".claude/rules/*.local.md", ".claude/fsk.local.json", ".worktrees/"]
 
 
-def cmd_git_hooks(path, local_mode):
+def cmd_gitignore(path):
     base = Path(path).resolve()
-    if not (base / ".git").exists():
-        print("não é um repo git.")
-        return 1
-    fsk = str((ROOT / "fsk.py").resolve())
-    installed = []
-    if (base / ".husky").exists():
-        for hook, tmpl in HOOK_EVENTS.items():
-            f = base / ".husky" / hook
-            line = tmpl.format(fsk=fsk)
-            txt = f.read_text(encoding="utf-8") if f.exists() else "#!/bin/sh\n"
-            if line not in txt:
-                f.write_text(txt.rstrip("\n") + "\n" + line + "\n", encoding="utf-8")
-            installed.append(f".husky/{hook}")
-    else:
-        hd = base / ".git" / "hooks"
-        hd.mkdir(parents=True, exist_ok=True)
-        for hook, tmpl in HOOK_EVENTS.items():
-            f = hd / hook
-            f.write_text(f"#!/bin/sh\n{tmpl.format(fsk=fsk)}\n", encoding="utf-8")
-            try:
-                os.chmod(f, 0o755)
-            except Exception:
-                pass
-            installed.append(f".git/hooks/{hook}")
-        lf = base / "lefthook.yml"
-        if lf.exists() or (base / ".lefthook.yml").exists():
-            print("aviso: repo usa lefthook — adicione ao lefthook.yml:\n"
-                  f"  post-checkout:\n    commands:\n      fsk: {{run: 'python \"{fsk}\" _hook post-checkout {{0}} {{1}} {{2}}'}}\n"
-                  f"  pre-commit:\n    commands:\n      fsk: {{run: 'python \"{fsk}\" _hook pre-commit'}}")
-    print(f"hooks instalados: {', '.join(installed)}")
-    gi = [".claude/fsk.local.json", ".worktrees/"]  # pessoal nunca versiona
-    if local_mode:
-        gi += GIT_ARTIFACTS
-    _write_block_file(base / ".gitignore", "\n".join(gi), GI_START, GI_END)
-    print(".gitignore: bloco fsk" + (" (modo local: artefatos de agente fora do git)" if local_mode else " (pessoal fora do git)"))
+    _write_block_file(base / ".gitignore", "\n".join(GITIGNORE_BASE), GI_START, GI_END)
+    print(".gitignore: bloco fsk (pessoal fora do git: settings.local.json, CLAUDE.local.md, *.local.md, fsk.local.json, .worktrees/)")
     return 0
 
 
-def cmd_hook(event, args):
-    cwd = Path(".").resolve()
-    if event == "post-checkout":
-        common = _run(["git", "rev-parse", "--git-common-dir"]).stdout.strip()
-        gdir = _run(["git", "rev-parse", "--absolute-git-dir"]).stdout.strip()
-        if not common or not gdir:
-            return 0
-        common = (cwd / common).resolve() if not os.path.isabs(common) else Path(common).resolve()
-        if common == Path(gdir).resolve():
-            return 0  # worktree principal: nada a copiar
-        main_top = common.parent
-        items = _load_fsk_json(cwd).get("worktree_copy", WT_COPY_DEFAULT)
-        copied = _copy_untracked(main_top, cwd, items)
-        if copied:
-            print(f"fsk: copiados para o worktree ({len(copied)}): {', '.join(copied)}")
-        return 0
-    if event == "pre-commit":
-        staged = _run(["git", "diff", "--cached", "--name-only"]).stdout.split()
-        bad = [f for f in staged if _is_secret_path(f)]
-        if bad:
-            print("fsk: NÃO commite segredo: " + ", ".join(bad) + "\n(remova do stage; use variável de ambiente.)")
-            return 1
-        _warn_unproven(staged)  # aviso, não bloqueia o commit local
-        return cmd_check_map(".")
-    return 0
-
-
-# ---------------------------------------------------------------- check-proof (freio da prova)
+# ---------------------------------------------------------------- check-proof (utilitário de CI, opcional)
 CODE_EXT = (".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".java", ".rb", ".php", ".cs", ".rs",
             ".kt", ".swift", ".vue", ".svelte", ".scala", ".c", ".cpp")
 
@@ -579,13 +516,6 @@ def _proof_is_real(base):
         if re.search(r"navegador|api real|integra[çc][ãa]o|end-to-end|e2e|não executado end-to-end|tentei subir", t):
             return True
     return False
-
-
-def _warn_unproven(files):
-    prod = [f for f in files if _is_prod_code(f)]
-    if prod and not _proof_is_real(Path(".").resolve()):
-        print(f"fsk (aviso): {len(prod)} arquivo(s) de produção sem prova real registrada em "
-              ".claude/specs/*/evidencias.md (canal navegador/API). Suíte verde é checagem, não prova.")
 
 
 def cmd_check_proof(base_ref, block):
@@ -621,8 +551,7 @@ def main():
     co.add_argument("--dry-run", action="store_true")
     cm = sub.add_parser("check-map"); cm.add_argument("--path", default=".")
     wt = sub.add_parser("worktree"); wt.add_argument("name"); wt.add_argument("--path", default="."); wt.add_argument("--branch", default=None)
-    gh = sub.add_parser("git-hooks"); gh.add_argument("--path", default="."); gh.add_argument("--local-mode", action="store_true")
-    hk = sub.add_parser("_hook"); hk.add_argument("event"); hk.add_argument("rest", nargs="*")
+    gi = sub.add_parser("gitignore"); gi.add_argument("--path", default=".")
     cp = sub.add_parser("check-proof"); cp.add_argument("--base", default=None); cp.add_argument("--block", action="store_true")
     args = ap.parse_args()
     if args.cmd == "core":
@@ -631,10 +560,8 @@ def main():
         sys.exit(cmd_check_map(args.path))
     if args.cmd == "worktree":
         sys.exit(cmd_worktree(args.name, args.path, args.branch))
-    if args.cmd == "git-hooks":
-        sys.exit(cmd_git_hooks(args.path, args.local_mode))
-    if args.cmd == "_hook":
-        sys.exit(cmd_hook(args.event, args.rest))
+    if args.cmd == "gitignore":
+        sys.exit(cmd_gitignore(args.path))
     if args.cmd == "check-proof":
         sys.exit(cmd_check_proof(args.base, args.block))
     data = load()

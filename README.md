@@ -24,8 +24,9 @@ Depois, uma vez por repositório:
 O `fsk.py` também faz: `validate` (schema do manifest), `detect`/`plan` (ferramentas da stack),
 `check-map` (confere que todo caminho citado no `AGENTS.md` existe — rodável em hook/CI).
 
-**Guardrails** (bloquear git destrutivo e leitura de `.env`, pre-commit `check-map`) são **opt-in**: o
-`/fsk-setup` pergunta e instala só com "ok" — nada vem travando por padrão.
+**Sem hooks:** o kit é só comportamento (skills + núcleo) e utilitários. As travas (destrutivo só com
+"ok", segredo mascarado) são disciplina do núcleo; `check-map`/`check-proof` ficam disponíveis como
+comandos para o time pôr no CI se quiser.
 
 ## As 10 skills
 

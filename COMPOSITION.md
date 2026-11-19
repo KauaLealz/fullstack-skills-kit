@@ -28,9 +28,9 @@
 O núcleo existe porque comportamento "sempre ativo" não funciona como skill — skill só carrega quando
 dispara.
 
-**Guardrails (opt-in):** hooks mecânicos que bloqueiam o irreversível (git `--force`/`--no-verify`/
-`reset --hard`, leitura de `.env`) e um pre-commit `check-map`. Não vêm ligados — o `/fsk-setup`
-pergunta. O plugin do Claude Code só injeta o núcleo; o bloqueio é escolha do time.
+**Sem hooks (decisão consciente):** o kit é só comportamento (núcleo + skills) e utilitários (`fsk.py`).
+As travas vivem no núcleo como disciplina; os scripts (subir, testar, inventário) ajudam sem automação
+oculta. `check-map`/`check-proof` ficam como comandos para o CI do time, nunca ligados por padrão.
 
 ## Portabilidade (7 provedores)
 Base portável: **AGENTS.md** (todos leem) + **`SKILL.md`** (mesmo formato em Claude, Codex, OpenCode,

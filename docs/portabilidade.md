@@ -15,7 +15,8 @@ python install/fsk.py core --target antigravity   # ~/.gemini/config/skills + AG
 python install/fsk.py core --target copilot --project .   # .github/prompts/*.prompt.md + copilot-instructions.md
 ```
 
-Claude Code também tem o plugin (`/plugin marketplace add …`), que empacota skills + o hook de núcleo.
+Claude Code também tem o plugin (`/plugin marketplace add …`), que empacota as skills (o núcleo entra via
+`fsk.py core` ou no AGENTS.md do projeto).
 
 ## O que cada provedor usa
 
@@ -37,8 +38,8 @@ Claude Code também tem o plugin (`/plugin marketplace add …`), que empacota s
   o instalador gera `*.prompt.md` equivalente (sem as `references/`, que ficam como limite conhecido).
 - **Rules** → fonte única; o `/fsk-setup` grava no formato do alvo (glob nativo nos 3 que têm; AGENTS.md
   aninhado nos que não têm).
-- **Hooks (guardrails)** → opt-in; o formato muda por alvo (cada um tem `PreToolUse`/`beforeShell…` com
-  bloqueio). O `guard.py` é portável; só o arquivo de registro muda.
+- **Scripts utilitários** → genéricos no kit; os adaptativos (subir, testar) o `/fsk-setup` gera em
+  `.claude/scripts/` com os comandos reais do projeto.
 - **MCP** → universal nos 7 (config difere, as tools não).
 
 ## Limites conhecidos
