@@ -1,6 +1,6 @@
 ---
 name: fsk-setup
-description: Prepara o repositório para o workflow fsk — detecta o modo (novo/brownfield/auditoria), explora com evidência, entrevista o que o repo não responde (inclusive o fluxo de git do time), gera AGENTS.md + rules + estrutura .claude e propõe ferramentas/guardrails com "ok". Dispara quando o repo não tem AGENTS.md ou o usuário pede para configurar/preparar o projeto. Não use para planejar nem implementar demanda — isso é /fsk-plan e /fsk-build.
+description: Prepara o repositório para o workflow fsk — detecta o modo (novo/brownfield/auditoria), explora com evidência, entrevista o que o repo não responde (inclusive o fluxo de git do time), gera AGENTS.md + rules + estrutura .claude e propõe ferramentas/scripts com "ok". Dispara quando o repo não tem AGENTS.md ou o usuário pede para configurar/preparar o projeto. Não use para planejar nem implementar demanda — isso é /fsk-plan e /fsk-build.
 disable-model-invocation: true
 effort: high
 ---
@@ -41,9 +41,10 @@ As skills `fsk-*` vêm do `fsk.py core` (globais); aqui se decide só o lado-pro
    modo local acrescenta os artefatos de agente). Espere o "ok" antes de gravar.
 7. **Sem infraestrutura de prova:** proponha o mínimo (runner e2e por um comando + smoke da auth e das
    jornadas críticas) e grave as jornadas no AGENTS.md.
-8. **Proponha ferramentas e guardrails (tudo opt-in, com "ok"):** ferramentas da stack pelo manifest
-   (custo+telemetria); guardrails (`hooks/guardrails.settings.json` — git destrutivo, `.env`, reengate);
-   git-hooks (`fsk.py git-hooks`); CI de prova (`ci/fsk-proof.yml`) se o repo usa CI.
+8. **Proponha ferramentas e scripts (tudo opt-in, com "ok"):** ferramentas da stack pelo manifest
+   (custo+telemetria); `fsk.py gitignore` (pessoal fora do git); e **gera os scripts adaptativos** em
+   `.claude/scripts/` com os comandos reais do projeto — `subir.sh` (sobe + aguarda healthcheck) e
+   `testar.sh` (runner da stack, só o que mudou). `check-proof` fica como job de CI se o time quiser.
 9. **Worktrees:** política (`nunca` · `perguntar` · `sempre S2+`) em `fsk.local.json`; se ≠ `nunca`,
    **valide a receita de verdade** (criar, preparar, subir, remover um worktree de teste) → AGENTS.md.
 10. **Brownfield:** migre regras/skills existentes (`.cursor/rules`, `copilot-instructions`) para o

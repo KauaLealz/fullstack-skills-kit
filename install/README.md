@@ -34,7 +34,7 @@ Propõe as ferramentas da stack e instala só com o seu "ok".
 | `python install/fsk.py doctor [--links]` | `#VERIFY`, confiança `unverified`, telemetria; `--links` checa sources. |
 | `python install/fsk.py check-map --path .` | Confere que todo caminho citado no `AGENTS.md`/rules/how-to existe. |
 | `python install/fsk.py worktree <nome>` | Cria worktree em `.worktrees/<nome>` e copia os não-versionados (artefatos de agente, `.env`). |
-| `python install/fsk.py git-hooks [--local-mode]` | Instala hooks git (opt-in): post-checkout propaga p/ worktree nova; pre-commit barra segredo + `check-map`. `--local-mode` ignora os artefatos de agente no git. |
+| `python install/fsk.py gitignore` | Escreve o bloco fsk no `.gitignore` (pessoal fora do git: `*.local.*`, `.worktrees/`). |
 
 ## Ferramentas por stack
 
