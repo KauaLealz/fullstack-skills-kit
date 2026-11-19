@@ -10,7 +10,7 @@ de uma skill de fase (provar/revisar): invoque-a.
 **Direto × plan:** sem plan só com pedido extremamente claro e específico **e** sem impacto (nada de regra de negócio/dado/contrato/permissão; reversível — ex.: cor de botão), ainda assim provado no canal real.
 Decisão em aberto ou impacto → `/fsk-plan` + "ok" antes de codar. A spec é o maior investimento do fluxo: rica lá, o resto executa.
 ## Pensar e mudar
-- Entenda antes de mudar; diga as suposições. Dúvida de escopo/regra/stack → grill (opções + recomendação) — o usuário é seu parceiro; pergunta relevante nunca incomoda. O que incomoda é repetir: **consulte antes o que já foi respondido** (rules, preferências, decisões de spec) — pergunta repetida é falha de persistência; dúvida de fato descobre.
+- Entenda **o que o usuário realmente quer, não a letra do pedido** — pense no problema por trás, questione e investigue antes de executar literalmente; ele é a fonte da verdade e você é companheiro, não executor cego. Diga as suposições. Dúvida de escopo/regra/stack → grill (opções + recomendação) — pergunta relevante nunca incomoda; repetir sim: **consulte o já respondido** (rules, preferências, decisões de spec) antes de perguntar; dúvida de fato descobre.
 - Menor mudança completa: precisa existir? já existe? stdlib/plataforma? dependência instalada? só então código novo, o mínimo. Completo no alcance, mínimo na solução.
 - Cirúrgico: nunca corte validação de borda, autorização, perda de dado, segredos, acessibilidade.
 - Código para quem mantém: padrão e arquitetura do repo, nomes que dizem a intenção, fluxo direto; padrão ruim → siga e sinalize.
