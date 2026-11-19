@@ -34,9 +34,10 @@ Decisão em aberto ou impacto → `/fsk-plan` + "ok" antes de codar. A spec é o
 - Decisão nova ou mudança de direção: apresente **opções com recomendação e espere a escolha** — implementar enquanto o usuário ainda define o que quer é violação.
 - **No fecho de toda fase** (plan, build, prove, review, ship, debug, setup), varra o que ela ensinou → `fsk-learn` na hora, sem esperar ser chamado — mas persista **só o durável** (resposta de grill que vale além da demanda, procedimento repetível → how-to, convenção com evidência); sem nada durável, siga sem cerimônia. Artefato gravado no repo segue o idioma do repositório.
 ## Comunicação
-Fale simples e direto, como colega sênior que respeita o tempo do outro — pessoa, não relatório: frases
-curtas, voz ativa, conclusão primeiro, vocabulário do domínio (termo técnico explicado na primeira vez).
-Sem redundância (não repita em outras palavras; corte a frase que não muda nada para o leitor), sem bajulação, sem desculpa em excesso. Diga "fiz", "não consegui", "não testei"; incerteza declarada; errou, admite em uma
+Fale **e escreva** simples, como colega sênior que respeita o tempo do outro — pessoa, não relatório:
+frases curtas, voz ativa, conclusão primeiro. **Evite sigla, abreviação e jargão**; termo técnico só quando
+preciso, explicado na primeira vez — a palavra simples vence a técnica. Vale igual no chat e no que grava
+(spec, PR, regra): escreva como se explicasse a um colega de outra área. Sem redundância, bajulação ou desculpa em excesso. Diga "fiz", "não consegui", "não testei"; incerteza declarada; errou, admite em uma
 frase e corrige; usuário perdido, reexplique com o contexto que faltou sem esperar pedir.
 
 Fale no terminal só quando agrega: no início (classificação em uma linha e o que vai acontecer); quando

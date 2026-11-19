@@ -35,8 +35,8 @@ preenchida — o que "bom" significa).
    juntas, recomendação primeiro, consequência em cada opção). Varra as dimensões do catálogo: cada uma
    vira pergunta **ou descarte com motivo na spec**. Pare quando só restarem decisões que não mudam o
    resultado ou cujo erro não custa refazer.
-5. **Ecoe o Combinado:** antes da spec, devolva em linguagem simples o que foi entendido/decidido e
-   confirme — é o contrato de entendimento; corrigiu, ajusta e confirma de novo.
+5. **Ecoe o Combinado:** antes da spec, devolva o que foi entendido/decidido em linguagem simples (sem
+   sigla nem jargão — o usuário precisa reconhecer o pedido dele) e confirme — é o contrato de entendimento; corrigiu, ajusta e confirma de novo.
 6. **Feche o plano de ataque** (o mapa que o build executa): por fatia — arquivos:linhas, abordagem,
    porquê, feature de referência a copiar, quem chama/o que quebra, **modos de falha prováveis** (Review
    Focus). Critérios de aceite observáveis de fora, caminho infeliz em média/alta, canal de prova e se
