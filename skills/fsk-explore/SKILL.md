@@ -1,6 +1,6 @@
 ---
 name: fsk-explore
-description: Levanta contexto de uma área e devolve ponteiros (arquivo:linha), nunca conteúdo bruto. Dispara quando o usuário pergunta "onde fica X", "como funciona Y", "o que isso afeta", ou numa área desconhecida ou de impacto amplo antes de planejar/implementar. Não use para planejar, implementar, revisar ou provar — só para descobrir e apontar.
+description: Levanta contexto de uma área e devolve ponteiros (arquivo:linha), nunca conteúdo bruto. Dispara quando o usuário pergunta "onde fica X", "como funciona Y", "o que isso afeta", ou numa área desconhecida ou de impacto amplo antes de planejar/implementar — mas só com pergunta que o Mapa/AGENTS.md do setup NÃO responde (o que o Mapa aponta não se explora de novo). Não use para planejar, implementar, revisar ou provar — só para descobrir e apontar.
 user-invocable: false
 context: fork
 background: false

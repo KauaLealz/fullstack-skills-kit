@@ -1,6 +1,6 @@
 ---
 name: fsk-learn
-description: Transforma aprendizado durável em regra viva — convenção do time vira rule/how-to no projeto (por PR, com evidência e carimbo), preferência pessoal vira nota global do usuário, e o Mapa nunca fica falso. Dispara em correção do usuário, "sempre faça X aqui", padrão repetido, decisão com porquê, drift entre rule e código, fim de ship. Propõe o diff e grava só com "ok". Não use para implementar nem para revisar código.
+description: Transforma aprendizado durável em regra viva — convenção do time vira rule/how-to no projeto (por PR, com evidência e carimbo), preferência pessoal vira nota global do usuário, e o Mapa nunca fica falso. Dispara PROATIVAMENTE, no mesmo turno, sempre que algo durável aparece — resposta de grill/entrevista que vale além da demanda, procedimento executado que vai se repetir (vira how-to), correção do usuário, "sempre faça X aqui", padrão repetido, decisão com porquê, drift entre rule e código, fim de ship. Propõe o diff e grava só com "ok". Não use para implementar nem para revisar código.
 user-invocable: false
 effort: medium
 ---
@@ -16,8 +16,11 @@ diff, grava com "ok".**
 
 ## Protocolo
 
-1. **Detecte o gatilho:** correção do usuário · "sempre faça X" · padrão repetido · decisão com porquê ·
-   drift rule×código · atrito (demorou a achar, ferramenta cara, informação que faltou) · fim de ship.
+1. **Detecte o gatilho — proativamente, no mesmo turno:** correção do usuário · **resposta de grill**
+   (plan/setup/ship) que vale além da demanda — a proposta sai no fecho da rodada, não depois ·
+   **procedimento executado que vai se repetir** (como subir, como criar X do jeito do repo) → how-to
+   proposto na hora · "sempre faça X" · padrão repetido · decisão com porquê · drift rule×código ·
+   atrito · fim de ship. Esperar ser invocado manualmente é falha desta skill.
 2. **Classifique o alcance** (a pergunta que define o destino):
    | Alcance | Destino | Exemplo |
    |---|---|---|

@@ -21,9 +21,12 @@ que a lógica isolada bate, não que o comportamento acontece. Catálogo amplo (
    Critério ambíguo → "bloqueado", pergunta. Concentre nos **modos de falha prováveis** da spec.
 2. **Suba o sistema — é o padrão, não opção** (Docker/serviço/comando do AGENTS.md). "Não subi" só com
    motivo real escrito ("tentei, falhou por `<erro>`"), nunca por pressa.
-3. **Prove no canal mais perto do usuário:** navegador (jornada) > requisição real com banco/fila reais >
-   integração na borda > unitário só quando nada acima observa — com o motivo no arquivo. **Frontend: só
-   navegador.** Para descer, nomeie o que o nível de cima não observa neste caso concreto.
+3. **Prove pela pirâmide, de cima para baixo** (exploratório → E2E → aceitação → integração → unitário):
+   **validação de comportamento acontece nas camadas de cima**, conforme viabilidade — navegador
+   (jornada) > requisição real com banco/fila reais > integração na borda. **Unitário é a base de
+   sustentação, nunca o canal de validação:** só para lógica que as camadas acima não observam (com o
+   motivo no arquivo), e roda **1× no fechamento como requisito de entrega** — não valida comportamento.
+   **Frontend: só navegador.** Para descer uma camada, nomeie o que a de cima não observa neste caso.
 4. **Observe além da tela:** console, rede, estado persistido (recarregue). Varie uma coisa por vez;
    intermitente repete 2–3× com taxa registrada; separe falha do produto de falha do teste. Critério de
    auth/permissão/tenant/entrada → **prove o negativo** (sem permissão, outro tenant, deslogado,

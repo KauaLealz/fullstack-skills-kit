@@ -23,7 +23,8 @@ recebendo tudo pré-organizado. Nada sai sem "ok". PR padrão (só sem formato d
    pergunta, e a resposta vira convenção gravada (projeto) ou preferência pessoal (global do usuário).
 2. **Dossiê de revisão** (`revisao.md` via `fsk-docs`, de spec+notas+evidencias+review+diff — nada de
    memória). Confira o **SHA** do `evidencias.md` contra o diff; review mexeu depois → re-prova. Prova só
-   com canal de checagem e sem justificativa → **bloqueia** e manda provar no canal real.
+   com canal de checagem e sem justificativa → **bloqueia** e manda provar no canal real. **Suíte completa
+   verde (unitário+integração, rodada 1× no fechamento ou CI) é requisito de entrega** — falta → bloqueia.
 3. **Rodada final "está 100%?"** — pergunte; houve ajuste → corrige, re-prova e pergunta de novo.
 4. **Mapa em dia (obrigatório):** `fsk.py check-map` + diff×AGENTS.md; mudança estrutural → `fsk-learn`
    atualiza o AGENTS.md **no mesmo PR**, commit próprio. PR não abre com mapa falso.
