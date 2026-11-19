@@ -48,9 +48,12 @@ partida, ou pergunta direta do usuário. Para o resto, a escada de custo do núc
    ponteiro novo no Mapa do `AGENTS.md`. Ponteiro do Mapa que aponta para algo inexistente ou movido é
    reportado na hora para correção.
 
-## Freios
+## Freios (exploração cirúrgica)
 Não leia arquivo inteiro sem necessidade; não liste diretórios recursivamente; não abra o que está em
-"Não ler"; não opine sobre a solução — isso é do `fsk-plan` e do `fsk-build`.
+"Não ler"; não opine sobre a solução — isso é do `fsk-plan` e do `fsk-build`. **Anti-voltas:** a mesma
+busca sem resultado 3 vezes → troque de estratégia (nome → estrutura → git) ou devolva "não achei" com o
+que tentou; pergunta respondida não se reconfirma; orçamento estourando → devolva o que tem e liste o que
+falta em "Não olhei".
 
 ## Pronto quando
 Responde as 3–5 perguntas num repo real devolvendo só ponteiros, e a janela principal não recebe

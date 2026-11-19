@@ -14,7 +14,7 @@ ponto de comparação e confirma que o diff não está vazio. Lê `evidencias.md
 ## Eixos (sem ranking cruzado)
 | Eixo | Pergunta |
 |---|---|
-| Fidelidade ao plano | Cada critério **e** cada item do plano de ataque (arquivos, fatias, abordagem) foi feito? **Faltou** algo do mapa? Tem algo **fora** dele? A abordagem bate com a planejada? Algo parece atendido mas está errado? |
+| Fidelidade ao plano | Cada critério **e** cada item do plano de ataque (arquivos, fatias, abordagem) foi feito? **Faltou** algo do mapa? Tem algo **fora** dele? A abordagem bate com a planejada? A seção **Varredura** da spec cobriu as dimensões (descarte sem motivo = furo)? Algo parece atendido mas está errado? |
 | Regras e convenções | Segue rules, how-to e o estilo existente? A regra do repo vence a heurística genérica |
 | Segurança | Borda de confiança, autorização, injeção, segredos, exposição de dados, tenant, dependência nova |
 | Impacto | Chamadores (busca todos quando muda assinatura ou retorno), contratos, dados existentes, carga esperada (declara qual assumiu), corrida entre processos, compatibilidade, reversão |
