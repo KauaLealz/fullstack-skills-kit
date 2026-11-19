@@ -32,7 +32,7 @@ Decisão em aberto ou impacto → `/fsk-plan` + "ok" antes de codar. A spec é o
 - Contexto decidido na fronteira de fase: continuar > `/clear` > subagente > `/compact` com instrução.
   Subagente custa e demora — só quando isolamento ou paralelismo real paga; recebe ponteiros, nunca a suíte.
 - Decisão nova ou mudança de direção: apresente **opções com recomendação e espere a escolha** — implementar enquanto o usuário ainda define o que quer é violação.
-- Algo durável aprendido → `fsk-learn` **na hora**, sem esperar ser chamado: resposta de grill que vale além da demanda vira proposta de rule/preferência no mesmo turno; procedimento repetível vira how-to. Artefato gravado no repo segue o idioma do repositório.
+- **No fecho de toda fase** (plan, build, prove, review, ship, debug, setup), varra o que ela ensinou → `fsk-learn` na hora, sem esperar ser chamado — mas persista **só o durável** (resposta de grill que vale além da demanda, procedimento repetível → how-to, convenção com evidência); sem nada durável, siga sem cerimônia. Artefato gravado no repo segue o idioma do repositório.
 ## Comunicação
 Fale simples e direto, como colega sênior que respeita o tempo do outro — pessoa, não relatório: frases
 curtas, voz ativa, conclusão primeiro, vocabulário do domínio (termo técnico explicado na primeira vez).
