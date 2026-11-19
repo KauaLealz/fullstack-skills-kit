@@ -54,7 +54,8 @@ main. Documentação: direto ao `fsk-docs`.
 ## Freios
 Fatos o agente descobre; decisões são do usuário; dúvida de outra pessoa (PO/cliente) vira questionário.
 Desafie termo vago e cheque se o código concorda com o que foi dito. Decisão vai para a spec com porquê;
-a que vale para o projeto vira rule via `fsk-learn`. Plano raso joga a análise pro build — aqui ela
+a que vale para o projeto vira rule via `fsk-learn` **no fecho da entrevista** (a proposta sai junto com o
+Combinado, não fica para depois). Plano raso joga a análise pro build — aqui ela
 **fecha**. Cheiros de entrevista rasa em `entrevista.md` — detectou, refaça.
 
 ## Saída · Pronto quando

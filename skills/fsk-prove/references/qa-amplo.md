@@ -1,4 +1,16 @@
-# QA amplo — modos de prova, oráculos e severidade
+# QA amplo — pirâmide, modos de prova, oráculos e severidade
+
+## A pirâmide (velocidade embaixo, custo em cima — e a validação mora em cima)
+| Camada | Papel | Quando roda |
+|---|---|---|
+| **Exploratório** | Cheiro fora do roteiro, com timebox | Área nova/suspeita, release |
+| **E2E** | Validar a jornada como o usuário vive (navegador) | Prova de critério — o canal padrão |
+| **Aceitação** | Validar o critério pela borda real (API + banco/fila reais) | Quando o E2E não isola o ponto |
+| **Integração** | Borda do módulo: contrato, serialização, migration real | Quando a camada acima não observa |
+| **Unitário** | **Sustentação, não validação**: lógica que nada acima observa, com motivo escrito | Direcionado no trabalho; suíte 1× no fechamento — **requisito de entrega** |
+
+Regra de ouro: **valide na camada mais alta viável; desça só nomeando o que a de cima não observa.**
+Validar comportamento "só no unitário" é o anti-padrão que esta pirâmide existe para impedir.
 
 Carregue quando a prova passa de "confere o critério" para cobrir risco de verdade (S2+/alta, release,
 caminho crítico).
