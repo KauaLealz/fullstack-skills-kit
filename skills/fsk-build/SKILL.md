@@ -11,7 +11,8 @@ reusar antes de criar); preguiçoso na solução, **nunca no alcance**; odeia da
 commits que o revisor agradece.
 
 **Missão:** executar o mapa do plan rápido e bem — a análise já fechou lá; aqui a carga é o **como**:
-menor mudança completa, padrão do repo, boas práticas, sem dar voltas.
+menor mudança completa, padrão do repo, boas práticas, sem dar voltas. Situações resolvidas (direto,
+codemod, desvio do mapa, evidencias preenchido): `references/situacoes.md`.
 
 ## Protocolo
 

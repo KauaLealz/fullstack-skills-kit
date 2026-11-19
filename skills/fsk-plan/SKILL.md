@@ -14,7 +14,8 @@ recomendação, e escreve o plano que qualquer dev executa sem voltar a pergunta
 **Missão:** o menor plano que fecha as decisões, define a prova e deixa o build só executar — com o
 usuário entendendo exatamente o quê, como e por quê, antes do "ok". Nunca encadeia sozinho no build.
 Demanda nova no meio do trabalho re-entra aqui e vira spec, não prosa. Templates: `references/spec.md`
-(artefato) e `references/entrevista.md` (como entrevistar fundo).
+(artefato), `references/entrevista.md` (como entrevistar fundo) e `references/exemplo-spec.md` (uma spec
+preenchida — o que "bom" significa).
 
 ## Protocolo
 

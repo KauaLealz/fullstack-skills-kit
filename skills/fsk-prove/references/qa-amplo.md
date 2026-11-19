@@ -48,10 +48,10 @@ auth, perda de dado, jornada que sustenta o produto.
 Antes de reportar bug, descarte: seletor frágil, timing/espera, dado de setup ruim, ambiente. Falha de
 teste vira conserto do teste (ou report da suíte frágil), não bug do produto.
 
-## SDD, não TDD
-O teste **deriva do critério da spec** — o ponto observável que a spec definiu é o seam do teste. Nada de
-red-green por ritual: o "falha sem a mudança" (git stash) valida que o teste testa algo, não é cerimônia
-de processo. Critério sem canal de prova definido é critério mal escrito — volta ao plan.
+## O teste nasce da spec
+O critério de aceite define o ponto observável; o teste deriva dele. Confirmar que o teste falha sem a
+mudança serve para validar que ele testa algo real. Critério sem canal de prova definido é critério mal
+escrito — volta ao plan.
 
 ## Não teste — anti-padrões com o "tell" que os delata
 - **Acoplado à implementação** · tell: quebra num refactor que não muda comportamento.

@@ -11,8 +11,8 @@ effort: medium
 evidência; podar o que envelheceu é tão trabalho quanto gravar.
 
 **Missão:** cada sessão deixar o agente mais contextualizado e mais barato — sem inchar, sem alucinar
-convenção, sem regra morta. Guia de escrita: `references/escrita-para-agentes.md`. Sempre: **propõe o
-diff, grava com "ok".**
+convenção, sem regra morta. Guia de escrita: `references/escrita-para-agentes.md`; cenários resolvidos (rule, preferência, how-to,
+drift e contra-exemplos): `references/exemplos.md`. Sempre: **propõe o diff, grava com "ok".**
 
 ## Protocolo
 
@@ -30,11 +30,13 @@ diff, grava com "ok".**
    | **Mecânico** | checagem (lint/hook/CI) — preferível a qualquer texto | import proibido entre camadas |
    | **Da demanda** | seção Decisões da spec | "nesta tela, paginação server-side" |
    Na dúvida entre pessoal e time, **pergunte** — não promova gosto de um dev a regra do time.
-3. **Exija evidência e carimbe:** rule/how-to nasce de 2+ exemplos ou declaração, **cita a evidência no
+3. **Absorva a intenção, não a frase:** o comportamento já existe em rule/núcleo? Reforce lá, não
+   duplique. É novo? Escreva o princípio em linguagem natural positiva — não transcreva a fala do usuário.
+4. **Exija evidência e carimbe:** rule/how-to nasce de 2+ exemplos ou declaração, **cita a evidência no
    próprio arquivo** (`arquivo:linha`/PR) e leva `origem: <sha>`. How-to carrega o **template concreto**
    (código-modelo real + onde vive + do/don'ts). Convenção sem evidência não grava.
-4. **Proponha o diff e espere o "ok".** Com "ok", grave; errado/velho → corrija ou remova (é git).
-5. **Precedência na leitura:** projeto → usuário (global) → default do kit. O projeto vence sempre.
+5. **Proponha o diff e espere o "ok".** Com "ok", grave; errado/velho → corrija ou remova (é git).
+6. **Precedência na leitura:** projeto → usuário (global) → default do kit. O projeto vence sempre.
 
 ## Mapa sempre verdadeiro
 O AGENTS.md é corrigido **no mesmo trabalho** que o torna falso: (1) o ship detecta mudança estrutural no

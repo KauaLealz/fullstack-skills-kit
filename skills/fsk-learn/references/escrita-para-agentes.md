@@ -14,6 +14,10 @@ só fica o que muda o comportamento padrão do modelo.
   lista" aceita qualquer coisa. Todo passo termina num critério que **exige** o resultado.
 - **Leading words:** palavras que o modelo já conhece ancoram comportamento barato ("sênior preguiçoso",
   "QA cético" valem parágrafos) — use-as em personas, títulos e regras.
+- **Absorva a intenção, não a frase.** Antes de gravar o que o usuário disse: o comportamento já existe?
+  Então só reforce ou ajuste onde está. Não existe? Escreva o **princípio** em linguagem natural e
+  positiva — nunca transcreva a fala literalmente nem defina algo pelo que ele não é ("X, não Y" só vale
+  como trava dura de um erro que de fato acontece).
 - **Uma regra, um lugar.** Nada repetido entre `AGENTS.md` e rules; skill aponta para skill, não copia.
 - **Não copie o que o ambiente já responde** num comando (scripts do `package.json`, configs). Registre o
   que não se descobre olhando: convenção não escrita, o porquê, a pegadinha.
