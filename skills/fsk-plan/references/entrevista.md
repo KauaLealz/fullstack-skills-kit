@@ -28,6 +28,9 @@ dados/migração → janela, lock, rollback testado · refactor → inventário 
 idêntico" medível · infra/config → ambiente por ambiente, segredo, custo.
 
 ## Forma das rodadas
+0. **Cap por rodada: máx. 5 perguntas**, priorizadas escopo > segurança/dados > UX. A varredura pode
+   gerar mais — o excedente vira descarte fundamentado ou espera a rodada seguinte; 12 perguntas de uma
+   vez é despejo, não entrevista.
 1. Rodada 1: tudo que a exploração destravou — decisões numeradas, recomendação em cada, "sim" aceita.
 2. Respostas abrem fronteira nova? Rodada 2 com o que destravou. Repita até fechar.
 3. Fecho da entrevista na spec: a lista de descartes com motivo + as decisões tomadas. Esse registro é o

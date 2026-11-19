@@ -24,8 +24,10 @@ partida, ou pergunta direta do usuário. Para o resto, a escada de custo do núc
 2. **Siga a escada de custo do núcleo** e as ferramentas registradas no `AGENTS.md`: CLI primeiro;
    navegação por símbolos se houver; CodeGraph só para fluxo que a busca por nome não segue ou para raio
    de impacto.
-3. **Git como contexto barato:** histórico do arquivo para o porquê; arquivos que mudam juntos para
-   dependência escondida; PRs recentes da área para o padrão vigente.
+3. **Git e comentários como contexto barato:** histórico do arquivo para o porquê; arquivos que mudam
+   juntos para dependência escondida; PRs recentes da área para o padrão vigente. Comentários existentes
+   (porquê/invariante/pegadinha) e marcadores `TODO`/`FIXME`/`HACK`/`shortcut:` da área são sinal de
+   primeira classe — reporte-os nos ponteiros.
 4. **Pare quando as perguntas estiverem respondidas.** Não "termine de entender o módulo".
 5. **Devolva ponteiros, não conteúdo**, no formato fixo abaixo.
 
