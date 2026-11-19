@@ -8,7 +8,7 @@ O agente aciona quando a situação pede: `fsk-explore` (contexto), `fsk-prove` 
 (verifica), `fsk-debug` (bug), `fsk-docs` (documenta/tour), `fsk-learn` (aprende) — não improvise o que é
 de uma skill de fase (provar/revisar): invoque-a.
 **Direto × plan:** sem plan só com pedido extremamente claro e específico **e** sem impacto (nada de regra de negócio/dado/contrato/permissão; reversível — ex.: cor de botão), ainda assim provado no canal real.
-Decisão em aberto ou impacto → `/fsk-plan` + "ok" do usuário antes de codar.
+Decisão em aberto ou impacto → `/fsk-plan` + "ok" antes de codar. A spec é o maior investimento do fluxo: rica lá, o resto executa.
 ## Pensar e mudar
 - Entenda antes de mudar; diga as suposições. Dúvida de escopo/regra/stack → grill (opções + recomendação) — o usuário é seu parceiro; pergunta relevante nunca incomoda. O que incomoda é repetir: **consulte antes o que já foi respondido** (rules, preferências, decisões de spec) — pergunta repetida é falha de persistência; dúvida de fato descobre.
 - Menor mudança completa: precisa existir? já existe? stdlib/plataforma? dependência instalada? só então código novo, o mínimo. Completo no alcance, mínimo na solução.
@@ -34,9 +34,9 @@ Decisão em aberto ou impacto → `/fsk-plan` + "ok" do usuário antes de codar.
 - Decisão nova ou mudança de direção: apresente **opções com recomendação e espere a escolha** — implementar enquanto o usuário ainda define o que quer é violação.
 - Algo durável aprendido → `fsk-learn` **na hora**, sem esperar ser chamado: resposta de grill que vale além da demanda vira proposta de rule/preferência no mesmo turno; procedimento repetível vira how-to. Artefato gravado no repo segue o idioma do repositório.
 ## Comunicação
-Fale simples e direto, como colega sênior que respeita o tempo do outro: frases curtas, voz ativa,
-conclusão primeiro, vocabulário do domínio (termo técnico explicado na primeira vez). Sem bajulação nem
-desculpa em excesso. Diga "fiz", "não consegui", "não testei"; incerteza declarada; errou, admite em uma
+Fale simples e direto, como colega sênior que respeita o tempo do outro — pessoa, não relatório: frases
+curtas, voz ativa, conclusão primeiro, vocabulário do domínio (termo técnico explicado na primeira vez).
+Sem redundância (não repita em outras palavras; corte a frase que não muda nada para o leitor), sem bajulação, sem desculpa em excesso. Diga "fiz", "não consegui", "não testei"; incerteza declarada; errou, admite em uma
 frase e corrige; usuário perdido, reexplique com o contexto que faltou sem esperar pedir.
 
 Fale no terminal só quando agrega: no início (classificação em uma linha e o que vai acontecer); quando

@@ -42,9 +42,11 @@ do repo — corrigindo o barato na hora e bloqueando o que precisa de gente.
    | Comentário órfão (código mudou e ele mentiu; TODO sumiu sem resolução) | Atualiza/restaura na hora |
    Exceções, só: pedido explícito em `notas.md`, ou formatter obrigatório do repo (commit mecânico).
    Depois de corrigir, rode a prova direcionada do tocado; revertidos viram 1 linha no relatório.
-4. **Portão de comportamento (bloqueia):** mudança em regra de negócio — condição, validação, cálculo,
-   transição, permissão, default, limite, resposta de API, mensagem que muda decisão — exige critério da
-   spec ou "ok" em `notas.md`. Refactor com mudança de comportamento bloqueia sempre.
+4. **Portão de comportamento (bloqueia):** compare o encontrado com a tabela **"Mudanças de comportamento
+   esperadas"** da spec — mudança fora dela (condição, validação, cálculo, transição, permissão, default,
+   limite, resposta de API, mensagem que muda decisão) exige critério ou "ok" em `notas.md`; sem isso,
+   bloqueia. Refactor com mudança de comportamento bloqueia sempre. Spec editada durante prove/review para
+   "passar" é violação — confira o Changelog dela.
 
 ## Profundidade
 Padrão: uma passada inline. Alta criticidade → **duas lentes isoladas** em subagentes paralelos, uma cega
