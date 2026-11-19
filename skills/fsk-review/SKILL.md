@@ -49,7 +49,7 @@ do repo — corrigindo o barato na hora e bloqueando o que precisa de gente.
    "passar" é violação — confira o Changelog dela.
 
 ## Profundidade
-Padrão: uma passada inline. Alta criticidade → **duas lentes isoladas** em subagentes paralelos, uma cega
+Padrão: uma passada inline. Alta risco → **duas lentes isoladas** em subagentes paralelos, uma cega
 à outra: **Spec** (fidelidade ao plano: faltou/fora/abordagem) e **Standards** (padrão da casa, segurança,
 simplicidade) — isoladas para uma não contaminar a outra; vereditos lado a lado, sem misturar ranking. **PR de colega** (sem spec/notas): aponta e pergunta, **não** corrige na hora;
 fidelidade vira "faz o que o título/issue diz?". Código pré-existente fora do escopo: só aponta.

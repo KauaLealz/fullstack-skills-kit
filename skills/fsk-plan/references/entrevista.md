@@ -52,6 +52,6 @@ idêntico" medível · infra/config → ambiente por ambiente, segredo, custo.
    que o `fsk-review` usa para cobrar cobertura depois.
 
 ## Cheiro de entrevista rasa (pare e refaça)
-Só 1 rodada numa demanda S2+; nenhuma pergunta cita `arquivo:linha`; nenhuma dimensão descartada por
+Só 1 rodada num trabalho de médio pra cima; nenhuma pergunta cita `arquivo:linha`; nenhuma dimensão descartada por
 escrito; o usuário respondeu e nada mudou no plano; critérios idênticos ao pedido original (entrevista
 que não descobriu nada).

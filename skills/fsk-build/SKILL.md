@@ -16,7 +16,7 @@ codemod, desvio do mapa, evidencias preenchido): `references/situacoes.md`.
 
 ## Protocolo
 
-1. **Entrada:** sem critérios e acima de S0 → escreva 3–6 e confirme. Alta sem spec → volte ao plan.
+1. **Entrada:** sem critérios e acima do trivial → escreva 3–6 e confirme. Alta sem spec → volte ao plan.
    Bug → `fsk-debug` primeiro.
 2. **Parta do mapa de ataque** (spec/`exploracao.md`): arquivos, onde, abordagem, referência a copiar.
    Mapa raso ou ausente → **volte ao `fsk-plan`**, não improvise a análise. Confirme o alcance
@@ -24,7 +24,7 @@ codemod, desvio do mapa, evidencias preenchido): `references/situacoes.md`.
 3. **Por fatia vertical:** menor mudança completa → checagem direcionada (só o que tocou) → `fsk-prove`
    da fatia → commit por intenção → linha em `notas.md` (decisão, aprovação, baixa confiança — no momento
    em que acontece). Decisão não prevista: pare e pergunte.
-4. **Fechamento:** prova de todos os critérios (subagente independente só em alta; S2 médio inline),
+4. **Fechamento:** prova de todos os critérios (subagente independente só no risco alto; no médio, inline),
    suíte completa uma vez ou CI (**checagem, não prova**), `fsk-review`, relatório do núcleo.
 
 ## Profundidade
@@ -35,7 +35,7 @@ codemod, desvio do mapa, evidencias preenchido): `references/situacoes.md`.
 | **Comentários** | Ler antes (TODO/FIXME/`shortcut:` não se apaga em silêncio); escrever só invariante/porquê/pegadinha — nunca narrar a linha nem falar com o revisor; mudou o código, o comentário acompanha ou morre |
 | **Massa (codemod)** | N arquivos, mesma mudança → script, nunca mão: inventário exato (grep+contagem na spec) → script idempotente salvo em `.claude/specs/<slug>/` (AST p/ estrutura, regex só p/ texto inequívoco) → amostra de 2–3 com diff revisado → aplicar → validação mecânica (contagem=inventário, grep residual 0, typecheck) → commit mecânico |
 | **Worktree** | Decidido no plan → crie pela receita do AGENTS.md; pasta principal intocada; caminho dito em 1 linha |
-| **S3 paralelo** | Fatias grandes e independentes → subagente por fatia em worktree a partir de branch de integração (ponteiros, nunca texto colado); poucas/acopladas → sequência; estado por fatia na spec (feita·andamento·bloqueada) p/ retomar |
+| **grande paralelo** | Fatias grandes e independentes → subagente por fatia em worktree a partir de branch de integração (ponteiros, nunca texto colado); poucas/acopladas → sequência; estado por fatia na spec (feita·andamento·bloqueada) p/ retomar |
 | **Autônomo** | "Implemente tudo, não pare": gates somem, **rito fica** — decisões em lote antes; por fatia notas+prova+1 linha de progresso; evidencias+review+relatório único no fim |
 
 ## Freios (anti-voltas)
@@ -48,6 +48,5 @@ caber o código. Demanda cresceu → reclassifica na fronteira. Retomado ("conti
 `notas.md`/spec e siga de onde parou.
 
 ## Saída · Pronto quando
-Commits por intenção + `notas.md` vivo + prova por fatia; push/PR são do `fsk-ship`. Pronto quando: S1 e
-S2 de ponta a ponta com notas e commits por intenção; S2 em worktree com a principal intocada; suíte
+Commits por intenção + `notas.md` vivo + prova por fatia; push/PR são do `fsk-ship`. Pronto quando: um pequeno e um médio de ponta a ponta com notas e commits por intenção; o médio em worktree com a principal intocada; suíte
 verde nunca chamada de "provado".

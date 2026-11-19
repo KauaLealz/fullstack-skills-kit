@@ -1,7 +1,7 @@
 # Template — dossiê de revisão (`.claude/specs/<slug>/revisao.md`)
 
 Gerado no início do ship, a partir de spec, `notas.md`, `evidencias.md`, achados do review e diff. Nada
-reconstruído de memória. Tamanho segue o rigor: S1 cabe em meia tela; S2+/alta usa todas as seções. O
+reconstruído de memória. Tamanho segue o rigor: pequeno cabe em meia tela; trabalho maior ou arriscado usa todas as seções. O
 corpo do PR é a versão enxuta deste dossiê (no formato de PR do repo, se houver).
 
 ```markdown

@@ -12,7 +12,7 @@
 Regra de ouro: **valide na camada mais alta viável; desça só nomeando o que a de cima não observa.**
 Validar comportamento "só no unitário" é o anti-padrão que esta pirâmide existe para impedir.
 
-Carregue quando a prova passa de "confere o critério" para cobrir risco de verdade (S2+/alta, release,
+Carregue quando a prova passa de "confere o critério" para cobrir risco de verdade (trabalho maior ou arriscado, release,
 caminho crítico).
 
 ## Risco = impacto × probabilidade

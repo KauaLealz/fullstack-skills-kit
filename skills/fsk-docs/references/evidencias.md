@@ -1,6 +1,6 @@
 # Template — relatório de evidências (`.claude/specs/<slug>/evidencias.md`)
 
-Gerado no fechamento da prova (S2+/alta). Fonte: tabela do `fsk-prove`, não memória.
+Gerado no fechamento da prova (trabalho maior ou arriscado). Fonte: tabela do `fsk-prove`, não memória.
 
 ```markdown
 # <Título> — evidências

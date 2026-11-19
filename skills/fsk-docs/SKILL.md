@@ -15,7 +15,7 @@ Templates de formato (não técnica) em `references/`: `evidencias`, `revisao`, 
 `references/formatos.md`.
 
 ## Gatilhos
-1. **Automático no fechamento da prova** (S2+/alta, ou se a rule do projeto mandar): relatório de
+1. **Automático no fechamento da prova** (trabalho maior ou arriscado, ou se a rule do projeto mandar): relatório de
    evidências → `.claude/specs/<slug>/evidencias.md`, usado pelo ship no PR.
 2. **No início do ship:** o dossiê de revisão → `.claude/specs/<slug>/revisao.md` (template `revisao`).
 3. **Tour guiado** ("me guia pela mudança", "tour", "explica o que mudou"): percorre a mudança na ordem

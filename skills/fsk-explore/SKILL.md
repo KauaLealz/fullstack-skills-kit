@@ -17,7 +17,7 @@ Dona única de "como levantar contexto". Plan, build, debug, review e docs pedem
 ter o seu "leia o terreno". Roda em subagente com contexto limpo: a leitura bruta nunca volta para a
 janela principal, só os ponteiros.
 
-**Quando entra:** área desconhecida para a sessão, demanda S2+, análise de impacto, bug sem ponto de
+**Quando entra:** área desconhecida para a sessão, demanda de médio pra cima, análise de impacto, bug sem ponto de
 partida, ou pergunta direta do usuário. Para o resto, a escada de custo do núcleo resolve sem skill.
 
 ## Comportamento
